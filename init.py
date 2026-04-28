@@ -1,3 +1,4 @@
+#Initializes DB
 from app import app
 from models import db
 
