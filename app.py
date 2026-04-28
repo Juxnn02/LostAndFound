@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request, jsonify
-from models import db, Account  # Make sure to import db and your Account model!
+import os
+from werkzeug.utils import secure_filename
+from models import db, Account, Post, Message  
 
 app = Flask(__name__)
 
+# Configuration for image uploads
+app.config['UPLOAD_FOLDER'] = 'static/images'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # DATABASE CONFIGURATION
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lostandfound.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -29,7 +33,9 @@ def forgot_password():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    # Fetch all listings from the database, newest first
+    posts = Post.query.order_by(Post.post_date.desc()).all()
+    return render_template("dashboard.html", posts=posts)
 
 @app.route("/create-listing")
 def create_listing():
@@ -68,6 +74,58 @@ def api_register():
     except Exception as e:
         db.session.rollback() # Undo if something goes wrong
         return jsonify({"success": False, "message": f"Server Error: {str(e)}"})
+
+# New API Route for Creating Listings with Images
+@app.route("/api/listings", methods=["POST"])
+def api_create_listing():
+    # Note: In a real app, grab user_id from the logged-in session. 
+    # Hardcoding to 1 for this demonstration.
+    user_id = 1 
+    
+    image_url = None
+    if 'image' in request.files:
+        file = request.files['image']
+        if file.filename != '':
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            image_url = f"images/{filename}"
+
+    new_post = Post(
+        user_id=user_id,
+        item_name=request.form.get('title'),
+        description=request.form.get('description'),
+        category=request.form.get('category'),
+        location=request.form.get('location'),
+        image_url=image_url
+    )
+    
+    try:
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)})
+
+# Real-time Messaging API scaffolding
+@app.route("/api/messages/<int:post_id>", methods=["GET", "POST"])
+def api_messages(post_id):
+    if request.method == "POST":
+        data = request.get_json()
+        new_msg = Message(
+            message_text=data['text'],
+            sender_id=1,   # Mock sender ID
+            receiver_id=2  # Mock receiver ID
+        )
+        db.session.add(new_msg)
+        db.session.commit()
+        return jsonify({"success": True})
+    
+    # GET method
+    messages = Message.query.all() # In production, filter by sender_id/receiver_id
+    return jsonify([{"text": m.message_text, "sender_id": m.sender_id} for m in messages])
+
 
 if __name__ == "__main__":
     app.run(debug=True)
