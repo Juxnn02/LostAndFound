@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Register</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/auth.css">
 </head>
 <body>
 
@@ -12,23 +12,25 @@
     Found
 </h2>
 
-<h3 style="font-size: 25px; margin-top: -20px;">Create your account!</h3>
+<div style="background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 350px; text-align: center;">
+    <h3 style="font-size: 25px; margin-top: 0;">Create your account!</h3>
+    
+    <p id="register-error" style="color: red; font-size: 14px; font-weight: bold;"></p>
 
-<form>
-    <input type="text" placeholder="Full Name" required><br><br>
+    <form onsubmit="handleRegisterSubmit(event)">
+        <input type="text" id="register-name" placeholder="Full Name" required><br><br>
+        <input type="email" id="register-email" placeholder="School Email" required><br><br>
+        <input type="password" id="register-password" placeholder="Password" required><br><br>
+        <input type="password" id="register-confirm" placeholder="Confirm Password" required><br><br>
+        <button style="font-size: 20px;" type="submit">Create Account</button>
+    </form>
 
-    <input type="email" placeholder="School Email" required><br><br>
+    <p style="margin-top: 20px;">
+        <a href="/">Already have an account? Log in</a>
+    </p>
+</div>
 
-    <input type="password" placeholder="Password" required><br><br>
-
-    <input type="password" placeholder="Confirm Password" required><br><br>
-
-    <button style="font-size: 20px;" type="submit">Create</button>
-</form>
-
-<p>
-    <a href="/">Already have an account?</a>
-</p>
-
+<script src="static/validation.js"></script>
+<script src="static/register.js"></script>
 </body>
 </html>
