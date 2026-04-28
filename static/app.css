@@ -1,0 +1,146 @@
+/* 
+   DASHBOARD & MAIN APP STYLES
+ */
+body.app-layout {
+    display: block; 
+    min-height: 100vh;
+    height: auto;
+    background-color: #f8f9fa; /* Clean light gray background */
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Shared Inputs and Buttons for App */
+input, select, textarea {
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+/* --- Navigation Bar --- */
+.navbar {
+    background-color: #ffffff;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e9ecef;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.navbar h2 {
+    margin: 0;
+    font-size: 28px;
+    font-family: Georgia, serif;
+    color: #2c3e50;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #f1f3f5;
+    padding: 8px 20px;
+    border-radius: 30px;
+    width: 40%;
+    border: 1px solid #ced4da;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    height: 30px;
+    margin-left: 10px;
+}
+
+/* Filter Menu */
+.filter-menu {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    padding: 0 20px;
+}
+
+.filter-menu a {
+    text-decoration: none;
+    color: #6c757d;
+    font-weight: 600;
+    font-size: 15px;
+    padding-bottom: 5px;
+    transition: color 0.2s;
+}
+
+.filter-menu a:hover {
+    color: #343a40;
+}
+
+.filter-menu a.active {
+    color: #0d6efd;
+    border-bottom: 2px solid #0d6efd;
+}
+
+/*  Listings Grid  */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 0 40px;
+    margin-bottom: 50px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e9ecef;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card-img {
+    background-color: #e9ecef;
+    height: 180px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #adb5bd;
+    font-weight: bold;
+}
+
+.card p {
+    margin: 0;
+    color: #495057;
+    line-height: 1.5;
+}
+
+.card strong {
+    font-size: 18px;
+    color: #212529;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Form Layouts for Create Listing */
+.form-container {
+    background: white;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 30px;
+}

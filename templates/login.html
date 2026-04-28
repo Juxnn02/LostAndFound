@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/auth.css">
 </head>
 <body>
 
@@ -12,15 +12,24 @@
     Found
 </h2>
 
-<h3 style="font-size: 25px; margin-top: -20px;">Sign into your account!</h3>
+<div style="background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 350px; text-align: center;">
+    <h3 style="font-size: 25px; margin-top: 0;">Sign into your account!</h3>
+    
+    <p id="login-error" style="color: red; font-size: 14px; font-weight: bold;"></p>
 
-<form>
-    <input type="email" placeholder="School Email" required><br><br>
-    <input type="password" placeholder="Password" required><br><br>
-    <button style="font-size: 20px;" type="submit">Sign in</button>
-</form>
+    <form action="/dashboard" onsubmit="handleLoginSubmit(event)">
+        <input type="email" id="login-email" placeholder="School Email" required><br><br>
+        <input type="password" placeholder="Password" required><br><br>
+        <button style="font-size: 20px;" type="submit">Sign in</button>
+    </form>
 
-<p><a href="/register">Don't have an account?</a> <a href="#">Forgot Password?</a></p>
+    <p style="margin-top: 20px;">
+        <a href="/register">Don't have an account?</a> <br>
+        <a href="/forgot-password" style="display: inline-block; margin-top: 10px;">Forgot Password?</a>
+    </p>
+</div>
 
+<script src="static/validation.js"></script>
+<script src="static/login.js"></script>
 </body>
 </html>

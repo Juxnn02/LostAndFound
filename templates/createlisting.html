@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create a Listing</title>
+    <link rel="stylesheet" href="static/app.css">
+</head>
+<body class="app-layout">
+
+    <div style="text-align: center; margin: 20px 0; position: relative;">
+        <a href="/dashboard" style="position: absolute; left: 30px; top: 10px; text-decoration: none; font-size: 20px;">&larr; Back</a>
+        <h1 style="font-size: 40px; font-family: serif; margin: 0;">Create a Listing!</h1>
+    </div>
+
+    <form class="form-container" id="create-listing-form">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
+            <div>
+                <label>Date:</label><br>
+                <input type="date" id="listing-date" required style="width: 100%;">
+            </div>
+
+            <div>
+                <label>Category:</label><br>
+                <select id="listing-category" required style="width: 100%; height: 35px; font-size: 16px;">
+                    <option value="">-Select-</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Apparel">Apparel</option>
+                    <option value="Books">Books</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Found at / Lost at:</label><br>
+                <select id="listing-location" required style="width: 100%; height: 35px; font-size: 16px;">
+                    <option value="">-Select-</option>
+                    <option value="Buley Library">Buley Library</option>
+                    <option value="Engleman Hall">Engleman Hall</option>
+                    <option value="Jennings Hall">Jennings Hall</option>
+                    <option value="Morrill Hall">Morrill Hall</option>
+                    <option value="Student Center">Student Center</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Description:</label><br>
+                <textarea id="listing-description" required rows="4" style="width: 100%; font-size: 16px; padding: 5px;" placeholder="Item description: Color, brand, any features!"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="button" onclick="location.href='/dashboard'" style="background: #ccc; border: none; width: 100px;">Cancel</button>
+                <button type="submit" style="background: #4CAF50; color: white; border: none; width: 100px;">Submit</button>
+            </div>
+        </div>
+
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
+            <div>
+                <label>Title:</label><br>
+                <input type="text" id="listing-title" required placeholder="e.g. Water Bottle" style="width: 100%;">
+            </div>
+
+            <div style="border: 2px dashed #aaa; flex: 1; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-direction: column; background: #fafafa; cursor: pointer; position: relative;">
+                <span style="font-size: 20px; color: #888;">Click to Upload</span>
+                <input type="file" id="listing-image" accept="image/*" style="opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer;">
+            </div>
+        </div>
+    </form>
+
+    <script src="static/createlisting.js"></script>
+</body>
+</html>
