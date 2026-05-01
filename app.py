@@ -24,7 +24,7 @@ app.config['MAIL_USERNAME'] = 'yourusername@southernct.edu'
 app.config['MAIL_PASSWORD'] = 'your_email_password'         
 app.config['MAIL_DEFAULT_SENDER'] = 'yourusername@southernct.edu'
 
- mail = Mail(app)
+mail = Mail(app)
 
 def generate_token(email):
     s = URLSafeTimedSerializer(app.secret_key)
