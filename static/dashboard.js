@@ -1,45 +1,87 @@
-//  Dashboard Logic 
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const filterLinks = document.querySelectorAll('.filter-menu a');
-    
-    // Logic to close dropdown when clicking outside
+
+    const cards = document.querySelectorAll('.card');
+    const noResults = document.getElementById('no-results');
+
+    // CLOSE DROPDOWN OUTSIDE CLICK
     window.addEventListener('click', (e) => {
         const menu = document.getElementById("user-dropdown");
         const btn = document.getElementById("user-menu-btn");
-        
-        // If the menu is open AND the click was not on the button
+
         if (!menu.classList.contains('hidden') && !btn.contains(e.target)) {
             menu.classList.add('hidden');
         }
     });
-    
-    // Handle Search functionality
+
+    // SEARCH LOGIC
     if (searchInput) {
-        searchInput.addEventListener('keyup', (e) => {
+        searchInput.addEventListener('keyup', () => {
             const query = searchInput.value.toLowerCase();
-            console.log("Searching for:", query);
-            // In the future, this will filter the DOM elements or make an API call
+
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                const match = text.includes(query);
+
+                if (query === "") {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = match ? '' : 'none';
+                    if (match) visibleCount++;
+                }
+            });
+
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
         });
     }
-    // Handle Category Filter Clicks
+
+    // FILTER LOGIC
     filterLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const target = e.target;
-            // Remove active style from all links
+
+            const target = e.currentTarget;
+            const category = target.innerText.toLowerCase();
+
             filterLinks.forEach(l => {
-                l.style.textDecoration = 'none';
+                l.classList.remove('active');
             });
-            // Add active style to clicked link
-            target.style.textDecoration = 'underline';
-            console.log("Filtering by:", target.innerText);
+
+            target.classList.add('active');
+
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const match = card.dataset.category?.toLowerCase();
+
+                let show;
+
+                if (category === "apply all") {
+                    show = true;
+                } else {
+                    show = (match === category);
+                }
+
+                card.style.display = show ? '' : 'none';
+
+                if (show) visibleCount++;
+            });
+
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
         });
     });
 });
 
-//Must be at the end of the file to work properly
+// Must be at the end to work properly
 function toggleUserMenu() {
     const menu = document.getElementById("user-dropdown");
     menu.classList.toggle("hidden");
-    }   
+}
