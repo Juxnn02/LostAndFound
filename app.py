@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for, redirect
 import os
 from werkzeug.utils import secure_filename
-from models import db, Account, Post, Message  
+from models import db, Account, Post, Message 
+from flask_mail import Mail, Message 
+from itsdangerous import URLSafeTimedSerializer
+
 
 app = Flask(__name__)
 
@@ -12,6 +15,76 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # DATABASE CONFIGURATION
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lostandfound.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config['MAIL_SERVER'] = 'smtp.office365.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'yourusername@southernct.edu'  
+app.config['MAIL_PASSWORD'] = 'your_email_password'         
+app.config['MAIL_DEFAULT_SENDER'] = 'yourusername@southernct.edu'
+
+ mail = Mail(app)
+
+def generate_token(email):
+    s = URLSafeTimedSerializer(app.secret_key)
+    return s.dump(email)
+
+def confrim_token(token, expiration=30):
+    s = URLSafeTimedSerializer(app.secret_key)
+    try:
+        email = s.loads(token, max_age expiration)
+        return email
+    except:
+        return None
+
+def send_verification_email(user_email):
+    token = generate_token(user_email)
+    verification_link = url_for('verify_email', token=token, _external=True)
+    msg = Message('Verify your email', recipients=[user_email])
+    msg.body = f''Please verify your email by clicking the link: {verification_link}
+    If you did not register, ignore this email.'''
+
+        mail.seng(msg)
+
+@app.route('/verify/<token>'):
+email = confim_token(token)
+if email: 
+    user = Account.query.filter_by(email=email).frist()
+    if user:
+        return"Email verified successfully."
+    else:
+        return "User not found."
+else: 
+    return "Invalid or Expired link."
+
+@app.route('/reset/<token>', methods={'GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        data = request. get_json()
+        email = data.get('email')
+        user = Account.query.filter_by(email=email).frist()
+        if user:
+            send_password_reset_email(email)
+            return "If your email exists in our system, a reset link has been sent."
+    return render_template('forgot_password.html')
+
+@app.route('/reset/<token>', methods=['GET', 'POST'])                                      
+def rest_password(token):
+    email = confrim_token(token)
+if not email:
+    return "Invalid or expired link."
+if request.method == 'POST':
+    data = request.get_json()
+    new_password = data.get('password')
+    user = Account.query.filter_by(email=email).first()
+    if user:
+        user.password = new_password
+        db.session.commit()
+        return "Your password has been reset successfully."
+    return "user not found."
+return render_template('reset_password.html')
+
 
 # Bind the database to this app
 db.init_app(app)
