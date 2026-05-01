@@ -53,20 +53,20 @@
     </div>
 
     <div class="grid-container" id="listings-grid">
-        <div class="card" data-category="accessories" onclick="location.href='/listing-info'" style="cursor: pointer;">
-            <div class="card-img">Picture</div>
-            <p><strong>Water Bottle</strong><br>Found in Buley Library.</p>
+        {% for post in posts %}
+        <div class="card" onclick="location.href='/listing-info?id={{ post.id }}'" style="cursor: pointer;">
+            <div class="card-img">
+                {% if post.image_url %}
+                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}" style="max-width: 100%; max-height: 100%; border-radius: 8px; object-fit: cover;">
+                {% else %}
+                    No Image
+                {% endif %}
+            </div>
+            <p><strong>{{ post.item_name }}</strong><br>Found in {{ post.location }}.</p>
         </div>
-        
-        <div class="card" data-category="books" onclick="location.href='/listing-info'" style="cursor: pointer;">
-            <div class="card-img">Picture</div>
-            <p><strong>Calculus Textbook</strong><br>Found in Engleman Hall.</p>
-        </div>
-        
-        <div class="card" data-category="electronics" onclick="location.href='/listing-info'" style="cursor: pointer;">
-            <div class="card-img">Picture</div>
-            <p><strong>AirPods Case</strong><br>Lost near Student Center.</p>
-        </div>
+        {% else %}
+            <p style="grid-column: 1 / -1; text-align: center; color: #565656;">No listings found. Be the first to create one!</p>
+        {% endfor %}
     </div>
 
     <script src="static/dashboard.js"></script>
