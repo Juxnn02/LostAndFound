@@ -5,14 +5,14 @@ body.app-layout {
     display: block; 
     min-height: 100vh;
     height: auto;
-    background-color: #f8f9fa; /* Clean light gray background */
+    background-color: rgb(201, 219, 231);
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Shared Inputs and Buttons for App */
 input, select, textarea {
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ced4da;
     border-radius: 4px;
     font-family: inherit;
@@ -21,7 +21,7 @@ input, select, textarea {
 /* --- Navigation Bar --- */
 .navbar {
     background-color: #ffffff;
-    padding: 15px 40px;
+    padding: 50px 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,7 +32,7 @@ input, select, textarea {
 
 .navbar h2 {
     margin: 0;
-    font-size: 28px;
+    font-size: 35px;
     font-family: Georgia, serif;
     color: #2c3e50;
 }
@@ -41,11 +41,12 @@ input, select, textarea {
 .search-bar {
     display: flex;
     align-items: center;
-    background: #f1f3f5;
-    padding: 8px 20px;
-    border-radius: 30px;
+    background: #ebebebf8;
+    padding: 5px 20px;
+    border-radius: 40px;
     width: 40%;
     border: 1px solid #ced4da;
+    margin-left: -10px;
 }
 
 .search-bar input {
@@ -61,7 +62,7 @@ input, select, textarea {
 .filter-menu {
     display: flex;
     justify-content: center;
-    gap: 25px;
+    gap: 40px;
     margin-bottom: 30px;
     flex-wrap: wrap;
     padding: 0 20px;
@@ -69,15 +70,15 @@ input, select, textarea {
 
 .filter-menu a {
     text-decoration: none;
-    color: #6c757d;
+    color: #47494a;
     font-weight: 600;
     font-size: 15px;
-    padding-bottom: 5px;
+    padding-bottom: 15px;
     transition: color 0.2s;
 }
 
 .filter-menu a:hover {
-    color: #343a40;
+    color: #575b5f;
 }
 
 .filter-menu a.active {
@@ -143,4 +144,63 @@ input, select, textarea {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
     gap: 30px;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover; 
+  margin-right: -15px;
+  border: 2px solid #ccc; 
+  margin-left: 50px;
+}
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #4a90e2;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 180px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    padding: 10px;
+    z-index: 999;
+}
+
+.user-dropdown a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+}
+
+.user-dropdown a:hover {
+    background: #f1f1f1;
+}
+
+.user-dropdown .email {
+    font-size: 13px;
+    color: gray;
+    margin: 0;
+}
+
+.hidden {
+    display: none;
 }

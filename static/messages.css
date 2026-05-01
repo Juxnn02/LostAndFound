@@ -1,0 +1,119 @@
+/* Layout */
+.messenger-wrapper {
+    display: flex;
+    max-width: 1100px;
+    height: 65vh;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 15px;
+    border: 2px solid white;
+    margin-top: 60px;
+    overflow: hidden;
+}
+
+/* Inbox */
+.inbox-list {
+    width: 320px;
+    background: rgba(248, 249, 250, 0.6);
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+}
+
+.inbox-card {
+    padding: 18px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.inbox-card:hover {
+    background: white;
+}
+
+.inbox-card.active {
+    background: white;
+    border-left: 5px solid #2c3e50;
+}
+
+.inbox-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.preview {
+    margin: 5px 0 0;
+    font-size: 13px;
+    color: #666;
+}
+
+/* Chat */
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+.chat-display {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #fdfdfd;
+}
+
+/* Bubbles */
+.bubble {
+    max-width: 70%;
+    padding: 12px 15px;
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.received {
+    align-self: flex-start;
+    background: #e9ecef;
+    border-bottom-left-radius: 4px;
+}
+
+.sent {
+    align-self: flex-end;
+    background: #0d6efd;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+/* Input */
+.message-input {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.message-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.message-input button {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Badge */
+.new-badge {
+    background: #dc3545;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}

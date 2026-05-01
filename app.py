@@ -37,13 +37,27 @@ def dashboard():
     posts = Post.query.order_by(Post.post_date.desc()).all()
     return render_template("dashboard.html", posts=posts)
 
-@app.route("/create-listing")
-def create_listing():
-    return render_template("createlisting.html")
-
 @app.route("/listing-info")
 def listing_info():
     return render_template("listing_info.html")
+
+@app.route("/createlisting")
+def create_listing():
+    return render_template("createlisting.html")
+
+@app.route("/my_listings")
+def my_listings():
+    return render_template("my_listings.html")
+
+@app.route("/edit_listing")
+def edit_listing():
+    return render_template("edit_listing.html")
+
+@app.route("/messages")
+def messages():
+    return render_template("messages.html")
+
+
 
 
 

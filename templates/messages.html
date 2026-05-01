@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Messages</title>
+    <link rel="stylesheet" href="static/app.css">
+    <link rel="stylesheet" href="static/messages.css">
+</head>
+<body class="app-layout">
+
+    <div style="text-align: center; margin: 20px 0; position: relative;">
+        <a href="/dashboard" style="position: absolute; left: 70px; top: 10px; text-decoration: none; font-size: 20px;">&larr; Back</a>
+        <h1 style="font-size: 40px; font-family: serif; margin: 0;">Messages</h1>
+    </div>
+
+    <div class="messenger-wrapper">
+
+        <!-- LEFT: Inbox -->
+        <aside class="inbox-list">
+
+            <div class="inbox-card active" onclick="loadChat('alex')">
+                <div class="inbox-header">
+                    <strong>Alex Rivera</strong>
+                    <span class="status-dot"></span>
+                </div>
+                <p class="preview">Listing: Purple Water Bottle</p>
+            </div>
+
+            <div class="inbox-card" onclick="loadChat('jordan')">
+                <div class="inbox-header">
+                    <strong>Jordan Smith</strong>
+                </div>
+                <p class="preview">Listing: Calculus Textbook</p>
+            </div>
+
+            <div class="inbox-card demo-highlight" onclick="loadChat('live')">
+                <div class="inbox-header">
+                    <strong>Live Demo User</strong>
+                    <span class="new-badge">New</span>
+                </div>
+                <p class="preview">Waiting for message...</p>
+            </div>
+
+        </aside>
+
+        <!-- RIGHT: Chat -->
+        <section class="chat-main">
+
+            <div class="chat-display" id="chat-box">
+                <p style="color:#999;">Select a conversation to start chatting...</p>
+            </div>
+
+            <form class="message-input" onsubmit="return handleSend(event)">
+                <input type="text" id="user-input" placeholder="Write a reply...">
+                <button type="submit">Send</button>
+            </form>
+
+        </section>
+
+    </div>
+
+    <script src="static/messages.js"></script>
+</body>
+</html>
