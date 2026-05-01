@@ -62,8 +62,8 @@ input, select, textarea {
 .filter-menu {
     display: flex;
     justify-content: center;
-    gap: 40px;
-    margin-bottom: 30px;
+    gap: 30px;
+    margin-bottom: 25px;
     flex-wrap: wrap;
     padding: 0 20px;
 }
@@ -91,10 +91,11 @@ input, select, textarea {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
-    padding: 0 40px;
+    padding: 0 60px;
     margin-bottom: 50px;
 }
 
+/* Card Styles */
 .card {
     background: white;
     border-radius: 12px;
@@ -109,9 +110,11 @@ input, select, textarea {
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
+/* Card Image Placeholder */
 .card-img {
     background-color: #e9ecef;
-    height: 180px;
+    height: 250px;
+    width: 100%;
     border-radius: 8px;
     margin-bottom: 15px;
     display: flex;
@@ -119,6 +122,15 @@ input, select, textarea {
     align-items: center;
     color: #adb5bd;
     font-weight: bold;
+    overflow: hidden;
+}
+
+/* Ensure images fit nicely within the card */
+.card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .card p {
@@ -131,7 +143,7 @@ input, select, textarea {
     font-size: 18px;
     color: #212529;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: -10px;
 }
 
 /* Form Layouts for Create Listing */
@@ -146,28 +158,21 @@ input, select, textarea {
     gap: 30px;
 }
 
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover; 
-  margin-right: -15px;
-  border: 2px solid #ccc; 
-  margin-left: 50px;
-}
+/* User Profle Dropdown */
 .avatar {
     width: 70px;
     height: 70px;
     border-radius: 50%;
+    margin-left: 50px;
     background-color: #4a90e2;
     color: white;
     font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
     cursor: pointer;
     user-select: none;
+    overflow: hidden;
 }
 
 .user-dropdown {
