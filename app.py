@@ -1,20 +1,25 @@
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask_mail import Mail, Message as MailMessage
 import os
 import json
-import uuid # For unique image names
+import uuid  # For unique image names
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from models import db, Account, Post, Message
+from models import db, Account, Post, Message, User
 import random
 
 app = Flask(__name__)
-app.secret_key = 'super_secret_key' # Needed to keep users logged in
+app.secret_key = 'super_secret_key'  # Needed to keep users logged in
 # Custom JSON Encoder to handle datetime objects
+
+
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.isoformat()
         return super().default(obj)
+
 
 app.json_encoder = DateTimeEncoder
 
@@ -27,7 +32,7 @@ app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = "josephofei24@gmail.com"
 
 # Your Gmail App Password (16 characters, no spaces)
-app.config["MAIL_PASSWORD"] = "fxmknkchgiyckmjz"
+app.config["MAIL_PASSWORD"] = "PASTE_YOUR_GMAIL_APP_PASSWORD_HERE"
 
 # Sender email
 app.config["MAIL_DEFAULT_SENDER"] = "josephofei24@gmail.com"
@@ -69,6 +74,7 @@ def dashboard():
     posts = Post.query.order_by(Post.post_date.desc()).all()
     return render_template("dashboard.html", posts=posts)
 
+
 @app.route("/listing-info")
 def listing_info():
     post_id = request.args.get('id', 1, type=int)
@@ -77,43 +83,46 @@ def listing_info():
         return render_template("listing_info.html", post=None)
     return render_template("listing_info.html", post=post)
 
+
 @app.route("/createlisting")
 def create_listing():
     return render_template("createlisting.html")
+
 
 @app.route("/my_listings")
 def my_listings():
     # Redirect to login if not logged in
     if 'user_id' not in session:
         return redirect("/")
-        
+
     current_user_id = session['user_id']
-    
+
     # Get only the posts made by this user
-    user_posts = Post.query.filter_by(user_id=current_user_id).order_by(Post.post_date.desc()).all()
-    
+    user_posts = Post.query.filter_by(
+        user_id=current_user_id).order_by(Post.post_date.desc()).all()
+
     return render_template("my_listings.html", posts=user_posts)
+
 
 @app.route("/edit_listing")
 def edit_listing():
     if 'user_id' not in session:
         return redirect("/")
-        
+
     # Get the ID from the URL (e.g., /edit_listing?edit=5)
     post_id = request.args.get('edit', type=int)
     post_to_edit = Post.query.get(post_id)
-    
+
     # Security check: Make sure this post belongs to the logged-in user
     if not post_to_edit or post_to_edit.user_id != session['user_id']:
         return redirect("/my_listings")
-        
+
     return render_template("edit_listing.html", post=post_to_edit)
+
 
 @app.route("/messages")
 def messages():
     return render_template("messages.html")
-
-
 
 
 # API ROUTES (Backend logic for saving data)
@@ -121,24 +130,24 @@ def messages():
 @app.route("/api/register", methods=["POST"])
 def api_register():
     data = request.get_json()
-    
+
     existing_user = Account.query.filter_by(email=data['email']).first()
     if existing_user:
         return jsonify({"success": False, "message": "Email already registered."})
-        
+
     hashed_password = generate_password_hash(data['password'])
-    
-    # 1. Create the Account 
+
+    # 1. Create the Account
     new_account = Account(
         name=data['name'],
         email=data['email'],
-        password=hashed_password 
+        password=hashed_password
     )
-    
+
     try:
         db.session.add(new_account)
-        db.session.commit() # Save to generate the Account ID
-        
+        db.session.commit()  # Save to generate the Account ID
+
         # 2. Automatically create the linked User profile
         new_user = User(
             account_id=new_account.id,
@@ -146,7 +155,7 @@ def api_register():
         )
         db.session.add(new_user)
         db.session.commit()
-        
+
         return jsonify({"success": True, "message": "Account created!"})
     except Exception as e:
         db.session.rollback()
@@ -156,22 +165,42 @@ def api_register():
 @app.route("/api/login", methods=["POST"])
 def api_login():
     data = request.get_json()
-    
-    user_account = Account.query.filter_by(email=data['email']).first()
-    
-    # Check if account exists AND passwords match
-    if user_account and check_password_hash(user_account.password, data['password']):
-        
-        # Find the linked User profile 
-        user_profile = User.query.filter_by(account_id=user_account.id).first()
-        
-        if user_profile:
-            session['user_id'] = user_profile.id # Save the USER ID so "My Listings" works!
-            return jsonify({"success": True})
-        else:
-            return jsonify({"success": False, "message": "User profile missing."})
-    else:
+
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"success": False, "message": "Email and password are required."})
+
+    if not email.endswith("@southernct.edu"):
+        return jsonify({"success": False, "message": "Please use your SouthernCT email."})
+
+    user_account = Account.query.filter_by(email=email).first()
+
+    if not user_account:
         return jsonify({"success": False, "message": "Invalid email or password"})
+
+    password_matches = (
+        user_account.password == password or
+        check_password_hash(user_account.password, password)
+    )
+
+    if not password_matches:
+        return jsonify({"success": False, "message": "Invalid email or password"})
+
+    user_profile = User.query.filter_by(account_id=user_account.id).first()
+
+    if not user_profile:
+        user_profile = User(
+            account_id=user_account.id,
+            username=user_account.name
+        )
+        db.session.add(user_profile)
+        db.session.commit()
+
+    session["user_id"] = user_profile.id
+
+    return jsonify({"success": True, "message": "Login successful!"})
 
 # New API Route for Creating Listings with Images
 
@@ -181,9 +210,9 @@ def api_create_listing():
     # Make sure they are logged in first
     if 'user_id' not in session:
         return jsonify({"success": False, "message": "Please log in first."})
-        
-    user_id = session['user_id'] # Get ID from the logged-in session
-    
+
+    user_id = session['user_id']  # Get ID from the logged-in session
+
     image_url = None
     if 'image' in request.files:
         file = request.files['image']
@@ -191,7 +220,7 @@ def api_create_listing():
             # Create a unique random name using uuid
             extension = file.filename.rsplit('.', 1)[1].lower()
             unique_name = str(uuid.uuid4()) + "." + extension
-            
+
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_name)
             file.save(filepath)
             image_url = f"images/{unique_name}"
@@ -230,45 +259,12 @@ def api_messages(post_id):
         return jsonify({"success": True})
 
     # GET method
-    messages = Message.query.all() # In production, filter by sender_id/receiver_id
+    messages = Message.query.all()  # In production, filter by sender_id/receiver_id
     return jsonify([{
-        "text": m.message_text, 
+        "text": m.message_text,
         "sender_id": m.sender_id,
         "timestamp": m.timestamp.isoformat() if m.timestamp else None
     } for m in messages])
-
-
-
-@app.route("/api/login", methods=["POST"])
-def api_login():
-    data = request.get_json()
-
-    email = data.get("email")
-    password = data.get("password")
-
-    if not email or not password:
-        return jsonify({"success": False, "message": "Email and password are required."})
-
-    if not email.endswith("@southernct.edu"):
-        return jsonify({"success": False, "message": "Please use your SouthernCT email."})
-
-    user = Account.query.filter_by(email=email).first()
-
-    if not user:
-        return jsonify({"success": False, "message": "Account not found."})
-
-    if user.password != password:
-        return jsonify({"success": False, "message": "Incorrect password."})
-
-    return jsonify({
-        "success": True,
-        "message": "Login successful!",
-        "user_id": user.id,
-        "name": user.name
-    })
-
-
-reset_codes = {}
 
 
 reset_codes = {}
@@ -333,7 +329,7 @@ def api_reset_password():
     if not user:
         return jsonify({"success": False, "message": "Account not found."})
 
-    user.password = password
+    user.password = generate_password_hash(password)
     db.session.commit()
 
     if email in reset_codes:
