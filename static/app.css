@@ -5,14 +5,14 @@ body.app-layout {
     display: block; 
     min-height: 100vh;
     height: auto;
-    background-color: #f8f9fa; /* Clean light gray background */
+    background-color: rgb(201, 219, 231);
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Shared Inputs and Buttons for App */
 input, select, textarea {
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ced4da;
     border-radius: 4px;
     font-family: inherit;
@@ -21,7 +21,7 @@ input, select, textarea {
 /* --- Navigation Bar --- */
 .navbar {
     background-color: #ffffff;
-    padding: 15px 40px;
+    padding: 50px 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,7 +32,7 @@ input, select, textarea {
 
 .navbar h2 {
     margin: 0;
-    font-size: 28px;
+    font-size: 35px;
     font-family: Georgia, serif;
     color: #2c3e50;
 }
@@ -41,11 +41,12 @@ input, select, textarea {
 .search-bar {
     display: flex;
     align-items: center;
-    background: #f1f3f5;
-    padding: 8px 20px;
-    border-radius: 30px;
+    background: #ebebebf8;
+    padding: 5px 20px;
+    border-radius: 40px;
     width: 40%;
     border: 1px solid #ced4da;
+    margin-left: -10px;
 }
 
 .search-bar input {
@@ -61,23 +62,23 @@ input, select, textarea {
 .filter-menu {
     display: flex;
     justify-content: center;
-    gap: 25px;
-    margin-bottom: 30px;
+    gap: 30px;
+    margin-bottom: 25px;
     flex-wrap: wrap;
     padding: 0 20px;
 }
 
 .filter-menu a {
     text-decoration: none;
-    color: #6c757d;
+    color: #47494a;
     font-weight: 600;
     font-size: 15px;
-    padding-bottom: 5px;
+    padding-bottom: 15px;
     transition: color 0.2s;
 }
 
 .filter-menu a:hover {
-    color: #343a40;
+    color: #575b5f;
 }
 
 .filter-menu a.active {
@@ -90,10 +91,11 @@ input, select, textarea {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
-    padding: 0 40px;
+    padding: 0 60px;
     margin-bottom: 50px;
 }
 
+/* Card Styles */
 .card {
     background: white;
     border-radius: 12px;
@@ -108,9 +110,11 @@ input, select, textarea {
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
+/* Card Image Placeholder */
 .card-img {
     background-color: #e9ecef;
-    height: 180px;
+    height: 250px;
+    width: 100%;
     border-radius: 8px;
     margin-bottom: 15px;
     display: flex;
@@ -118,6 +122,15 @@ input, select, textarea {
     align-items: center;
     color: #adb5bd;
     font-weight: bold;
+    overflow: hidden;
+}
+
+/* Ensure images fit nicely within the card */
+.card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .card p {
@@ -130,7 +143,7 @@ input, select, textarea {
     font-size: 18px;
     color: #212529;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: -10px;
 }
 
 /* Form Layouts for Create Listing */
@@ -143,4 +156,477 @@ input, select, textarea {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
     gap: 30px;
+}
+
+/* User Profle Dropdown */
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-left: 50px;
+    background-color: #4a90e2;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: hidden;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 180px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    padding: 10px;
+    z-index: 999;
+}
+
+.user-dropdown a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+}
+
+.user-dropdown a:hover {
+    background: #f1f1f1;
+}
+
+.user-dropdown .email {
+    font-size: 13px;
+    color: gray;
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- LISTING INFO PAGE --- */
+.listing-page-body {
+    padding: 30px;
+}
+
+.listing-back-link {
+    text-decoration: none;
+    font-size: 20px;
+    color: #333;
+}
+
+.listing-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.listing-title {
+    text-align: center;
+    font-family: serif;
+    font-size: 40px;
+    margin-top: 0;
+}
+
+.listing-image {
+    width: 100%;
+    height: 300px;
+    background: #eaeaea;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.listing-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.listing-info-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.listing-avatar {
+    background: #e0ecf8;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.listing-details h3 {
+    margin: 0;
+}
+
+.listing-details p {
+    color: #666;
+    margin: 5px 0;
+}
+
+.listing-timestamp {
+    color: #999;
+    font-size: 12px;
+}
+
+.listing-actions {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.btn-connect {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-connect:hover {
+    background: #1976D2;
+}
+
+.btn-report {
+    background: #ff4c4c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-report:hover {
+    background: #e63939;
+}
+
+.chat-thread {
+    display: none;
+    margin-top: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.chat-thread.active {
+    display: block;
+}
+
+.chat-thread h4 {
+    margin-top: 0;
+}
+
+.chat-message {
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    width: fit-content;
+    max-width: 80%;
+}
+
+.chat-message.received {
+    background: #f1f0f0;
+    color: black;
+}
+
+.chat-message.sent {
+    background: #2196F3;
+    color: white;
+    margin-left: auto;
+}
+
+.chat-message-time {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.chat-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.chat-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.chat-form button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.chat-form button:hover {
+    background: #45a049;
+}
+
+.report-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.report-modal.active {
+    display: flex;
+}
+
+.report-modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 350px;
+}
+
+.report-modal-content h3 {
+    margin-top: 0;
+}
+
+.report-radio-label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.report-modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.btn-cancel {
+    background: #ccc;
+    border: none;
+    width: 48%;
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-submit-report {
+    background: #d9534f;
+    color: white;
+    border: none;
+    width: 48%;
+    height: 30px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* --- MESSAGES PAGE --- */
+.messages-header {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.messages-header h1 {
+    font-size: 40px;
+    font-family: serif;
+    margin: 0;
+}
+
+.back-link-messages {
+    position: absolute;
+    left: 70px;
+    top: 10px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #333;
+}
+
+.empty-chat-text {
+    color: #999;
+}
+
+/* --- DASHBOARD STYLES --- */
+.navbar-flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.search-icon {
+    font-size: 20px;
+    margin-right: -8px;
+}
+
+.search-input {
+    font-size: 16px;
+}
+
+.settings-select {
+    padding: 5px;
+    font-size: 16px;
+    margin-right: 60px;
+}
+
+.card-image-img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.no-listings {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #565656;
+}
+
+.no-results {
+    display: none;
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #565656;
+}
+
+/* --- EDIT LISTING PAGE --- */
+.edit-listing-header {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.edit-listing-header h1 {
+    font-size: 40px;
+    font-family: serif;
+    margin: 0;
+}
+
+.form-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input[type="date"],
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    font-size: 16px;
+    padding: 8px 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-group select {
+    height: 40px;
+    cursor: pointer;
+}
+
+.form-group textarea {
+    font-family: inherit;
+    resize: vertical;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-form {
+    border: none;
+    width: 100px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-cancel-form {
+    background: #ccc;
+}
+
+.btn-save {
+    background: #0d6efd;
+    color: white;
+    height: 40px;
+}
+
+.btn-submit-form {
+    background: #4CAF50;
+    color: white;
+    height: 40px;
+}
+
+.form-right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.image-upload-area {
+    border: 2px dashed #aaa;
+    flex: 1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #fafafa;
+    cursor: pointer;
+    position: relative;
+}
+
+.image-upload-text {
+    font-size: 20px;
+    color: #888;
+}
+
+.image-upload-input {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
 }

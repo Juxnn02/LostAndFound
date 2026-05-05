@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create a Listing</title>
     <link rel="stylesheet" href="static/app.css">
 </head>
 <body class="app-layout">
 
-    <div style="text-align: center; margin: 20px 0; position: relative;">
-        <a href="/dashboard" style="position: absolute; left: 30px; top: 10px; text-decoration: none; font-size: 20px;">&larr; Back</a>
-        <h1 style="font-size: 40px; font-family: serif; margin: 0;">Create a Listing!</h1>
+    <div class="edit-listing-header">
+        <h1>Create a Listing!</h1>
     </div>
 
     <form class="form-container" id="create-listing-form">
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
-            <div>
-                <label>Date:</label><br>
-                <input type="date" id="listing-date" required style="width: 100%;">
+        <div class="form-content">
+            <div class="form-group">
+                <label for="listing-date">Date:</label>
+                <input type="date" id="listing-date" required>
             </div>
 
-            <div>
-                <label>Category:</label><br>
-                <select id="listing-category" required style="width: 100%; height: 35px; font-size: 16px;">
+            <div class="form-group">
+                <label for="listing-category">Category:</label>
+                <select id="listing-category" required title="Select the item category">
                     <option value="">-Select-</option>
                     <option value="Accessories">Accessories</option>
                     <option value="Apparel">Apparel</option>
@@ -30,9 +31,9 @@
                 </select>
             </div>
 
-            <div>
-                <label>Found at / Lost at:</label><br>
-                <select id="listing-location" required style="width: 100%; height: 35px; font-size: 16px;">
+            <div class="form-group">
+                <label for="listing-location">Found at / Lost at:</label>
+                <select id="listing-location" required title="Select the location where item was found or lost">
                     <option value="">-Select-</option>
                     <option value="Buley Library">Buley Library</option>
                     <option value="Engleman Hall">Engleman Hall</option>
@@ -42,26 +43,27 @@
                 </select>
             </div>
 
-            <div>
-                <label>Description:</label><br>
-                <textarea id="listing-description" required rows="4" style="width: 100%; font-size: 16px; padding: 5px;" placeholder="Item description: Color, brand, any features!"></textarea>
+            <div class="form-group">
+                <label for="listing-description">Description:</label>
+                <textarea id="listing-description" required rows="4" placeholder="Item description: Color, brand, any features!"></textarea>
             </div>
 
-            <div style="display: flex; gap: 10px;">
-                <button type="button" onclick="location.href='/dashboard'" style="background: #ccc; border: none; width: 100px;">Cancel</button>
-                <button type="submit" style="background: #4CAF50; color: white; border: none; width: 100px;">Submit</button>
+            <div class="form-buttons">
+                <button type="button" class="btn-form btn-cancel-form" onclick="location.href='/dashboard'">Cancel</button>
+                <button type="submit" class="btn-form btn-submit-form">Submit</button>
             </div>
         </div>
 
-<div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
-            <div>
-                <label>Title:</label><br>
-                <input type="text" id="listing-title" required placeholder="e.g. Water Bottle" style="width: 100%;">
+        <div class="form-right-column">
+            <div class="form-group">
+                <label for="listing-title">Title:</label>
+                <input type="text" id="listing-title" required placeholder="e.g. Water Bottle">
             </div>
 
-            <div style="border: 2px dashed #aaa; flex: 1; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-direction: column; background: #fafafa; cursor: pointer; position: relative;">
-                <span style="font-size: 20px; color: #888;" id="upload-text">Click to Upload</span>
-                <input type="file" id="listing-image" name="image" accept="image/*" style="opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer;" onchange="document.getElementById('upload-text').innerText = this.files[0] ? this.files[0].name : 'Click to Upload'">
+            <div class="image-upload-area" id="image-upload-area">
+                <img id="image-preview" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" alt="Image preview">
+                <span class="image-upload-text" id="upload-text">Click to Upload</span>
+                <input type="file" id="listing-image" name="image" accept="image/*" class="image-upload-input" title="Select image file">
             </div>
         </div>
     </form>

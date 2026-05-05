@@ -48,3 +48,80 @@ button {
 button:hover {
     background-color: #0b5ed7;
 }
+
+/* Auth Page Title */
+h2 {
+    font-size: 50px;
+}
+
+h2 img {
+    height: 70px;
+    vertical-align: middle;
+    margin: 0 -20px;
+}
+
+h2 img[alt] {
+    display: block;
+}
+
+/* Auth Form Container */
+.auth-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 350px;
+    text-align: center;
+}
+
+.auth-container h3 {
+    font-size: 25px;
+    margin-top: 0;
+}
+
+.auth-error {
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.auth-description {
+    font-size: 14px;
+    color: #555;
+}
+
+.auth-buttons {
+    margin-top: 20px;
+}
+
+.auth-button {
+    font-size: 18px;
+    width: 200px;
+}
+
+.auth-signin-button {
+    font-size: 20px;
+}
+
+.auth-links {
+    margin-top: 20px;
+}
+
+.auth-link {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #0d6efd;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}

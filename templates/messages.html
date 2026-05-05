@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+    <link rel="stylesheet" href="static/app.css">
+    <link rel="stylesheet" href="static/messages.css">
+</head>
+<body class="app-layout">
+
+    <div class="messages-header">
+        <a href="/dashboard" class="back-link-messages">&larr; Back</a>
+        <h1>Messages</h1>
+    </div>
+
+    <div class="messenger-wrapper">
+
+        <!-- LEFT: Inbox -->
+        <aside class="inbox-list">
+
+            <div class="inbox-card active" onclick="loadChat('alex')">
+                <div class="inbox-header">
+                    <strong>Alex Rivera</strong>
+                    <span class="status-dot"></span>
+                </div>
+                <p class="preview">Listing: Purple Water Bottle</p>
+            </div>
+
+            <div class="inbox-card" onclick="loadChat('jordan')">
+                <div class="inbox-header">
+                    <strong>Jordan Smith</strong>
+                </div>
+                <p class="preview">Listing: Calculus Textbook</p>
+            </div>
+
+            <div class="inbox-card demo-highlight" onclick="loadChat('live')">
+                <div class="inbox-header">
+                    <strong>Live Demo User</strong>
+                    <span class="new-badge">New</span>
+                </div>
+                <p class="preview">Waiting for message...</p>
+            </div>
+
+        </aside>
+
+        <!-- RIGHT: Chat -->
+        <section class="chat-main">
+
+            <div class="chat-display" id="chat-box">
+                <p class="empty-chat-text">Select a conversation to start chatting...</p>
+            </div>
+
+            <form class="message-input" onsubmit="return handleSend(event)">
+                <input type="text" id="user-input" placeholder="Write a reply...">
+                <button type="submit">Send</button>
+            </form>
+
+        </section>
+
+    </div>
+
+    <script src="static/timeformat.js"></script>
+    <script src="static/messages.js"></script>
+</body>
+</html>

@@ -1,80 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listing Details - Lost & Found</title>
     <link rel="stylesheet" href="static/app.css">
 </head>
-<body class="app-layout" style="padding: 30px;">
+<body class="app-layout listing-page-body">
 
-    <a href="/dashboard" style="text-decoration: none; font-size: 20px; color: #333;">&larr; Back to Dashboard</a>
+    <a href="/dashboard" class="listing-back-link">&larr; Back to Dashboard</a>
 
-    <div style="max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <div class="listing-container">
         
-        <h1 style="text-align: center; font-family: serif; font-size: 40px; margin-top: 0;">Water Bottle</h1>
+        <h1 class="listing-title" id="listing-title">{% if post %}{{ post.item_name }}{% else %}Water Bottle{% endif %}</h1>
         
-        <div style="width: 100%; height: 300px; background: #eaeaea; border-radius: 15px; display: flex; justify-content: center; align-items: center; color: #888; font-size: 24px; margin-bottom: 20px;">
-            Picture
+        <div class="listing-image" id="listing-image-container">
+            {% if post and post.image_url %}
+                <img id="listing-image" src="{{ url_for('static', filename=post.image_url) }}" alt="Listing item image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;">
+            {% else %}
+                <img id="listing-image" src="" alt="Listing item image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px; display: none;">
+                <span id="no-image-text">Picture</span>
+            {% endif %}
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <div style="background: #e0ecf8; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 20px;">
-                    UI
-                </div>
-                <div>
-                    <h3 style="margin: 0;">Detailed description, location, and date</h3>
-                    <p style="color: #666; margin: 5px 0;">Found at Buley Library on 10/24/2026. Blue Hydroflask, has a small dent on the bottom.</p>
+        <div class="listing-content">
+            <div class="listing-info-group">
+                <div class="listing-avatar">{{ post.author.account.name[:2] if post and post.author else 'UI' }}</div>
+                <div class="listing-details">
+                    <h3 id="listing-location-label">{% if post %}{{ post.location }}{% else %}Detailed description{% endif %}</h3>
+                    <p id="listing-description">{% if post %}{{ post.description }}{% else %}Found at Buley Library on 10/24/2026. Purple stainless steel waterbottle with a small dent on the bottom.{% endif %}</p>
+                    <span class="listing-timestamp" id="listing-timestamp" data-timestamp="{% if post %}{{ post.post_date.isoformat() }}{% endif %}"></span>
                 </div>
             </div>
 
-            <div style="display: flex; gap: 10px; flex-direction: column;">
-                <button id="connect-btn" style="background: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                    Connect &#128172;
-                </button>
-                <button id="report-btn" style="background: #ff4c4c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-                    Report
-                </button>
+            <div class="listing-actions">
+                <button id="connect-btn" class="btn-connect">Connect &#128172;</button>
+                <button id="report-btn" class="btn-report">Report</button>
             </div>
         </div>
 
-        <div id="chat-thread" style="display: none; margin-top: 30px; border: 1px solid #ddd; border-radius: 10px; padding: 15px;">
-            <h4 style="margin-top: 0;">Thread message</h4>
-            <div style="background: #f1f0f0; padding: 10px; border-radius: 10px; margin-bottom: 10px; width: fit-content; max-width: 80%;">
-                Hey, that's my water bottle!
-            </div>
-            <div style="background: #2196F3; color: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; width: fit-content; max-width: 80%; margin-left: auto;">
-                Great, where should we meet?
-            </div>
+        <div id="chat-thread" class="chat-thread">
+            <h4>Thread message</h4>
+            <div class="chat-message received">Hey, that's my water bottle!</div>
+            <div class="chat-message sent">Great, where should we meet?</div>
             
-            <form id="chat-form" style="display: flex; gap: 10px; margin-top: 20px;">
-                <input type="text" id="chat-input" placeholder="Type a message..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                <button type="submit" style="margin: 0; background: #4CAF50; color: white; border: none; border-radius: 5px;">Send</button>
+            <form id="chat-form" class="chat-form">
+                <input type="text" id="chat-input" placeholder="Type a message...">
+                <button type="submit">Send</button>
             </form>
         </div>
     </div>
 
-    <div id="report-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
-        <div style="background: white; padding: 30px; border-radius: 15px; width: 350px;">
+    <div id="report-modal" class="report-modal">
+        <div class="report-modal-content">
             <h3>What's wrong with this listing?</h3>
             <form id="report-form">
-                <label style="display: block; margin-bottom: 10px;">
+                <label class="report-radio-label">
                     <input type="radio" name="report-reason" value="False Claim" required> False Claim
                 </label>
-                <label style="display: block; margin-bottom: 10px;">
+                <label class="report-radio-label">
                     <input type="radio" name="report-reason" value="Inappropriate Content"> Inappropriate Content
                 </label>
-                <label style="display: block; margin-bottom: 20px;">
+                <label class="report-radio-label">
                     <input type="radio" name="report-reason" value="Personal Information"> Personal Information
                 </label>
                 
-                <div style="display: flex; gap: 10px; justify-content: space-between;">
-                    <button type="button" id="cancel-report-btn" style="background: #ccc; border: none; width: 48%;">Cancel</button>
-                    <button type="submit" style="background: #d9534f; color: white; border: none; width: 48%;">Submit</button>
+                <div class="report-modal-buttons">
+                    <button type="button" id="cancel-report-btn" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-submit-report">Submit</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <script src="static/timeformat.js"></script>
     <script src="static/listing_info.js"></script>
 </body>
 </html>

@@ -9,6 +9,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 //  Create Listing Logic 
 document.addEventListener('DOMContentLoaded', () => {
+    // IMAGE PREVIEW
+    const imageInput = document.getElementById('listing-image');
+    const imagePreview = document.getElementById('image-preview');
+    const uploadText = document.getElementById('upload-text');
+    
+    if (imageInput) {
+        imageInput.addEventListener('change', (event) => {
+            const file = event.target.files ? event.target.files[0] : null;
+            
+            if (file) {
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (imagePreview && e.target) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        uploadText.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Hide preview if no file selected
+                if (imagePreview) {
+                    imagePreview.style.display = 'none';
+                    uploadText.style.display = 'block';
+                    imagePreview.src = '';
+                }
+            }
+        });
+    }
+    
     const createForm = document.getElementById('create-listing-form');
     if (createForm) {
         createForm.addEventListener('submit', (event) => __awaiter(this, void 0, void 0, function* () {

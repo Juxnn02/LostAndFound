@@ -9,6 +9,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportModal = document.getElementById('report-modal');
     const cancelReportBtn = document.getElementById('cancel-report-btn');
     const reportForm = document.getElementById('report-form');
+    
+    // FORMAT LISTING TIMESTAMP
+    const listingTimestamp = document.getElementById('listing-timestamp');
+    if (listingTimestamp) {
+        const isoTimestamp = listingTimestamp.getAttribute('data-timestamp');
+        if (isoTimestamp) {
+            listingTimestamp.textContent = formatTimeAgo(isoTimestamp);
+            // Update timestamp every 60 seconds
+            setInterval(() => {
+                listingTimestamp.textContent = formatTimeAgo(isoTimestamp);
+            }, 60000);
+        }
+    }
+    
     // Extract post ID from URL (e.g., /listing-info?id=5)
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('id') || '1';
@@ -42,7 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     messageDiv.style.color = 'black';
                     messageDiv.style.marginLeft = '0'; // Align to left
                 }
-                messageDiv.textContent = msg.text;
+                // Create message content with timestamp
+                const timestamp = msg.timestamp ? formatTimeAgo(msg.timestamp) : '';
+                messageDiv.innerHTML = `<p style="margin: 0;">${msg.text}</p><span style="font-size: 11px; opacity: 0.7;">${timestamp}</span>`;
                 chatThread.insertBefore(messageDiv, chatForm);
             });
         })
@@ -52,8 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (connectBtn && chatThread) {
         connectBtn.addEventListener('click', () => {
             const isHidden = chatThread.style.display === 'none';
-            chatThread.style.display = isHidden ? 'block' : 'none';
-            if (isHidden) {
+            chatThread.classList.toggle('active');
+            if (!isHidden) {
                 loadMessages();
             }
         });
@@ -91,12 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Report Modal Logic ---
     if (reportBtn && reportModal) {
         reportBtn.addEventListener('click', () => {
-            reportModal.style.display = 'flex'; // Show modal overlay
+            reportModal.classList.add('active'); // Show modal overlay
         });
     }
     if (cancelReportBtn && reportModal) {
         cancelReportBtn.addEventListener('click', () => {
-            reportModal.style.display = 'none'; // Hide modal
+            reportModal.classList.remove('active'); // Hide modal
         });
     }
     if (reportForm && reportModal) {
@@ -105,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(reportForm);
             const reason = formData.get('report-reason');
             alert(`Report submitted for reason: ${reason}. An admin will review this listing.`);
-            reportModal.style.display = 'none'; // Close modal after submission
+            reportModal.classList.remove('active'); // Close modal after submission
         });
     }
 });

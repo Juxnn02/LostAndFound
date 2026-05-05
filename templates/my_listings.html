@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings</title>
+    <link rel="stylesheet" href="static/app.css">
+    <link rel="stylesheet" href="static/my_listings.css">
+</head>
+<body class="app-layout">
+
+    <div class="messages-header">
+        <a href="/dashboard" class="back-link-messages">&larr; Back</a>
+        <h1>My Listings</h1>
+    </div>
+
+     <div id="listing-count">Total Listings: 8</div>
+
+
+    <main class="listings-split-view">
+        <!-- Active Section -->
+        <section class="listing-column">
+            <h2>Active Listings</h2>
+                <div class="column-grid">
+    {% for post in posts %}
+    <div class="listing-card">
+        <div class="listing-info">
+            <strong>{{ post.item_name }}</strong>
+            <p>{{ post.location }}</p>
+        </div>
+        <div class="listing-actions">
+        <button class="icon-btn" onclick="editListing('{{ post.id }}')">✏️</button>            
+        <button class="icon-btn delete-btn" onclick="deleteListing('{{ post.id }}')">🗑️</button>        </div>
+    </div>
+    {% else %}
+        <p>You haven't created any listings yet.</p>
+    {% endfor %}
+</div>
+        </section>
+
+        <!-- Resolved Section -->
+        <section class="listing-column resolved-zone">
+            <h2>Resolved</h2>
+            <div class="column-grid">
+                <div class="listing-card"><strong>Test 5</strong></div>
+                <div class="listing-card"><strong>Test 6</strong></div>
+                <div class="listing-card"><strong>Test 7</strong></div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="static/my_listings.js"></script>
+</body>
+</html>  

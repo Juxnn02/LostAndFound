@@ -1,31 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="static/auth.css">
 </head>
 <body>
 
-<h2 style="font-size: 50px;">
+<h2>
     Lost 
-    <img src="static/magnify glass.png" style="height: 70px; vertical-align: middle; margin: 0 -20px;"> 
+    <img src="static/magnify glass.png" alt="Magnifying glass icon"> 
     Found
 </h2>
 
-<div style="background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 350px; text-align: center;">
-    <h3 style="font-size: 25px; margin-top: 0;">Create your account!</h3>
+<div class="auth-container">
+    <h3>Create your account!</h3>
     
-    <p id="register-error" style="color: red; font-size: 14px; font-weight: bold;"></p>
+    <p id="register-error" class="auth-error"></p>
 
     <form onsubmit="handleRegisterSubmit(event)">
         <input type="text" id="register-name" placeholder="Full Name" required><br><br>
         <input type="email" id="register-email" placeholder="School Email" required><br><br>
         <input type="password" id="register-password" placeholder="Password" required><br><br>
         <input type="password" id="register-confirm" placeholder="Confirm Password" required><br><br>
-        <button style="font-size: 20px;" type="submit">Create Account</button>
+        <button class="auth-signin-button" type="submit">Create Account</button>
     </form>
 
-    <p style="margin-top: 20px;">
+    <p class="auth-links">
         <a href="/">Already have an account? Log in</a>
     </p>
 </div>
