@@ -60,9 +60,10 @@
                 <input type="text" id="listing-title" required placeholder="e.g. Water Bottle">
             </div>
 
-            <div class="image-upload-area">
+            <div class="image-upload-area" id="image-upload-area">
+                <img id="image-preview" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" alt="Image preview">
                 <span class="image-upload-text" id="upload-text">Click to Upload</span>
-                <input type="file" id="listing-image" name="image" accept="image/*" class="image-upload-input" title="Select image file" onchange="document.getElementById('upload-text').innerText = this.files[0] ? this.files[0].name : 'Click to Upload'">
+                <input type="file" id="listing-image" name="image" accept="image/*" class="image-upload-input" title="Select image file">
             </div>
         </div>
     </form>

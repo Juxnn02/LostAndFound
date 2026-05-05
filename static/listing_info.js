@@ -9,6 +9,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportModal = document.getElementById('report-modal');
     const cancelReportBtn = document.getElementById('cancel-report-btn');
     const reportForm = document.getElementById('report-form');
+    
+    // FORMAT LISTING TIMESTAMP
+    const listingTimestamp = document.getElementById('listing-timestamp');
+    if (listingTimestamp) {
+        const isoTimestamp = listingTimestamp.getAttribute('data-timestamp');
+        if (isoTimestamp) {
+            listingTimestamp.textContent = formatTimeAgo(isoTimestamp);
+            // Update timestamp every 60 seconds
+            setInterval(() => {
+                listingTimestamp.textContent = formatTimeAgo(isoTimestamp);
+            }, 60000);
+        }
+    }
+    
     // Extract post ID from URL (e.g., /listing-info?id=5)
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('id') || '1';

@@ -12,17 +12,24 @@
 
     <div class="listing-container">
         
-        <h1 class="listing-title">Water Bottle</h1>
+        <h1 class="listing-title" id="listing-title">{% if post %}{{ post.item_name }}{% else %}Water Bottle{% endif %}</h1>
         
-        <div class="listing-image">Picture</div>
+        <div class="listing-image" id="listing-image-container">
+            {% if post and post.image_url %}
+                <img id="listing-image" src="{{ url_for('static', filename=post.image_url) }}" alt="Listing item image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;">
+            {% else %}
+                <img id="listing-image" src="" alt="Listing item image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px; display: none;">
+                <span id="no-image-text">Picture</span>
+            {% endif %}
+        </div>
 
         <div class="listing-content">
             <div class="listing-info-group">
-                <div class="listing-avatar">UI</div>
+                <div class="listing-avatar">{{ post.author.account.name[:2] if post and post.author else 'UI' }}</div>
                 <div class="listing-details">
-                    <h3>Detailed description</h3>
-                    <p>Found at Buley Library on 10/24/2026. Purple stainless steel waterbottle with a small dent on the bottom.</p>
-                    <span class="listing-timestamp" id="listing-timestamp"></span>
+                    <h3 id="listing-location-label">{% if post %}{{ post.location }}{% else %}Detailed description{% endif %}</h3>
+                    <p id="listing-description">{% if post %}{{ post.description }}{% else %}Found at Buley Library on 10/24/2026. Purple stainless steel waterbottle with a small dent on the bottom.{% endif %}</p>
+                    <span class="listing-timestamp" id="listing-timestamp" data-timestamp="{% if post %}{{ post.post_date.isoformat() }}{% endif %}"></span>
                 </div>
             </div>
 

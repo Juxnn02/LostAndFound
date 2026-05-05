@@ -50,7 +50,11 @@ def dashboard():
 
 @app.route("/listing-info")
 def listing_info():
-    return render_template("listing_info.html")
+    post_id = request.args.get('id', 1, type=int)
+    post = Post.query.get(post_id)
+    if not post:
+        return render_template("listing_info.html", post=None)
+    return render_template("listing_info.html", post=post)
 
 @app.route("/createlisting")
 def create_listing():
