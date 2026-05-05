@@ -1,12 +1,13 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import os
 import json
+import uuid # For unique image names
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from models import db, Account, Post, Message  
-
+from werkzeug.security import generate_password_hash, check_password_hash
+from models import db, Account, Post, Message, User
 app = Flask(__name__)
-
+app.secret_key = 'super_secret_key' # Needed to keep users logged in
 # Custom JSON Encoder to handle datetime objects
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -62,11 +63,31 @@ def create_listing():
 
 @app.route("/my_listings")
 def my_listings():
-    return render_template("my_listings.html")
+    # Redirect to login if not logged in
+    if 'user_id' not in session:
+        return redirect("/")
+        
+    current_user_id = session['user_id']
+    
+    # Get only the posts made by this user
+    user_posts = Post.query.filter_by(user_id=current_user_id).order_by(Post.post_date.desc()).all()
+    
+    return render_template("my_listings.html", posts=user_posts)
 
 @app.route("/edit_listing")
 def edit_listing():
-    return render_template("edit_listing.html")
+    if 'user_id' not in session:
+        return redirect("/")
+        
+    # Get the ID from the URL (e.g., /edit_listing?edit=5)
+    post_id = request.args.get('edit', type=int)
+    post_to_edit = Post.query.get(post_id)
+    
+    # Security check: Make sure this post belongs to the logged-in user
+    if not post_to_edit or post_to_edit.user_id != session['user_id']:
+        return redirect("/my_listings")
+        
+    return render_template("edit_listing.html", post=post_to_edit)
 
 @app.route("/messages")
 def messages():
@@ -80,45 +101,79 @@ def messages():
 
 @app.route("/api/register", methods=["POST"])
 def api_register():
-    # 1. Get the data sent from the JavaScript frontend
     data = request.get_json()
     
-    # 2. Check if the email already exists in the database
     existing_user = Account.query.filter_by(email=data['email']).first()
     if existing_user:
         return jsonify({"success": False, "message": "Email already registered."})
         
-    # 3. Create a new Account object using the data from the form
+    hashed_password = generate_password_hash(data['password'])
+    
+    # 1. Create the Account 
     new_account = Account(
         name=data['name'],
         email=data['email'],
-        password=data['password'] 
+        password=hashed_password 
     )
     
-    # 4. Save it to the database!
     try:
         db.session.add(new_account)
+        db.session.commit() # Save to generate the Account ID
+        
+        # 2. Automatically create the linked User profile
+        new_user = User(
+            account_id=new_account.id,
+            username=data['name']
+        )
+        db.session.add(new_user)
         db.session.commit()
+        
         return jsonify({"success": True, "message": "Account created!"})
     except Exception as e:
-        db.session.rollback() # Undo if something goes wrong
+        db.session.rollback()
         return jsonify({"success": False, "message": f"Server Error: {str(e)}"})
+
+
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json()
+    
+    user_account = Account.query.filter_by(email=data['email']).first()
+    
+    # Check if account exists AND passwords match
+    if user_account and check_password_hash(user_account.password, data['password']):
+        
+        # Find the linked User profile 
+        user_profile = User.query.filter_by(account_id=user_account.id).first()
+        
+        if user_profile:
+            session['user_id'] = user_profile.id # Save the USER ID so "My Listings" works!
+            return jsonify({"success": True})
+        else:
+            return jsonify({"success": False, "message": "User profile missing."})
+    else:
+        return jsonify({"success": False, "message": "Invalid email or password"})
 
 # New API Route for Creating Listings with Images
 @app.route("/api/listings", methods=["POST"])
 def api_create_listing():
-    # Note: In a real app, grab user_id from the logged-in session. 
-    # Hardcoding to 1 for this demonstration.
-    user_id = 1 
+    # Make sure they are logged in first
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Please log in first."})
+        
+    user_id = session['user_id'] # Get ID from the logged-in session
     
     image_url = None
     if 'image' in request.files:
         file = request.files['image']
         if file.filename != '':
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # Create a unique random name using uuid
+            extension = file.filename.rsplit('.', 1)[1].lower()
+            unique_name = str(uuid.uuid4()) + "." + extension
+            
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_name)
             file.save(filepath)
-            image_url = f"images/{filename}"
+            image_url = f"images/{unique_name}"
 
     new_post = Post(
         user_id=user_id,
@@ -158,6 +213,7 @@ def api_messages(post_id):
         "sender_id": m.sender_id,
         "timestamp": m.timestamp.isoformat() if m.timestamp else None
     } for m in messages])
+
 
 
 if __name__ == "__main__":

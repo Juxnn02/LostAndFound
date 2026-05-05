@@ -21,24 +21,21 @@
         <!-- Active Section -->
         <section class="listing-column">
             <h2>Active Listings</h2>
-            <div class="column-grid">
-                <!-- Card 1 -->
-                <div class="listing-card">
-                    <div class="listing-info">
-                        <strong>Purple Water Bottle</strong>
-                        <p>Buley Library</p>
-                    </div>
-                    <div class="listing-actions">
-                        <button class="icon-btn" onclick="editListing(1)">✏️</button>
-                        <button class="icon-btn delete-btn" onclick="deleteListing(1)">🗑️</button>
-                    </div>
-                </div>
-                <!-- Test Cards -->
-                <div class="listing-card"><strong>Test 1</strong></div>
-                <div class="listing-card"><strong>Test 2</strong></div>
-                <div class="listing-card"><strong>Test 3</strong></div>
-                <div class="listing-card"><strong>Test 4</strong></div>
-            </div>
+                <div class="column-grid">
+    {% for post in posts %}
+    <div class="listing-card">
+        <div class="listing-info">
+            <strong>{{ post.item_name }}</strong>
+            <p>{{ post.location }}</p>
+        </div>
+        <div class="listing-actions">
+        <button class="icon-btn" onclick="editListing('{{ post.id }}')">✏️</button>            
+        <button class="icon-btn delete-btn" onclick="deleteListing('{{ post.id }}')">🗑️</button>        </div>
+    </div>
+    {% else %}
+        <p>You haven't created any listings yet.</p>
+    {% endfor %}
+</div>
         </section>
 
         <!-- Resolved Section -->
