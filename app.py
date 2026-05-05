@@ -16,7 +16,7 @@ app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = "josephofei24@gmail.com"
 
 # Your Gmail App Password (16 characters, no spaces)
-app.config["MAIL_PASSWORD"] = "fxmknkchgiyckmjz"
+app.config["MAIL_PASSWORD"] = "yupdaoscykecqymb"
 
 # Sender email
 app.config["MAIL_DEFAULT_SENDER"] = "josephofei24@gmail.com"
