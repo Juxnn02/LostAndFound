@@ -4,8 +4,9 @@ import json
 import uuid # For unique image names
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, Account, Post, Message, User
+from models import db, Account, Post, Message
+import random
+
 app = Flask(__name__)
 app.secret_key = 'super_secret_key' # Needed to keep users logged in
 # Custom JSON Encoder to handle datetime objects
@@ -16,6 +17,22 @@ class DateTimeEncoder(json.JSONEncoder):
         return super().default(obj)
 
 app.json_encoder = DateTimeEncoder
+
+
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+
+# Gmail account used by the app to SEND emails
+app.config["MAIL_USERNAME"] = "josephofei24@gmail.com"
+
+# Your Gmail App Password (16 characters, no spaces)
+app.config["MAIL_PASSWORD"] = "fxmknkchgiyckmjz"
+
+# Sender email
+app.config["MAIL_DEFAULT_SENDER"] = "josephofei24@gmail.com"
+
+mail = Mail(app)
 
 # Configuration for image uploads
 app.config['UPLOAD_FOLDER'] = 'static/images'
@@ -35,13 +52,16 @@ db.init_app(app)
 def login():
     return render_template("login.html")
 
+
 @app.route("/register")
 def register():
     return render_template("register.html")
 
+
 @app.route("/forgot-password")
 def forgot_password():
     return render_template("forgotpassword.html")
+
 
 @app.route("/dashboard")
 def dashboard():
@@ -92,7 +112,6 @@ def edit_listing():
 @app.route("/messages")
 def messages():
     return render_template("messages.html")
-
 
 
 
@@ -155,6 +174,8 @@ def api_login():
         return jsonify({"success": False, "message": "Invalid email or password"})
 
 # New API Route for Creating Listings with Images
+
+
 @app.route("/api/listings", methods=["POST"])
 def api_create_listing():
     # Make sure they are logged in first
@@ -183,7 +204,7 @@ def api_create_listing():
         location=request.form.get('location'),
         image_url=image_url
     )
-    
+
     try:
         db.session.add(new_post)
         db.session.commit()
@@ -193,6 +214,8 @@ def api_create_listing():
         return jsonify({"success": False, "message": str(e)})
 
 # Real-time Messaging API scaffolding
+
+
 @app.route("/api/messages/<int:post_id>", methods=["GET", "POST"])
 def api_messages(post_id):
     if request.method == "POST":
@@ -205,7 +228,7 @@ def api_messages(post_id):
         db.session.add(new_msg)
         db.session.commit()
         return jsonify({"success": True})
-    
+
     # GET method
     messages = Message.query.all() # In production, filter by sender_id/receiver_id
     return jsonify([{
@@ -214,6 +237,109 @@ def api_messages(post_id):
         "timestamp": m.timestamp.isoformat() if m.timestamp else None
     } for m in messages])
 
+
+
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json()
+
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"success": False, "message": "Email and password are required."})
+
+    if not email.endswith("@southernct.edu"):
+        return jsonify({"success": False, "message": "Please use your SouthernCT email."})
+
+    user = Account.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({"success": False, "message": "Account not found."})
+
+    if user.password != password:
+        return jsonify({"success": False, "message": "Incorrect password."})
+
+    return jsonify({
+        "success": True,
+        "message": "Login successful!",
+        "user_id": user.id,
+        "name": user.name
+    })
+
+
+reset_codes = {}
+
+
+reset_codes = {}
+
+
+@app.route("/api/forgot-password", methods=["POST"])
+def api_forgot_password():
+    data = request.get_json()
+    email = data.get("email")
+
+    if not email or not email.endswith("@southernct.edu"):
+        return jsonify({"success": False, "message": "Please enter a valid SouthernCT email."})
+
+    user = Account.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({"success": False, "message": "Account not found."})
+
+    code = str(random.randint(100000, 999999))
+    reset_codes[email] = code
+
+    try:
+        msg = MailMessage(
+            subject="Lost and Found Password Reset Code",
+            recipients=[email],
+            body=f"Your password reset verification code is: {code}"
+        )
+        mail.send(msg)
+
+        return jsonify({
+            "success": True,
+            "message": "Verification code sent to your email."
+        })
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Email failed to send: {str(e)}"
+        })
+
+
+@app.route("/api/verify-reset-code", methods=["POST"])
+def api_verify_reset_code():
+    data = request.get_json()
+    email = data.get("email")
+    code = data.get("code")
+
+    if reset_codes.get(email) != code:
+        return jsonify({"success": False, "message": "Invalid verification code."})
+
+    return jsonify({"success": True, "message": "Code verified."})
+
+
+@app.route("/api/reset-password", methods=["POST"])
+def api_reset_password():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    user = Account.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({"success": False, "message": "Account not found."})
+
+    user.password = password
+    db.session.commit()
+
+    if email in reset_codes:
+        del reset_codes[email]
+
+    return jsonify({"success": True, "message": "Password updated."})
 
 
 if __name__ == "__main__":
