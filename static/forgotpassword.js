@@ -1,47 +1,95 @@
-//  Forgot Password Logic 
+let resetEmail = "";
+
 function handleForgotSubmit(event) {
     event.preventDefault();
-    const emailInput = document.getElementById('forgot-email');
-    const errorDiv = document.getElementById('forgot-error');
-    if (!emailInput || !errorDiv)
-        return;
-    const email = emailInput.value;
-    if (!validateSouthernEmail(email)) {
-        errorDiv.textContent = "Please enter a valid @southernct.edu email.";
-        return;
-    }
-    // If valid, hide Step 1 and show Step 2 (Verification Code)
-    errorDiv.textContent = "";
-    const step1 = document.getElementById('forgot-step-1');
-    const step2 = document.getElementById('forgot-step-2');
-    if (step1)
-        step1.style.display = 'none';
-    if (step2)
-        step2.style.display = 'block';
+
+    const email = document.getElementById("forgot-email").value;
+    const errorDiv = document.getElementById("forgot-error");
+
+    fetch("/api/forgot-password", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email: email })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resetEmail = email;
+                errorDiv.style.color = "green";
+                errorDiv.textContent = data.message;
+
+                document.getElementById("forgot-step-1").style.display = "none";
+                document.getElementById("forgot-step-2").style.display = "block";
+
+
+            } else {
+                errorDiv.style.color = "red";
+                errorDiv.textContent = data.message;
+            }
+        });
 }
+
 function handleForgotVerify(event) {
     event.preventDefault();
-    // Hide Step 2, Show Step 3 (New Password)
-    const step2 = document.getElementById('forgot-step-2');
-    const step3 = document.getElementById('forgot-step-3');
-    if (step2)
-        step2.style.display = 'none';
-    if (step3)
-        step3.style.display = 'block';
+
+    const code = document.getElementById("verification-code").value;
+    const errorDiv = document.getElementById("forgot-error");
+
+    fetch("/api/verify-reset-code", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: resetEmail,
+            code: code
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                errorDiv.textContent = "";
+
+                document.getElementById("forgot-step-2").style.display = "none";
+                document.getElementById("forgot-step-3").style.display = "block";
+            } else {
+                errorDiv.style.color = "red";
+                errorDiv.textContent = data.message;
+            }
+        });
 }
+
 function handleResetPassword(event) {
     event.preventDefault();
-    const passwordInput = document.getElementById('new-password');
-    const confirmInput = document.getElementById('new-confirm');
-    const errorDiv = document.getElementById('reset-error');
-    if (!passwordInput || !confirmInput || !errorDiv)
-        return;
-    const password = passwordInput.value;
-    const confirm = confirmInput.value;
+
+    const password = document.getElementById("new-password").value;
+    const confirm = document.getElementById("new-confirm").value;
+    const errorDiv = document.getElementById("reset-error");
+
     if (password !== confirm) {
         errorDiv.textContent = "Passwords do not match.";
         return;
     }
-    alert("Password reset successfully!");
-    window.location.href = "/"; // Redirect to login
+
+    fetch("/api/reset-password", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: resetEmail,
+            password: password
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Password reset successfully!");
+                window.location.href = "/";
+            } else {
+                errorDiv.textContent = data.message;
+            }
+        });
 }

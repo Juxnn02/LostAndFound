@@ -17,9 +17,9 @@
     
     <p id="login-error" style="color: red; font-size: 14px; font-weight: bold;"></p>
 
-    <form action="/dashboard" onsubmit="handleLoginSubmit(event)">
+    <form onsubmit="handleLoginSubmit(event)">
         <input type="email" id="login-email" placeholder="School Email" required><br><br>
-        <input type="password" placeholder="Password" required><br><br>
+        <input type="password" id="login-password" placeholder="Password" required><br><br>
         <button style="font-size: 20px;" type="submit">Sign in</button>
     </form>
 
