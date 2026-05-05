@@ -19,12 +19,12 @@
     
     <p id="login-error" class="auth-error"></p>
 
-    <form action="/dashboard" onsubmit="handleLoginSubmit(event)">
+    <form onsubmit="handleLoginSubmit(event)">
         <input type="email" id="login-email" placeholder="School Email" required><br><br>
-        <input type="password" placeholder="Password" required><br><br>
+        <input type="password" id="login-password" placeholder="Password" required><br><br>
         <button class="auth-signin-button" type="submit">Sign in</button>
     </form>
-
+    
     <p class="auth-links">
         <a href="/register">Don't have an account?</a> <br>
         <a href="/forgot-password" class="auth-link">Forgot Password?</a>

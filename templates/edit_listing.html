@@ -12,22 +12,23 @@
         <h1>Edit Listing</h1>
     </div>
 
-    <form class="form-container" id="edit-listing-form">
+<form class="form-container" id="edit-listing-form">
         <div class="form-content">
+            
             <div class="form-group">
                 <label for="listing-date">Date:</label>
-                <input type="date" id="listing-date" required>
+                <input type="date" id="listing-date" value="{{ post.post_date.strftime('%Y-%m-%d') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="listing-category">Category:</label>
                 <select id="listing-category" required title="Select the item category">
                     <option value="">-Select-</option>
-                    <option value="Accessories">Accessories</option>
-                    <option value="Apparel">Apparel</option>
-                    <option value="Books">Books</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Other">Other</option>
+                    <option value="Accessories" {% if post.category == 'Accessories' %}selected{% endif %}>Accessories</option>
+                    <option value="Apparel" {% if post.category == 'Apparel' %}selected{% endif %}>Apparel</option>
+                    <option value="Books" {% if post.category == 'Books' %}selected{% endif %}>Books</option>
+                    <option value="Electronics" {% if post.category == 'Electronics' %}selected{% endif %}>Electronics</option>
+                    <option value="Other" {% if post.category == 'Other' %}selected{% endif %}>Other</option>
                 </select>
             </div>
 
@@ -35,37 +36,37 @@
                 <label for="listing-location">Found at / Lost at:</label>
                 <select id="listing-location" required title="Select the location where item was found or lost">
                     <option value="">-Select-</option>
-                    <option value="Buley Library">Buley Library</option>
-                    <option value="Engleman Hall">Engleman Hall</option>
-                    <option value="Jennings Hall">Jennings Hall</option>
-                    <option value="Morrill Hall">Morrill Hall</option>
-                    <option value="Student Center">Student Center</option>
+                    <option value="Buley Library" {% if post.location == 'Buley Library' %}selected{% endif %}>Buley Library</option>
+                    <option value="Engleman Hall" {% if post.location == 'Engleman Hall' %}selected{% endif %}>Engleman Hall</option>
+                    <option value="Jennings Hall" {% if post.location == 'Jennings Hall' %}selected{% endif %}>Jennings Hall</option>
+                    <option value="Morrill Hall" {% if post.location == 'Morrill Hall' %}selected{% endif %}>Morrill Hall</option>
+                    <option value="Student Center" {% if post.location == 'Student Center' %}selected{% endif %}>Student Center</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="listing-description">Description:</label>
-                <textarea id="listing-description" required rows="4" placeholder="Item description: Color, brand, any features!"></textarea>
+                <textarea id="listing-description" required rows="4">{{ post.description }}</textarea>
             </div>
 
             <div class="form-buttons">
-                <!-- Cancel goes back to my_listings -->
                 <button type="button" class="btn-form btn-cancel-form" onclick="location.href='/my_listings'">Cancel</button>
-                <!-- Button text updated to Save -->
                 <button type="submit" class="btn-form btn-save">Save Changes</button>
             </div>
         </div>
 
         <div class="form-right-column">
+            
             <div class="form-group">
                 <label for="listing-title">Title:</label>
-                <input type="text" id="listing-title" required placeholder="e.g. Water Bottle">
+                <input type="text" id="listing-title" value="{{ post.item_name }}" required>
             </div>
 
             <div class="image-upload-area">
                 <span class="image-upload-text">Update Image</span>
                 <input type="file" id="listing-image" accept="image/*" class="image-upload-input" title="Select image file">
             </div>
+            
         </div>
     </form>
 </body>
