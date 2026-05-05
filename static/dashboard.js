@@ -5,6 +5,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.card');
     const noResults = document.getElementById('no-results');
 
+    // FORMAT TIMESTAMPS
+    function updateTimestamps() {
+        document.querySelectorAll('.post-time').forEach(elem => {
+            const timestamp = elem.getAttribute('data-timestamp');
+            if (timestamp) {
+                elem.textContent = 'posted ' + formatTimeAgo(timestamp);
+            }
+        });
+    }
+
+    // Update timestamps immediately and every minute
+    updateTimestamps();
+    setInterval(updateTimestamps, 60000);
+
     // CLOSE DROPDOWN OUTSIDE CLICK
     window.addEventListener('click', (e) => {
         const menu = document.getElementById("user-dropdown");

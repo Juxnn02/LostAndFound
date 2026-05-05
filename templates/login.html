@@ -1,31 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="static/auth.css">
 </head>
 <body>
 
-<h2 style="font-size: 50px;">
+<h2>
     Lost 
-    <img src="static/magnify glass.png" style="height: 70px; vertical-align: middle; margin: 0 -20px;"> 
+    <img src="static/magnify glass.png" alt="Magnifying glass icon"> 
     Found
 </h2>
 
-<div style="background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 350px; text-align: center;">
-    <h3 style="font-size: 25px; margin-top: 0;">Sign into your account!</h3>
+<div class="auth-container">
+    <h3>Sign into your account!</h3>
     
-    <p id="login-error" style="color: red; font-size: 14px; font-weight: bold;"></p>
+    <p id="login-error" class="auth-error"></p>
 
     <form action="/dashboard" onsubmit="handleLoginSubmit(event)">
         <input type="email" id="login-email" placeholder="School Email" required><br><br>
         <input type="password" placeholder="Password" required><br><br>
-        <button style="font-size: 20px;" type="submit">Sign in</button>
+        <button class="auth-signin-button" type="submit">Sign in</button>
     </form>
 
-    <p style="margin-top: 20px;">
+    <p class="auth-links">
         <a href="/register">Don't have an account?</a> <br>
-        <a href="/forgot-password" style="display: inline-block; margin-top: 10px;">Forgot Password?</a>
+        <a href="/forgot-password" class="auth-link">Forgot Password?</a>
     </p>
 </div>
 

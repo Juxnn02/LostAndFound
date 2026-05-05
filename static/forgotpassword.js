@@ -15,9 +15,9 @@ function handleForgotSubmit(event) {
     const step1 = document.getElementById('forgot-step-1');
     const step2 = document.getElementById('forgot-step-2');
     if (step1)
-        step1.style.display = 'none';
+        step1.classList.add('hidden');
     if (step2)
-        step2.style.display = 'block';
+        step2.classList.add('active');
 }
 function handleForgotVerify(event) {
     event.preventDefault();
@@ -25,9 +25,9 @@ function handleForgotVerify(event) {
     const step2 = document.getElementById('forgot-step-2');
     const step3 = document.getElementById('forgot-step-3');
     if (step2)
-        step2.style.display = 'none';
+        step2.classList.remove('active');
     if (step3)
-        step3.style.display = 'block';
+        step3.classList.add('active');
 }
 function handleResetPassword(event) {
     event.preventDefault();

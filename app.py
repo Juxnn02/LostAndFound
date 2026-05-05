@@ -1,9 +1,20 @@
 from flask import Flask, render_template, request, jsonify
 import os
+import json
+from datetime import datetime
 from werkzeug.utils import secure_filename
 from models import db, Account, Post, Message  
 
 app = Flask(__name__)
+
+# Custom JSON Encoder to handle datetime objects
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
+
+app.json_encoder = DateTimeEncoder
 
 # Configuration for image uploads
 app.config['UPLOAD_FOLDER'] = 'static/images'
@@ -138,7 +149,11 @@ def api_messages(post_id):
     
     # GET method
     messages = Message.query.all() # In production, filter by sender_id/receiver_id
-    return jsonify([{"text": m.message_text, "sender_id": m.sender_id} for m in messages])
+    return jsonify([{
+        "text": m.message_text, 
+        "sender_id": m.sender_id,
+        "timestamp": m.timestamp.isoformat() if m.timestamp else None
+    } for m in messages])
 
 
 if __name__ == "__main__":

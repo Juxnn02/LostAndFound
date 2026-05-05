@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Lost & Found</title>
     <link rel="stylesheet" href="static/app.css">
 </head>
@@ -8,7 +10,7 @@
 
     <div class="navbar">
     <!-- LEFT: User -->
-    <div style="display: flex; align-items: center; gap: 10px; position: relative;">
+    <div class="navbar-flex">
         <div class="avatar" id="user-menu-btn" onclick="toggleUserMenu()">
             AM
         </div>
@@ -26,13 +28,13 @@
 
     <!-- RIGHT: Search -->
     <div class="search-bar">
-        <span style="font-size: 20px; margin-right: -8px;">&#128269;</span>
-        <input type="text" style="font-size: 16px;" id="search-input" placeholder="Find your item...">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" class="search-input" id="search-input" placeholder="Find your item..." title="Search for items">
     </div>
 
     <!-- SETTINGS -->
     <div>
-        <select onchange="location = this.value;" style="padding: 5px; font-size: 16px; margin-right: 60px;">
+        <select onchange="location = this.value;" class="settings-select" title="Navigation menu">
             <option value="#">Settings</option>
             <option value="/createlisting">Create Listing</option>
             <option value="/my_listings">My Listings</option>
@@ -56,25 +58,25 @@
         {% for post in posts %}
         <div class="card" 
             data-category="{{ post.category|lower }}"
-            onclick="location.href='/listing-info?id={{ post.id }}'" 
-            style="cursor: pointer;">
+            onclick="location.href='/listing-info?id={{ post.id }}'">
             <div class="card-img">
                 {% if post.image_url %}
-                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}" style="max-width: 100%; max-height: 100%; border-radius: 8px; object-fit: cover;">
+                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}" class="card-image-img">
                 {% else %}
                     No Image
                 {% endif %}
             </div>
-            <p><strong>{{ post.item_name }}</strong><br>Found in {{ post.location }}.</p>
+            <p><strong>{{ post.item_name }}</strong><br>Found in {{ post.location }}.<br><span class="listing-timestamp post-time" data-timestamp="{{ post.post_date.isoformat() }}"></span></p>
         </div>
         {% else %}
-            <p style="grid-column: 1 / -1; text-align: center; color: #565656;">No listings found. Be the first to create one!</p>
+            <p class="no-listings">No listings found. Be the first to create one!</p>
         {% endfor %}
     </div>
 
-    <p id="no-results" style="display:none; grid-column: 1 / -1; text-align: center; color: #565656;">
+    <p id="no-results" class="no-results">
         No match your search.
     </p>
+    <script src="static/timeformat.js"></script>
     <script src="static/dashboard.js"></script>
 </body>
 </html>

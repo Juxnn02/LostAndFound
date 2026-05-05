@@ -42,7 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     messageDiv.style.color = 'black';
                     messageDiv.style.marginLeft = '0'; // Align to left
                 }
-                messageDiv.textContent = msg.text;
+                // Create message content with timestamp
+                const timestamp = msg.timestamp ? formatTimeAgo(msg.timestamp) : '';
+                messageDiv.innerHTML = `<p style="margin: 0;">${msg.text}</p><span style="font-size: 11px; opacity: 0.7;">${timestamp}</span>`;
                 chatThread.insertBefore(messageDiv, chatForm);
             });
         })
@@ -52,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (connectBtn && chatThread) {
         connectBtn.addEventListener('click', () => {
             const isHidden = chatThread.style.display === 'none';
-            chatThread.style.display = isHidden ? 'block' : 'none';
-            if (isHidden) {
+            chatThread.classList.toggle('active');
+            if (!isHidden) {
                 loadMessages();
             }
         });
@@ -91,12 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Report Modal Logic ---
     if (reportBtn && reportModal) {
         reportBtn.addEventListener('click', () => {
-            reportModal.style.display = 'flex'; // Show modal overlay
+            reportModal.classList.add('active'); // Show modal overlay
         });
     }
     if (cancelReportBtn && reportModal) {
         cancelReportBtn.addEventListener('click', () => {
-            reportModal.style.display = 'none'; // Hide modal
+            reportModal.classList.remove('active'); // Hide modal
         });
     }
     if (reportForm && reportModal) {
@@ -105,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(reportForm);
             const reason = formData.get('report-reason');
             alert(`Report submitted for reason: ${reason}. An admin will review this listing.`);
-            reportModal.style.display = 'none'; // Close modal after submission
+            reportModal.classList.remove('active'); // Close modal after submission
         });
     }
 });

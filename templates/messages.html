@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages</title>
     <link rel="stylesheet" href="static/app.css">
     <link rel="stylesheet" href="static/messages.css">
 </head>
 <body class="app-layout">
 
-    <div style="text-align: center; margin: 20px 0; position: relative;">
-        <a href="/dashboard" style="position: absolute; left: 70px; top: 10px; text-decoration: none; font-size: 20px;">&larr; Back</a>
-        <h1 style="font-size: 40px; font-family: serif; margin: 0;">Messages</h1>
+    <div class="messages-header">
+        <a href="/dashboard" class="back-link-messages">&larr; Back</a>
+        <h1>Messages</h1>
     </div>
 
     <div class="messenger-wrapper">
@@ -46,7 +48,7 @@
         <section class="chat-main">
 
             <div class="chat-display" id="chat-box">
-                <p style="color:#999;">Select a conversation to start chatting...</p>
+                <p class="empty-chat-text">Select a conversation to start chatting...</p>
             </div>
 
             <form class="message-input" onsubmit="return handleSend(event)">
@@ -58,6 +60,7 @@
 
     </div>
 
+    <script src="static/timeformat.js"></script>
     <script src="static/messages.js"></script>
 </body>
 </html>
