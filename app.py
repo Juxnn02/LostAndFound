@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, jsonify, url_for, redirect
 import os
 from werkzeug.utils import secure_filename
-from models import db, Account, Post, Message 
-from flask_mail import Mail, Message 
+from models import db, Account, Post, Message as DBMessage
+from flask_mail import Mail, Message as MailMessage
 from itsdangerous import URLSafeTimedSerializer
 
 
 app = Flask(__name__)
+app.secret_key = 'your-secret-key'
 
 # Configuration for image uploads
 app.config['UPLOAD_FOLDER'] = 'static/images'
@@ -28,37 +29,40 @@ mail = Mail(app)
 
 def generate_token(email):
     s = URLSafeTimedSerializer(app.secret_key)
-    return s.dump(email)
+    return s.dumps(email)
 
-def confrim_token(token, expiration=30):
+def confirm_token(token, expiration=30):
     s = URLSafeTimedSerializer(app.secret_key)
     try:
-        email = s.loads(token, max_age expiration)
+        email = s.loads(token, max_age=expiration)
         return email
     except:
         return None
 
 def send_verification_email(user_email):
-    token = generate_token(user_email)
-    verification_link = url_for('verify_email', token=token, _external=True)
-    msg = Message('Verify your email', recipients=[user_email])
-    msg.body = f''Please verify your email by clicking the link: {verification_link}
-    If you did not register, ignore this email.'''
+  token = generate_token(user_email)
+  verification_link = url_for('verify_email', token=token, _external=True)
+  msg = MailMessage('Verify your email', recipients=[user_email])
+  msg.body = f''Please verify your email by clicking the link: {verification_link} If you did not register, ignore this email.'''
+  mail.send(msg)
 
-        mail.seng(msg)
 
-@app.route('/verify/<token>'):
-email = confim_token(token)
-if email: 
-    user = Account.query.filter_by(email=email).frist()
-    if user:
+
+@app.route('/verify/<token>')
+def verify_email(token):
+  email = confirm_token(token)
+  if email: 
+    user = Account.query.filter_by(email=email).first()
+      if user:
+        user.is_verified = True
+        db.session.commit()
         return"Email verified successfully."
-    else:
+      else:
         return "User not found."
-else: 
+  else: 
     return "Invalid or Expired link."
 
-@app.route('/reset/<token>', methods={'GET', 'POST'])
+@app.route('/forgot-password', methods={'GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
         data = request. get_json()
@@ -66,12 +70,13 @@ def forgot_password():
         user = Account.query.filter_by(email=email).frist()
         if user:
             send_password_reset_email(email)
-            return "If your email exists in our system, a reset link has been sent."
-    return render_template('forgot_password.html')
+            return jsonify({"message": "If your email exists in our system, a reset link has been sent."})
+    return render_template("forgot_password.html")
+    
 
 @app.route('/reset/<token>', methods=['GET', 'POST'])                                      
-def rest_password(token):
-    email = confrim_token(token)
+def reset_password(token):
+    email = confirm_token(token)
 if not email:
     return "Invalid or expired link."
 if request.method == 'POST':
@@ -79,7 +84,7 @@ if request.method == 'POST':
     new_password = data.get('password')
     user = Account.query.filter_by(email=email).first()
     if user:
-        user.password = new_password
+        user.password = generate_password_hash(new_password)
         db.session.commit()
         return "Your password has been reset successfully."
     return "user not found."
@@ -87,7 +92,8 @@ return render_template('reset_password.html')
 
 
 # Bind the database to this app
-db.init_app(app)
+with app.app_context():
+  db.init_app(app)
 
 
 # UI HTML ROUTES (Pages users see)
@@ -102,7 +108,7 @@ def register():
 
 @app.route("/forgot-password")
 def forgot_password():
-    return render_template("forgotpassword.html")
+    return render_template("forgot_password.html")
 
 @app.route("/dashboard")
 def dashboard():
@@ -186,7 +192,7 @@ def api_create_listing():
 def api_messages(post_id):
     if request.method == "POST":
         data = request.get_json()
-        new_msg = Message(
+        new_msg = DBMessage(
             message_text=data['text'],
             sender_id=1,   # Mock sender ID
             receiver_id=2  # Mock receiver ID
