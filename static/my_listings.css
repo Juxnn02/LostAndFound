@@ -1,0 +1,109 @@
+/* Header */
+.page-header {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.page-header h1 {
+    font-size: 40px;
+    font-family: serif;
+    margin: 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 70px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #2c3e50;
+}
+
+#listing-count {
+    text-align: center;
+    margin: 40px 0;
+    color: #2a2b2c;
+}
+
+/* SPLIT VIEW */
+.listings-split-view {
+    display: flex;
+    gap: 30px;
+    padding: 0 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* LEFT / RIGHT BOXES */
+.listing-column {
+    flex: 1;
+    background: rgba(255,255,255,0.5);
+    padding: 25px;
+    border-radius: 15px;
+    border: 2px solid white;
+}
+
+.listing-column h2 {
+    text-align: center;
+    font-family: serif;
+    margin: 0 0 15px;
+    color: #2c3e50;
+}
+
+/* 2-COLUMN GRID INSIDE */
+.column-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* CARD */
+.listing-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+
+    min-height: 80px;
+    box-sizing: border-box;
+}
+
+/* text */
+.listing-info p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* buttons */
+.listing-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    border: none;
+    background: #f1f3f5;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.icon-btn:hover {
+    background: #e2e6ea;
+}
+
+.delete-btn:hover {
+    background: #ffe3e3;
+}
+
+/* resolved look */
+.resolved-zone .listing-card {
+    opacity: 0.9;
+}

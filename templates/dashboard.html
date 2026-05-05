@@ -1,65 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Lost & Found</title>
     <link rel="stylesheet" href="static/app.css">
 </head>
 <body class="app-layout">
 
     <div class="navbar">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <div id="user-menu-btn" style="background: white; padding: 10px; border-radius: 50%; font-weight: bold; cursor: pointer;">
-                User Initials &#x25BC;
-            </div>
-            <a href="/" style="text-decoration: none; color: #d9534f; font-weight: bold; margin-left: 10px;">Logout</a>
+    <!-- LEFT: User -->
+    <div class="navbar-flex">
+        <div class="avatar" id="user-menu-btn" onclick="toggleUserMenu()">
+            AM
         </div>
 
-        <h2>DashBoard</h2>
-
-        <div class="search-bar">
-            <span style="font-size: 20px; margin-right: 10px;">&#128269;</span>
-            <input type="text" id="search-input" placeholder="Find your item...">
-            <button style="width: auto; height: auto; margin: 0; padding: 2px 10px;">Filters =</button>
-        </div>
-
-        <div>
-            <select onchange="location = this.value;" style="padding: 5px; font-size: 16px;">
-                <option value="#">Menu</option>
-                <option value="/create-listing">Create Listing</option>
-                <option value="#">Edit Listings</option>
-                <option value="#">Claimed Listings</option>
-                <option value="#">Messages</option>
-            </select>
+        <!-- dropdown -->
+        <div id="user-dropdown" class="user-dropdown hidden">
+            <p class="email">studentemail@southernct.edu</p>
+            <hr>
+            <a href="/">Logout</a>
         </div>
     </div>
 
+    <!-- CENTER: Title -->
+    <h2>Dashboard</h2>
+
+    <!-- RIGHT: Search -->
+    <div class="search-bar">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" class="search-input" id="search-input" placeholder="Find your item..." title="Search for items">
+    </div>
+
+    <!-- SETTINGS -->
+    <div>
+        <select onchange="location = this.value;" class="settings-select" title="Navigation menu">
+            <option value="#">Settings</option>
+            <option value="/createlisting">Create Listing</option>
+            <option value="/my_listings">My Listings</option>
+            <option value="/messages">Messages</option>
+        </select>
+    </div>
+
+</div>
+
     <div class="filter-menu" id="filter-menu">
-        <a href="#" class="active" style="text-decoration: underline;">Apply All</a>
+        <a href="#" class="active" >Apply All</a>
         <a href="#">Accessories</a>
         <a href="#">Apparel</a>
         <a href="#">Books</a>
         <a href="#">Electronics</a>
         <a href="#">Other</a>
-        <a href="#">Clear</a>
+        <a href="#">Claimed Listings</a>
     </div>
 
     <div class="grid-container" id="listings-grid">
         {% for post in posts %}
-        <div class="card" onclick="location.href='/listing-info?id={{ post.id }}'" style="cursor: pointer;">
+        <div class="card" 
+            data-category="{{ post.category|lower }}"
+            onclick="location.href='/listing-info?id={{ post.id }}'">
             <div class="card-img">
                 {% if post.image_url %}
-                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}" style="max-width: 100%; max-height: 100%; border-radius: 8px; object-fit: cover;">
+                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}" class="card-image-img">
                 {% else %}
                     No Image
                 {% endif %}
             </div>
-            <p><strong>{{ post.item_name }}</strong><br>Found in {{ post.location }}.</p>
+            <p><strong>{{ post.item_name }}</strong><br>Found in {{ post.location }}.<br><span class="listing-timestamp post-time" data-timestamp="{{ post.post_date.isoformat() }}"></span></p>
         </div>
         {% else %}
-            <p style="grid-column: 1 / -1; text-align: center; color: #888;">No listings found. Be the first to create one!</p>
+            <p class="no-listings">No listings found. Be the first to create one!</p>
         {% endfor %}
     </div>
 
+    <p id="no-results" class="no-results">
+        No match your search.
+    </p>
+    <script src="static/timeformat.js"></script>
     <script src="static/dashboard.js"></script>
 </body>
 </html>
