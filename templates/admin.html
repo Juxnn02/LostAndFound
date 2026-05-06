@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/admin.css">
+</head>
+
+<body>
+
+    <div class="admin-navbar">
+        <h1>Lost & Found Admin Panel</h1>
+
+        <div>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin-logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="admin-container">
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-cards">
+
+            <div class="dashboard-card">
+                <h2>{{ total_users }}</h2>
+                <p>Total Users</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h2>{{ total_posts }}</h2>
+                <p>Total Listings</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h2>{{ total_reports }}</h2>
+                <p>Reports</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h2>{{ banned_users }}</h2>
+                <p>Banned Users</p>
+            </div>
+
+        </div>
+
+        <!-- USERS SECTION -->
+        <div class="admin-section">
+            <h2>Manage Users</h2>
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+
+                    <td>
+                        {% if user.is_banned %}
+                        Banned
+                        {% else %}
+                        Active
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <button onclick="toggleBan({{ user.id }})">
+                            {% if user.is_banned %}
+                            Unban
+                            {% else %}
+                            Ban
+                            {% endif %}
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- POSTS SECTION -->
+        <div class="admin-section">
+            <h2>Manage Listings</h2>
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for post in posts %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.item_name }}</td>
+                    <td>{{ post.category }}</td>
+                    <td>{{ post.location }}</td>
+
+                    <td>
+                        {% if post.is_claimed %}
+                        Claimed
+                        {% else %}
+                        Unclaimed
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <button onclick="toggleClaimed({{ post.id }})">
+                            Toggle Claimed
+                        </button>
+
+                        <button onclick="deletePost({{ post.id }})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- REPORTS SECTION -->
+        <div class="admin-section">
+            <h2>Reports</h2>
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Reporting Email</th>
+                    <th>Reportee Email</th>
+                    <th>Status</th>
+                </tr>
+
+                {% for report in reports %}
+                <tr>
+                    <td>{{ report.id }}</td>
+                    <td>{{ report.reporting_email }}</td>
+                    <td>{{ report.reportee_email }}</td>
+                    <td>{{ report.status }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    </div>
+
+    <script src="/static/admin.js"></script>
+
+</body>
+
+</html>
