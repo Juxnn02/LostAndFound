@@ -14,37 +14,72 @@
         <h1>My Listings</h1>
     </div>
 
-     <div id="listing-count">Total Listings: 8</div>
-
+      <!-- TOTAL COUNT -->
+    <div id="listing-count" style="padding: 0 60px;">
+        Total Listings: {{ listings|length }}
+    </div>
 
     <main class="listings-split-view">
         <!-- Active Section -->
         <section class="listing-column">
-            <h2>Active Listings</h2>
-                <div class="column-grid">
-    {% for post in posts %}
-    <div class="listing-card">
-        <div class="listing-info">
-            <strong>{{ post.item_name }}</strong>
-            <p>{{ post.location }}</p>
-        </div>
-        <div class="listing-actions">
-        <button class="icon-btn" onclick="editListing('{{ post.id }}')">✏️</button>            
-        <button class="icon-btn delete-btn" onclick="deleteListing('{{ post.id }}')">🗑️</button>        </div>
-    </div>
-    {% else %}
-        <p>You haven't created any listings yet.</p>
-    {% endfor %}
-</div>
-        </section>
+               <h2>Active Listings</h2>
 
-        <!-- Resolved Section -->
-        <section class="listing-column resolved-zone">
-            <h2>Resolved</h2>
+                <div class="column-grid">
+                    {% for listing in listings %}
+                        {% if not listing.is_claimed %}
+
+                        <div class="listing-card">
+                            <div class="listing-info">
+                                <strong>{{ listing.item_name }}</strong>
+                                <p>{{ listing.location }}</p>
+                            </div>
+
+                            <div class="listing-actions">
+                                <button class="icon-btn"
+                                        onclick="editListing('{{ listing.id }}')">
+                                    ✏️
+                                </button>
+                                <button class="icon-btn claim-btn"
+                                        onclick="claimListing('{{ listing.id }}')">
+                                    🏷️ Claim
+                                </button>
+
+                                <button class="icon-btn delete-btn"
+                                        onclick="deleteListing('{{ listing.id }}')">
+                                    🗑️
+                                </button>                               
+                            </div>
+                        </div>
+
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+
+        <!-- Claimed Section -->
+        <section class="listing-column claimed-zone">
+            <h2>Claimed Listings</h2>
+
             <div class="column-grid">
-                <div class="listing-card"><strong>Test 5</strong></div>
-                <div class="listing-card"><strong>Test 6</strong></div>
-                <div class="listing-card"><strong>Test 7</strong></div>
+                {% for listing in listings %}
+                    {% if listing.is_claimed %}
+
+                    <div class="listing-card claimed">
+                        <div class="listing-info">
+                            <strong>{{ listing.item_name }}</strong>
+                            <p>{{ listing.location }}</p>
+                        </div>
+
+                        <div class="listing-actions">
+                            <button class="icon-btn"
+                                    onclick="unclaimListing('{{ listing.id }}')">
+                                ↩️ Unclaim
+                            </button>
+                        </div>
+                    </div>
+
+                    {% endif %}
+                {% endfor %}
             </div>
         </section>
 
