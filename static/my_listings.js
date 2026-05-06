@@ -1,29 +1,75 @@
 /* My Listings Logic */
 document.addEventListener('DOMContentLoaded', () => {
+    // Updates the count display based on how many cards are rendered
     updateTotalCount();
 });
 
-/* Function to redirect to edit page */
+/* CLAIM LISTING  */
+function claimListing(id) {
+    fetch(`/api/listings/claim/${id}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // Reloading the page lets Jinja2 move the item to the "Claimed" column
+            location.reload(); 
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(err => console.error("Claim failed:", err));
+}
+
+/* UNCLAIM LISTING
+ * Reverses the claim status.
+ */
+function unclaimListing(id) {
+    fetch(`/api/listings/unclaim/${id}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(err => console.error("Unclaim failed:", err));
+}
+
+/* Edit Listing */
 function editListing(id) {
-    // This matches the logic you had to include the ID in the URL
     window.location.href = `/edit_listing?edit=${id}`;
 }
 
-/* Function to handle deletion */
+/* DELETE LISTING */
 function deleteListing(id) {
     if (confirm("Are you sure you want to delete this listing? This action cannot be undone.")) {
-        console.log("Team: Requesting deletion for Listing ID:", id);
-        // Backend team will add API call here
-        alert("Listing " + id + " has been deleted (Demo only).");
+        fetch(`/api/listings/delete/${id}`, {
+            method: "DELETE"
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Remove the card from the screen immediately or reload
+                location.reload(); 
+            } else {
+                alert("Error deleting listing: " + data.message);
+            }
+        })
+        .catch(err => console.error("Delete failed:", err));
     }
 }
 
-/* Update the count at the top of the page */
+/* Update Total Count */
 function updateTotalCount() {
     const countElement = document.getElementById('listing-count');
-    const totalCards = document.querySelectorAll('.card, .listing-card').length;
+    // Finds every div with the class 'listing-card'
+    const totalCards = document.querySelectorAll('.listing-card').length;
     
     if (countElement) {
-        countElement.innerText = `Total Listings: ${totalCards}`;
+        countElement.innerHTML = `<strong>Total Listings:</strong> ${totalCards}`;
     }
 }

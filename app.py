@@ -101,7 +101,7 @@ def my_listings():
     user_posts = Post.query.filter_by(
         user_id=current_user_id).order_by(Post.post_date.desc()).all()
 
-    return render_template("my_listings.html", posts=user_posts)
+    return render_template("my_listings.html", listings=user_posts)
 
 
 @app.route("/edit_listing")
@@ -241,6 +241,56 @@ def api_create_listing():
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)})
+
+@app.route("/api/listings/claim/<int:post_id>", methods=["POST"])
+def api_claim_listing(post_id):
+    post = Post.query.get_or_404(post_id)
+    post.is_claimed = True
+    
+    try:
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)})
+
+@app.route("/api/listings/unclaim/<int:post_id>", methods=["POST"])
+def api_unclaim_listing(post_id):
+    post = Post.query.get_or_404(post_id)
+    post.is_claimed = False
+    try:
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)})
+
+
+@app.route("/api/listings/update/<int:post_id>", methods=["POST"])
+def api_update_listing(post_id):
+    post = Post.query.get_or_404(post_id)
+    
+    # Update the fields with the new data from the form
+    post.item_name = request.form.get("item_name")
+    post.location = request.form.get("location")
+    post.category = request.form.get("category")
+    # Add any other fields you want to edit here
+    
+    db.session.commit()
+    return redirect("/my-listings") # Go back to the management page
+
+@app.route("/api/listings/delete/<int:post_id>", methods=["DELETE"])
+def api_delete_listing(post_id):
+    post = Post.query.get_or_404(post_id)
+    
+    try:
+        db.session.delete(post)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)})
+
 
 # Real-time Messaging API scaffolding
 

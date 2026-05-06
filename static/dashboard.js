@@ -55,44 +55,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // FILTER LOGIC
+    // FILTER
     filterLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
 
-            const target = e.currentTarget;
-            const category = target.innerText.toLowerCase();
+            const category = link.innerText.toLowerCase();
 
-            filterLinks.forEach(l => {
-                l.classList.remove('active');
-            });
-
-            target.classList.add('active');
+            filterLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
 
             let visibleCount = 0;
 
             cards.forEach(card => {
-                const match = card.dataset.category?.toLowerCase();
+                const cardCategory = card.dataset.category;
+                const status = card.dataset.status;
 
                 let show;
 
                 if (category === "apply all") {
                     show = true;
+                } else if (category === "claimed listings") {
+                    show = (status === "claimed");
                 } else {
-                    show = (match === category);
+                    show = (cardCategory === category && status !== "claimed");
                 }
 
                 card.style.display = show ? '' : 'none';
-
                 if (show) visibleCount++;
             });
 
-            if (noResults) {
+            // show correct message
+            if (category === "claimed listings") {
+                noClaimed.style.display = visibleCount === 0 ? 'block' : 'none';
+                noResults.style.display = 'none';
+            } else {
                 noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+                noClaimed.style.display = 'none';
             }
         });
     });
 });
+
+const scrollBtn = document.getElementById("scrollTopBtn");
+
+window.addEventListener("scroll", () => {
+    if (document.documentElement.scrollTop > 20) {
+        scrollBtn.style.display = "block";
+    } else {
+        scrollBtn.style.display = "none";
+    }
+});
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
 
 // Must be at the end to work properly
 function toggleUserMenu() {

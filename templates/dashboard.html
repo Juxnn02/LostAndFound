@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Lost & Found</title>
     <link rel="stylesheet" href="static/app.css">
+    <link rel="stylesheet" href="static/dashboard_extras.css">
 </head>
+
+<button onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
+    ↑ Back to Top
+</button>
+
 <body class="app-layout">
 
-    <div class="navbar">
+<div class="navbar">
     <!-- LEFT: User -->
     <div class="navbar-flex">
         <div class="avatar" id="user-menu-btn" onclick="toggleUserMenu()">
             AM
         </div>
 
-        <!-- dropdown -->
         <div id="user-dropdown" class="user-dropdown hidden">
             <p class="email">studentemail@southernct.edu</p>
             <hr>
@@ -34,49 +39,67 @@
 
     <!-- SETTINGS -->
     <div>
-        <select onchange="location = this.value;" class="settings-select" title="Navigation menu">
+        <select onchange="location = this.value;" class="settings-select">
             <option value="#">Settings</option>
             <option value="/createlisting">Create Listing</option>
             <option value="/my_listings">My Listings</option>
             <option value="/messages">Messages</option>
         </select>
     </div>
-
 </div>
 
-    <div class="filter-menu" id="filter-menu">
-        <a href="#" class="active" >Apply All</a>
-        <a href="#">Accessories</a>
-        <a href="#">Apparel</a>
-        <a href="#">Books</a>
-        <a href="#">Electronics</a>
-        <a href="#">Other</a>
-        <a href="#">Claimed Listings</a>
-    </div>
+<!-- FILTERS -->
+<div class="filter-menu" id="filter-menu">
+    <a href="#" class="active">Apply All</a>
+    <a href="#">Accessories</a>
+    <a href="#">Apparel</a>
+    <a href="#">Books</a>
+    <a href="#">Electronics</a>
+    <a href="#">Other</a>
+    <a href="#">Claimed Listings</a>
+</div>
 
-    <div class="grid-container" id="listings-grid">
-        {% for post in posts %}
-        <div class="card" 
-            data-category="{{ post.category|lower }}"
-            onclick="location.href='/listing-info?id={{ post.id }}'">
+<!-- GRID -->
+<div class="grid-container" id="listings-grid">
+    {% for post in posts %}
+    <div class="card"
+        data-category="{{ post.category|lower }}"
+        data-status="{{ 'claimed' if post.is_claimed else 'active' }}"
+        onclick="location.href='/listing-info?id={{ post.id }}'">
+
+        <div class="card-img-wrapper">
             <div class="card-img">
                 {% if post.image_url %}
-                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}" class="card-image-img">
+                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}">
                 {% else %}
                     No Image
                 {% endif %}
             </div>
-            <p><strong>{{ post.item_name }}</strong><br>Found in {{ post.location }}.<br><span class="listing-timestamp post-time" data-timestamp="{{ post.post_date.isoformat() }}"></span></p>
+            
+            {% if post.is_claimed %}
+                <div class="claimed-overlay">CLAIMED</div>
+            {% endif %}
         </div>
-        {% else %}
-            <p class="no-listings">No listings found. Be the first to create one!</p>
-        {% endfor %}
-    </div>
 
-    <p id="no-results" class="no-results">
-        No match your search.
-    </p>
-    <script src="static/timeformat.js"></script>
-    <script src="static/dashboard.js"></script>
+        <p>
+            <strong>{{ post.item_name }}</strong><br>
+            Found in {{ post.location }}
+        </p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Messages -->
+<p id="no-results" class="no-results">
+    No match your search.
+</p>
+
+<p id="no-claimed" class="no-results">
+    Nothing has been claimed yet.
+</p>
+
+<script src="static/timeformat.js"></script>
+<script src="static/dashboard.js"></script>
+
 </body>
 </html>
