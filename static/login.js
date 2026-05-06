@@ -27,7 +27,7 @@ async function handleLoginSubmit(event) {
         const data = await response.json();
 
         if (data.success) {
-            window.location.href = "/dashboard"; // ONLY redirect if Python says the password is correct
+            window.location.href = data.redirect; // ONLY redirect if Python says the password is correct
         } else {
             errorDiv.textContent = data.message; // Show error message from Python
         }

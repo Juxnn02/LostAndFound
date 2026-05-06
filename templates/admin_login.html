@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="static/admin.css">
+</head>
+
+<body class="admin-login-body">
+
+    <div class="admin-login-card">
+        <h1>Lost & Found Admin</h1>
+        <p>Sign in to manage users, listings, and reports.</p>
+
+        <p id="admin-login-error" class="error-message"></p>
+
+        <form onsubmit="handleAdminLogin(event)">
+            <input type="text" id="admin-username" placeholder="Admin Username" required>
+            <input type="password" id="admin-password" placeholder="Admin Password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <a href="/">Back to User Login</a>
+    </div>
+
+    <script src="static/admin.js"></script>
+</body>
+
+</html>

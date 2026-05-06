@@ -6,7 +6,7 @@ import json
 import uuid  # For unique image names
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from models import db, Account, Post, Message, User
+from models import db, Account, Post, Message, User, Admin, Report
 import random
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = "josephofei24@gmail.com"
 
 # Your Gmail App Password (16 characters, no spaces)
-app.config["MAIL_PASSWORD"] = "yupdaoscykecqymb"
+app.config["MAIL_PASSWORD"] = "Paste_your_app_password_here"
 
 # Sender email
 app.config["MAIL_DEFAULT_SENDER"] = "josephofei24@gmail.com"
@@ -180,6 +180,9 @@ def api_login():
     if not user_account:
         return jsonify({"success": False, "message": "Invalid email or password"})
 
+    if user_account.is_banned:
+        return jsonify({"success": False, "message": "Your account has been banned. Contact an admin."})
+
     password_matches = (
         user_account.password == password or
         check_password_hash(user_account.password, password)
@@ -199,8 +202,27 @@ def api_login():
         db.session.commit()
 
     session["user_id"] = user_profile.id
+    session["account_id"] = user_account.id
+    session["user_email"] = user_account.email
 
-    return jsonify({"success": True, "message": "Login successful!"})
+    admin = Admin.query.filter_by(user_id=user_profile.id).first()
+
+    if admin:
+        session["is_admin"] = True
+        session["admin_id"] = admin.id
+        return jsonify({
+            "success": True,
+            "message": "Admin login successful!",
+            "redirect": "/admin"
+        })
+
+    session["is_admin"] = False
+
+    return jsonify({
+        "success": True,
+        "message": "Login successful!",
+        "redirect": "/dashboard"
+    })
 
 # New API Route for Creating Listings with Images
 
@@ -242,17 +264,19 @@ def api_create_listing():
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)})
 
+
 @app.route("/api/listings/claim/<int:post_id>", methods=["POST"])
 def api_claim_listing(post_id):
     post = Post.query.get_or_404(post_id)
     post.is_claimed = True
-    
+
     try:
         db.session.commit()
         return jsonify({"success": True})
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)})
+
 
 @app.route("/api/listings/unclaim/<int:post_id>", methods=["POST"])
 def api_unclaim_listing(post_id):
@@ -269,20 +293,21 @@ def api_unclaim_listing(post_id):
 @app.route("/api/listings/update/<int:post_id>", methods=["POST"])
 def api_update_listing(post_id):
     post = Post.query.get_or_404(post_id)
-    
+
     # Update the fields with the new data from the form
     post.item_name = request.form.get("item_name")
     post.location = request.form.get("location")
     post.category = request.form.get("category")
     # Add any other fields you want to edit here
-    
+
     db.session.commit()
-    return redirect("/my-listings") # Go back to the management page
+    return redirect("/my-listings")  # Go back to the management page
+
 
 @app.route("/api/listings/delete/<int:post_id>", methods=["DELETE"])
 def api_delete_listing(post_id):
     post = Post.query.get_or_404(post_id)
-    
+
     try:
         db.session.delete(post)
         db.session.commit()
@@ -386,6 +411,113 @@ def api_reset_password():
         del reset_codes[email]
 
     return jsonify({"success": True, "message": "Password updated."})
+
+
+def admin_required():
+    return session.get("is_admin") == True
+
+
+@app.route("/admin-login")
+def admin_login_page():
+    return render_template("admin_login.html")
+
+
+@app.route("/api/admin-login", methods=["POST"])
+def api_admin_login():
+    data = request.get_json()
+
+    username = data.get("username")
+    password = data.get("password")
+
+    admin = Admin.query.filter_by(admin_username=username).first()
+
+    if admin and admin.admin_password == password:
+        session["is_admin"] = True
+        session["admin_id"] = admin.id
+        return jsonify({"success": True, "message": "Admin login successful."})
+
+    return jsonify({"success": False, "message": "Invalid admin username or password."})
+
+
+@app.route("/admin")
+def admin_dashboard():
+    if not admin_required():
+        return redirect("/admin-login")
+
+    users = Account.query.all()
+    posts = Post.query.order_by(Post.post_date.desc()).all()
+    reports = Report.query.order_by(Report.created_at.desc()).all()
+
+    total_users = Account.query.count()
+    total_posts = Post.query.count()
+    total_reports = Report.query.count()
+    banned_users = Account.query.filter_by(is_banned=True).count()
+
+    return render_template(
+        "admin.html",
+        users=users,
+        posts=posts,
+        reports=reports,
+        total_users=total_users,
+        total_posts=total_posts,
+        total_reports=total_reports,
+        banned_users=banned_users
+    )
+
+
+@app.route("/api/admin/delete-post/<int:post_id>", methods=["POST"])
+def admin_delete_post(post_id):
+    if not admin_required():
+        return jsonify({"success": False, "message": "Unauthorized"})
+
+    post = Post.query.get(post_id)
+
+    if not post:
+        return jsonify({"success": False, "message": "Post not found"})
+
+    db.session.delete(post)
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "Post deleted"})
+
+
+@app.route("/api/admin/toggle-ban/<int:account_id>", methods=["POST"])
+def admin_toggle_ban(account_id):
+    if not admin_required():
+        return jsonify({"success": False, "message": "Unauthorized"})
+
+    account = Account.query.get(account_id)
+
+    if not account:
+        return jsonify({"success": False, "message": "Account not found"})
+
+    account.is_banned = not account.is_banned
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "User status updated"})
+
+
+@app.route("/api/admin/toggle-claimed/<int:post_id>", methods=["POST"])
+def admin_toggle_claimed(post_id):
+    if not admin_required():
+        return jsonify({"success": False, "message": "Unauthorized"})
+
+    post = Post.query.get(post_id)
+
+    if not post:
+        return jsonify({"success": False, "message": "Post not found"})
+
+    post.is_claimed = not post.is_claimed
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "Post claimed status updated"})
+
+
+@app.route("/admin-logout")
+def admin_logout():
+    session.pop("is_admin", None)
+    session.pop("admin_id", None)
+    return redirect("/admin-login")
 
 
 if __name__ == "__main__":
