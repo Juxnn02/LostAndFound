@@ -93,7 +93,7 @@
         }).then(response => response.json())
           .then(data => { 
               if (data.success) {
-                  window.location.herf = '/my_listings';
+                  window.location.href = '/my_listings';
               } else { 
                   alert('Update failed: ' + data.message);
               }
