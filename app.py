@@ -142,7 +142,7 @@ def update_listing(post_id):
             post.image_url = f"images/{unique_name}"
 
     try: 
-        db.seession.commit()
+        db.session.commit()
         return jsonify({"success": True})
     except Exception as e:
         db.session.rollback()
