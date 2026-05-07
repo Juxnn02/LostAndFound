@@ -146,7 +146,7 @@ def update_listing(post_id):
         return jsonify({"success": True})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"success": False "message": str(e)})
+        return jsonify({"success": False, "message": str(e)})
 
 
 @app.route("/messages")
