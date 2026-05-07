@@ -87,13 +87,13 @@
         if (imageInput.files.length > 0) { formData.append('image', imageInput.files[0]);
         }
 
-        fetch(`/api/listings/update/${postId}`, {
+        fetch(`/listings/update/${postId}`, {
             method: 'POST',
             body: formData
         }).then(response => response.json())
           .then(data => { 
               if (data.success) {
-                  window.location.herf = '/my_listing';
+                  window.location.herf = '/my_listings';
               } else { 
                   alert('Update failed: ' + data.message);
               }
