@@ -52,16 +52,14 @@ button:hover {
 /* Auth Page Title */
 h2 {
     font-size: 50px;
+    text-align: center;
 }
 
 h2 img {
     height: 70px;
     vertical-align: middle;
     margin: 0 -20px;
-}
-
-h2 img[alt] {
-    display: block;
+    display: inline;
 }
 
 /* Auth Form Container */
