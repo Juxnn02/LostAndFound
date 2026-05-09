@@ -1,129 +1,360 @@
-/* Header */
-.page-header {
-    text-align: center;
-    margin: 20px 0;
-    position: relative;
+/* MY LISTINGS — Pinterest-style redesign */
+
+/* ── Header ── */
+.ml-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 50;
 }
 
-.page-header h1 {
-    font-size: 40px;
-    font-family: serif;
+.ml-back {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.ml-back:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.ml-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-dark);
     margin: 0;
 }
 
-.back-link {
-    position: absolute;
-    top: 20px;
-    left: 70px;
+.ml-new-btn {
     text-decoration: none;
-    font-size: 20px;
-    color: #2c3e50;
+    background: var(--primary);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 8px;
+    transition: background 0.15s, transform 0.1s;
 }
 
-#listing-count {
-    text-align: center;
-    margin: 40px 0;
-    color: #2a2b2c;
+.ml-new-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
 }
 
-/* SPLIT VIEW */
-.listings-split-view {
+/* ── Stats row ── */
+.ml-stats {
     display: flex;
-    gap: 30px;
-    padding: 0 40px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-/* LEFT / RIGHT BOXES */
-.listing-column {
-    flex: 1;
-    background: rgba(255,255,255,0.5);
-    padding: 25px;
-    border-radius: 15px;
-    border: 2px solid white;
-}
-
-.listing-column h2 {
-    text-align: center;
-    font-family: serif;
-    margin: 0 0 15px;
-    color: #2c3e50;
-}
-
-/* 2-COLUMN GRID INSIDE */
-.column-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-/* CARD */
-/* CARD: Vertical stack */
-.listing-card {
-    display: flex;
-    flex-direction: column;   
-    justify-content: flex-start;
-    align-items: flex-start;
-
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 16px 32px;
     background: white;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
-    min-height: 100px; 
-    box-sizing: border-box;
+    border-bottom: 1px solid var(--border);
 }
 
-/* TEXT: Title and Location on one line */
-.listing-info {
+.ml-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 32px;
+}
+
+.ml-stat-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.ml-stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ml-stat-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--border);
+}
+
+/* ── Split view ── */
+.ml-split {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    min-height: calc(100vh - 130px);
+}
+
+.ml-col {
+    flex: 1;
+    padding: 24px 24px 48px;
+    min-height: 100%;
+}
+
+.ml-divider {
+    width: 1px;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+/* ── Column heading ── */
+.ml-col-heading {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ml-col-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.active-dot  { background: var(--success, #10B981); }
+.claimed-dot { background: var(--primary); }
+
+/* ── Masonry grid ── */
+.ml-grid {
+    columns: 2;
+    column-gap: 12px;
+}
+
+/* ── Card ── */
+.ml-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    break-inside: avoid;
+    display: inline-block;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.ml-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.ml-card-claimed {
+    opacity: 0.8;
+}
+
+/* ── Card image ── */
+.ml-card-img {
+    position: relative;
+    background: #F1F5F9;
+    width: 100%;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.ml-card-img img {
+    width: 100%;
+    height: auto;
+    max-height: 280px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.2s;
+}
+
+.ml-card-img:hover img {
+    transform: scale(1.03);
+}
+
+.ml-no-image {
+    width: 100%;
+    min-height: 90px;
+    background: linear-gradient(135deg, #F1F5F9 0%, #E8EDF4 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 20px 0;
+}
+
+.ml-no-image-icon {
+    font-size: 24px;
+    opacity: 0.35;
+    line-height: 1;
+}
+
+.ml-no-image-label {
+    font-size: 10px;
+    color: #94A3B8;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.ml-claimed-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(16, 185, 129, 0.9);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+/* ── Card body ── */
+.ml-card-body {
+    padding: 10px 12px 6px;
+}
+
+.ml-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 3px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.listing-info strong {
-    display: inline; 
-    font-size: 16px;
+.ml-card-loc {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0 0 6px;
 }
 
-.listing-info p {
-    display: inline;
-    font-size: 14px;
-    color: #555555f0;
-    margin: 0;
+.ml-card-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid rgba(0, 61, 165, 0.2);
 }
 
-/* BUTTONS: Horizontal row at bottom */
-.listing-actions {
-    display: flex;           
-    flex-direction: row;     
-    gap: 8px;                
-    width: 100%;
-    margin-top: auto; 
+/* ── Card actions ── */
+.ml-card-actions {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px 10px;
+    border-top: 1px solid var(--border);
+    background: #FAFAFA;
 }
 
-.icon-btn {
-    flex: 1;           
-    text-align: center;
-    padding: 8px;
-    font-size: 16px;
+.ml-btn {
+    flex: 1;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 6px 4px;
     border: none;
-    background: #efefefef;
     border-radius: 6px;
     cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    text-align: center;
 }
 
-.icon-btn:hover {
-    background: #e2e6ea;
+.ml-btn-edit {
+    background: var(--primary-light);
+    color: var(--primary);
 }
 
-.delete-btn:hover {
-    background: #ffe3e3;
+.ml-btn-edit:hover {
+    background: rgba(0, 61, 165, 0.18);
 }
 
-/* resolved look */
-.resolved-zone .listing-card {
-    opacity: 0.9;
+.ml-btn-claim {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.ml-btn-claim:hover {
+    background: rgba(16, 185, 129, 0.22);
+}
+
+.ml-btn-delete {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--danger, #EF4444);
+}
+
+.ml-btn-delete:hover {
+    background: rgba(239, 68, 68, 0.18);
+}
+
+.ml-btn-unclaim {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.ml-btn-unclaim:hover {
+    background: rgba(0, 61, 165, 0.18);
+}
+
+/* ── Empty state ── */
+.ml-empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 40px 16px;
+    line-height: 1.8;
+}
+
+.ml-empty a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ml-empty a:hover {
+    text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .ml-split {
+        flex-direction: column;
+    }
+    .ml-divider {
+        width: auto;
+        height: 1px;
+    }
+}
+
+@media (max-width: 600px) {
+    .ml-grid { columns: 1; }
+    .ml-header { padding: 16px; }
+    .ml-col { padding: 16px; }
 }

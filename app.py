@@ -28,9 +28,9 @@ app.json_encoder = DateTimeEncoder
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = os.environ["MAIL_USERNAME"]
-app.config["MAIL_PASSWORD"] = os.environ["MAIL_PASSWORD"]
-app.config["MAIL_DEFAULT_SENDER"] = os.environ["MAIL_USERNAME"]
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME", "")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD", "")
+app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_USERNAME", "")
 
 mail = Mail(app)
 
@@ -268,8 +268,14 @@ def api_update_listing(post_id):
 
 @app.route("/api/listings/delete/<int:post_id>", methods=["DELETE"])
 def api_delete_listing(post_id):
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Not logged in"}), 401
     post = Post.query.get_or_404(post_id)
+    if post.user_id != session['user_id']:
+        return jsonify({"success": False, "message": "Not authorized"}), 403
     try:
+        Message.query.filter_by(post_id=post_id).delete()
+        Report.query.filter_by(post_id=post_id).delete()
         db.session.delete(post)
         db.session.commit()
         return jsonify({"success": True})

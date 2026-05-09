@@ -78,7 +78,10 @@
                 {% if post.image_url %}
                     <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}">
                 {% else %}
-                    <span class="card-no-image">No Image</span>
+                    <div class="card-no-image">
+                        <span class="card-no-image-icon">📷</span>
+                        <span class="card-no-image-label">No photo</span>
+                    </div>
                 {% endif %}
             </div>
 
