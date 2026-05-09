@@ -3,41 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Your Listing</title>
+    <title>New Listing — Lost &amp; Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/app.css">
 </head>
 <body class="app-layout">
 
     <div class="edit-listing-header">
-        <h1>Edit Listing</h1>
+        <a href="/dashboard" class="listing-back-link create-back-link">&larr; Back</a>
+        <h1>Create a Listing</h1>
     </div>
 
-<form class="form-container" id="edit-listing-form">
-    <div style="display: flex; gap: 40px; align-items: flex-start;">
-        
-        <div class="form-left-column" style="flex: 1;">     
-            
+    <p id="create-error" class="create-error"></p>
+
+    <form class="form-container" id="create-listing-form" enctype="multipart/form-data">
+
+        <!-- LEFT: Text fields -->
+        <div class="form-content">
+
             <div class="form-group">
-                <label for="listing-date">Date:</label>
-                <input type="date" id="listing-date" value="{{ post.post_date.strftime('%Y-%m-%d') }}" required>
+                <label for="listing-title">Title <span class="required-star">*</span></label>
+                <input type="text" id="listing-title" placeholder="e.g. Blue Water Bottle" required>
             </div>
 
             <div class="form-group">
-                <label for="listing-category">Category:</label>
-                <select id="listing-category" required title="Select the item category">
-                    <option value="">-Select-</option>
-                    <option value="Accessories" {% if post.category == 'Accessories' %}selected{% endif %}>Accessories</option>
-                    <option value="Apparel" {% if post.category == 'Apparel' %}selected{% endif %}>Apparel</option>
-                    <option value="Books" {% if post.category == 'Books' %}selected{% endif %}>Books</option>
-                    <option value="Electronics" {% if post.category == 'Electronics' %}selected{% endif %}>Electronics</option>
-                    <option value="Other" {% if post.category == 'Other' %}selected{% endif %}>Other</option>
-                </select>
+                <label for="listing-description">Description <span class="required-star">*</span></label>
+                <textarea id="listing-description" required rows="4"
+                    placeholder="Color, brand, any identifying features..."></textarea>
             </div>
 
             <div class="form-group">
-                <label for="listing-location">Found at / Lost at:</label>
-                <select id="listing-location" required title="Select the location where item was found or lost">
-                     <option value="">— Select location —</option>
+                <label for="listing-location">Where was it found / lost? <span class="required-star">*</span></label>
+                <select id="listing-location" required title="Select location">
+                    <option value="">— Select location —</option>
                     <option value="Buley Library">Buley Library</option>
                     <option value="Engleman Hall">Engleman Hall</option>
                     <option value="Jennings Hall">Jennings Hall</option>
@@ -50,86 +49,47 @@
             </div>
 
             <div class="form-group">
-                <label for="listing-description">Description:</label>
-                <textarea id="listing-description" required rows="4">{{ post.description }}</textarea>
+                <label for="listing-category">Category</label>
+                <select id="listing-category" title="Select category">
+                    <option value="">— Select category —</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Apparel">Apparel</option>
+                    <option value="Books">Books</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
-            
-          <div class="form-group">
+
+            <p class="required-note"><span class="required-star">*</span> Required fields</p>
+
             <div class="form-buttons">
-                <button type="button" class="btn-form btn-cancel-form" onclick="location.href='/my_listings'">Cancel</button>
-                <button type="submit" class="btn-form btn-save">Save</button>
+                <button type="button" class="btn-form btn-cancel-form" onclick="location.href='/dashboard'">Cancel</button>
+                <button type="submit" class="btn-form btn-submit-form">Submit Listing</button>
             </div>
-          </div>
         </div>
-        
-         <div class="form-right-column" style="flex: 1;"> 
+
+        <!-- RIGHT: Image upload -->
+        <div class="form-right-column">
             <div class="form-group">
-                <label for="listing-title">Title:</label>
-                <input type="text" id="listing-title" required>
+                <label>Photo <span class="form-label-hint">(optional)</span></label>
             </div>
 
-            <div style="border: none; padding: 0; margin: 0;">
-                <label class="image-upload-text">Update Image</label>
-                <input type="file" id="listing-image" accept="image/*" style="border: none;" title="Select image file">
+            <div class="image-upload-area" id="image-upload-area">
+                <img id="image-preview" class="upload-preview" alt="Image preview">
+                <div class="upload-placeholder" id="upload-placeholder">
+                    <span class="upload-icon">📷</span>
+                    <span class="image-upload-text">Click to upload a photo</span>
+                    <span class="upload-hint">JPG, PNG, GIF — any size</span>
+                </div>
+                <input type="file" id="listing-image" name="image" accept="image/*"
+                       class="image-upload-input" title="Select image file">
             </div>
-            <div class="form-group" style="margin-top: 10px;">
-                <label>Current Image:</label>
-            <img id="image-preview" src="{{ post.image_url }}" style="max-width: 300px; display: block; margin-top: 6px;">
-            </div>
-          </div>
-        
+
+            <button type="button" class="upload-clear-btn" id="clear-image-btn">Remove photo</button>
+        </div>
+
     </form>
-    
-    <script>
-        document.getElementById('listing-image').addEventListener('change', function() {
-            const file = this.files[0];
-            const preview = document.getElementById('image-preview');
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            } else { 
-                preview.scr = '';
-                previewContainer.style.display = 'none';
-            }
-        });
-                            
-        
-        document.getElementById('edit-listing-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const postId = {{ post.id }};
-
-        const formData = new FormData();
-
-        formData.append('item_name', document.getElementById('listing-title').value);
-        formData.append('description', document.getElementById('listing-description').value);
-        formData.append('category', document.getElementById('listing-category').value);
-        formData.append('location', document.getElementById('listing-location').value);
-
-        const imageInput = document.getElementById('listing-image');
-        if (imageInput.files.length > 0) { formData.append('image', imageInput.files[0]);
-        }
-
-        fetch(`/listings/update/${postId}`, {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-          .then(data => { 
-              if (data.success) {
-                  window.location.href = '/my_listings';
-              } else { 
-                  alert('Update failed: ' + data.message);
-              }
-          }).catch(error => {
-              console.error('Error:', error);
-              alert('An error occured.');
-          });
-        });                                                                                                                                                                                          
-    </script>   
+    <script src="static/createlisting.js"></script>
 </body>
 </html>
