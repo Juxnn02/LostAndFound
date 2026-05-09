@@ -37,13 +37,15 @@
             <div class="form-group">
                 <label for="listing-location">Found at / Lost at:</label>
                 <select id="listing-location" required title="Select the location where item was found or lost">
-                    <option value="">-Select-</option>
-                    <option value="Buley Library" {% if post.location == 'Buley Library' %}selected{% endif %}>Buley Library</option>
-                    <option value="Engleman Hall" {% if post.location == 'Engleman Hall' %}selected{% endif %}>Engleman Hall</option>
-                    <option value="Jennings Hall" {% if post.location == 'Jennings Hall' %}selected{% endif %}>Jennings Hall</option>
-                    <option value="Morrill Hall" {% if post.location == 'Morrill Hall' %}selected{% endif %}>Morrill Hall</option>
-                    <option value="Student Center" {% if post.location == 'Student Center' %}selected{% endif %}>Student Center</option>
-                     <option value="Other" {% if post.category == 'Other' %}selected{% endif %}>Other</option>
+                     <option value="">— Select location —</option>
+                    <option value="Buley Library">Buley Library</option>
+                    <option value="Engleman Hall">Engleman Hall</option>
+                    <option value="Jennings Hall">Jennings Hall</option>
+                    <option value="Morrill Hall">Morrill Hall</option>
+                    <option value="Student Center">Student Center</option>
+                    <option value="Farnham Hall">Farnham Hall</option>
+                    <option value="Outside / Grounds">Outside / Grounds</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
 
