@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Admin — Lost & Found</title>
+    <link rel="stylesheet" href="static/admin.css">
+</head>
+<body class="admin-login-body">
+
+    <div class="admin-login-card">
+        <h1>Create Admin Account</h1>
+        <p>Enter the setup key from your server environment to register a new admin.</p>
+
+        <p id="admin-register-error" class="error-message"></p>
+        <p id="admin-register-success" class="success-message"></p>
+
+        <form onsubmit="handleAdminRegister(event)">
+            <input type="text" id="setup-key" placeholder="Setup Key (ADMIN_SETUP_KEY)" required>
+            <input type="text" id="new-username" placeholder="Admin Username" required>
+            <input type="password" id="new-password" placeholder="Admin Password" required>
+            <button type="submit">Create Admin</button>
+        </form>
+
+        <a href="/admin-login" class="admin-back-link">Back to Admin Login</a>
+    </div>
+
+    <script>
+        async function handleAdminRegister(event) {
+            event.preventDefault();
+            const errorEl = document.getElementById('admin-register-error');
+            const successEl = document.getElementById('admin-register-success');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+
+            const setup_key = document.getElementById('setup-key').value;
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+
+            const res = await fetch('/api/admin-register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ setup_key, username, password })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                successEl.textContent = data.message + ' You can now log in.';
+                event.target.reset();
+            } else {
+                errorEl.textContent = data.message;
+            }
+        }
+    </script>
+</body>
+</html>

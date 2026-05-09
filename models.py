@@ -14,8 +14,7 @@ class Account(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     is_banned = db.Column(db.Boolean, default=False)
-    
-    # Relationship to User
+
     user_profile = db.relationship('User', backref='account', uselist=False, cascade="all, delete-orphan")
 
 class User(db.Model):
@@ -24,14 +23,16 @@ class User(db.Model):
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
     username = db.Column(db.String(255), nullable=False)
     student_id = db.Column(db.Integer, unique=True)
-    
-    # Relationships
+
     posts = db.relationship('Post', backref='author', cascade="all, delete-orphan")
+    sent_messages = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', lazy='dynamic')
+    received_messages = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy='dynamic')
 
 class Admin(db.Model):
     __tablename__ = 'admin'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # nullable so admins don't require a student account
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     admin_username = db.Column(db.String(255), unique=True, nullable=False)
     admin_password = db.Column(db.String(255), nullable=False)
 
@@ -46,9 +47,9 @@ class Post(db.Model):
     location = db.Column(db.String(255))
     image_url = db.Column(db.String(500))
     is_claimed = db.Column(db.Boolean, default=False)
-    
-    # Relationships
+
     reports = db.relationship('Report', backref='post', cascade="all, delete-orphan")
+    messages = db.relationship('Message', backref='post', cascade="all, delete-orphan")
 
 class Message(db.Model):
     __tablename__ = 'message'
@@ -57,6 +58,8 @@ class Message(db.Model):
     message_text = db.Column(db.Text, nullable=False)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # links message to the listing it's about
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=True)
 
 class Report(db.Model):
     __tablename__ = 'report'

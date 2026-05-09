@@ -138,3 +138,21 @@ button:hover {
     color: red;
     font-weight: bold;
 }
+
+.success-message {
+    color: green;
+    font-weight: bold;
+}
+
+.admin-back-link {
+    display: block;
+    margin-top: 16px;
+    text-align: center;
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.admin-back-link:hover {
+    text-decoration: underline;
+}

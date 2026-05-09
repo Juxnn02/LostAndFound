@@ -3,58 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listing Details - Lost & Found</title>
+    <title>Listing Details — Lost & Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/app.css">
 </head>
 <body class="app-layout listing-page-body">
 
     <a href="/dashboard" class="listing-back-link">&larr; Back to Dashboard</a>
 
-    <!-- MAIN CONTAINER -->
-    <div class="listing-container">
+    <div class="listing-container" data-post-id="{{ post.id if post else '' }}" data-owner-id="{{ post.author.id if post and post.author else '' }}">
 
-        <!-- TITLE -->
-        <h1 class="listing-title">
-            {{ post.item_name }}
-        </h1>
+        <h1 class="listing-title">{{ post.item_name if post else 'Listing Not Found' }}</h1>
 
-        <!-- IMAGE -->
         <div class="listing-image">
-            {% if post.image_url %}
-                <img src="{{ url_for('static', filename=post.image_url) }}">
+            {% if post and post.image_url %}
+                <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}">
             {% else %}
-                No Image
+                <span class="card-no-image">No Image</span>
             {% endif %}
         </div>
 
         <div class="listing-content">
             <div class="listing-info-group">
-                <div class="listing-avatar">{{ post.author.account.name[:2] if post and post.author else 'UI' }}</div>
+                <div class="listing-avatar">
+                    {{ post.author.account.name[:2].upper() if post and post.author else 'UI' }}
+                </div>
                 <div class="listing-details">
-                    <h3 id="listing-location-label">{% if post %}{{ post.location }}{% else %}Detailed description{% endif %}</h3>
-                    <p id="listing-description">{% if post %}{{ post.description }}{% else %}Found at Buley Library on 10/24/2026. Purple stainless steel waterbottle with a small dent on the bottom.{% endif %}</p>
-                    <span class="listing-timestamp" id="listing-timestamp" data-timestamp="{% if post %}{{ post.post_date.isoformat() }}{% endif %}"></span>
+                    <h3>{{ post.location if post else '' }}</h3>
+                    <p>{{ post.description if post else '' }}</p>
+                    <span class="listing-timestamp" id="listing-timestamp"
+                          data-timestamp="{{ post.post_date.isoformat() if post else '' }}"></span>
                 </div>
             </div>
 
+            {% if post %}
             <div class="listing-actions">
-                <button id="connect-btn" class="btn-connect">Connect &#128172;</button>
-                <button id="report-btn" class="btn-report">Report</button>
+                <button type="button" id="connect-btn" class="btn-connect">Connect &#128172;</button>
+                <button type="button" id="report-btn" class="btn-report">Report</button>
             </div>
+            {% endif %}
         </div>
 
-        <div id="chat-thread" class="chat-thread">
-            <h4>Thread message</h4>
-            <div class="chat-message received">Hey, that's my water bottle!</div>
-            <div class="chat-message sent">Great, where should we meet?</div>
-            
-            <form id="chat-form" class="chat-form">
-                <input type="text" id="chat-input" placeholder="Type a message...">
-                <button type="submit">Send</button>
-            </form>
-        </div>
     </div>
 
+    <!-- Report Modal -->
     <div id="report-modal" class="report-modal">
         <div class="report-modal-content">
             <h3>What's wrong with this listing?</h3>
@@ -68,7 +61,7 @@
                 <label class="report-radio-label">
                     <input type="radio" name="report-reason" value="Personal Information"> Personal Information
                 </label>
-                
+
                 <div class="report-modal-buttons">
                     <button type="button" id="cancel-report-btn" class="btn-cancel">Cancel</button>
                     <button type="submit" class="btn-submit-report">Submit</button>

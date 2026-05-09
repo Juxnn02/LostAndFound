@@ -3,63 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Lost & Found</title>
+    <title>Dashboard — Lost & Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/app.css">
     <link rel="stylesheet" href="static/dashboard_extras.css">
 </head>
 
-<button onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
-    ↑ Back to Top
-</button>
-
 <body class="app-layout">
 
-<div class="navbar">
-    <!-- LEFT: User -->
-    <div class="navbar-flex">
-        <div class="avatar" id="user-menu-btn" onclick="toggleUserMenu()">
-            AM
-        </div>
+<button type="button" onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">&#8593; Top</button>
 
+<!-- NAVBAR -->
+<div class="navbar">
+    <!-- LEFT: User avatar + dropdown -->
+    <div class="navbar-flex">
+        <div class="avatar" id="user-menu-btn" onclick="toggleUserMenu()" title="Account">AM</div>
         <div id="user-dropdown" class="user-dropdown hidden">
-            <p class="email">studentemail@southernct.edu</p>
-            <hr>
-            <a href="/">Logout</a>
+            <p class="email" id="nav-user-email">studentemail@southernct.edu</p>
+            <hr class="dropdown-divider">
+            <a href="/my_listings">My Listings</a>
+            <a href="/messages">Messages</a>
+            <a href="/" class="dropdown-logout">Logout</a>
         </div>
     </div>
 
     <!-- CENTER: Title -->
-    <h2>Dashboard</h2>
+    <h2>Lost &amp; Found</h2>
 
-    <!-- RIGHT: Search -->
+    <!-- SEARCH -->
     <div class="search-bar">
         <span class="search-icon">&#128269;</span>
-        <input type="text" class="search-input" id="search-input" placeholder="Find your item..." title="Search for items">
+        <input type="text" class="search-input" id="search-input" placeholder="Search items..." title="Search for items">
     </div>
 
-    <!-- SETTINGS -->
-    <div>
-        <select onchange="location = this.value;" class="settings-select">
-            <option value="#">Settings</option>
-            <option value="/createlisting">Create Listing</option>
-            <option value="/my_listings">My Listings</option>
-            <option value="/messages">Messages</option>
-        </select>
-    </div>
+    <!-- NAV LINKS -->
+    <nav class="navbar-links">
+        <a href="/createlisting" class="nav-link">
+            <span>&#43;</span> <span>New Listing</span>
+        </a>
+        <a href="/my_listings" class="nav-link">
+            <span>&#9776;</span> <span>My Listings</span>
+        </a>
+        <a href="/messages" class="nav-link">
+            <span>&#128172;</span> <span>Messages</span>
+        </a>
+        <a href="/" class="nav-link nav-logout">
+            <span>&#8594;</span> <span>Logout</span>
+        </a>
+    </nav>
 </div>
 
 <!-- FILTERS -->
 <div class="filter-menu" id="filter-menu">
-    <a href="#" class="active">Apply All</a>
-    <a href="#">Accessories</a>
-    <a href="#">Apparel</a>
-    <a href="#">Books</a>
-    <a href="#">Electronics</a>
-    <a href="#">Other</a>
-    <a href="#">Claimed Listings</a>
+    <a href="#" class="active" data-filter="all">All Items</a>
+    <a href="#" data-filter="accessories">Accessories</a>
+    <a href="#" data-filter="apparel">Apparel</a>
+    <a href="#" data-filter="books">Books</a>
+    <a href="#" data-filter="electronics">Electronics</a>
+    <a href="#" data-filter="other">Other</a>
+    <a href="#" data-filter="claimed">Claimed</a>
 </div>
 
-<!-- GRID -->
+<!-- LISTINGS GRID -->
 <div class="grid-container" id="listings-grid">
     {% for post in posts %}
     <div class="card"
@@ -72,31 +78,29 @@
                 {% if post.image_url %}
                     <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}">
                 {% else %}
-                    No Image
+                    <span class="card-no-image">No Image</span>
                 {% endif %}
             </div>
-            
+
             {% if post.is_claimed %}
                 <div class="claimed-overlay">CLAIMED</div>
             {% endif %}
+
+            {% if post.category %}
+                <span class="card-badge">{{ post.category }}</span>
+            {% endif %}
         </div>
 
-        <p>
-            <strong>{{ post.item_name }}</strong><br>
-            Found in {{ post.location }}
-        </p>
+        <div class="card-body">
+            <strong>{{ post.item_name }}</strong>
+            <p class="card-location">&#128205; {{ post.location }}</p>
+        </div>
     </div>
     {% endfor %}
 </div>
 
-<!-- Messages -->
-<p id="no-results" class="no-results">
-    No match your search.
-</p>
-
-<p id="no-claimed" class="no-results">
-    Nothing has been claimed yet.
-</p>
+<p id="no-results" class="no-results">No items match your search.</p>
+<p id="no-claimed" class="no-results">Nothing has been claimed yet.</p>
 
 <script src="static/timeformat.js"></script>
 <script src="static/dashboard.js"></script>

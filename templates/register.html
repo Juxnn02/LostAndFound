@@ -3,32 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Register — Lost & Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/auth.css">
 </head>
 <body>
 
 <h2>
-    Lost 
-    <img src="static/magnify glass.png" alt="Magnifying glass icon"> 
+    Lost
+    <img src="static/magnify glass.png" alt="Magnifying glass icon">
     Found
 </h2>
 
 <div class="auth-container">
-    <h3>Create your account!</h3>
-    
+    <h3>Create your account</h3>
+
     <p id="register-error" class="auth-error"></p>
 
     <form onsubmit="handleRegisterSubmit(event)">
-        <input type="text" id="register-name" placeholder="Full Name" required><br><br>
-        <input type="email" id="register-email" placeholder="School Email" required><br><br>
-        <input type="password" id="register-password" placeholder="Password" required><br><br>
-        <input type="password" id="register-confirm" placeholder="Confirm Password" required><br><br>
+        <div class="auth-input-group">
+            <label for="register-name">Full Name</label>
+            <input type="text" id="register-name" placeholder="Your full name" required>
+        </div>
+
+        <div class="auth-input-group">
+            <label for="register-email">School Email</label>
+            <input type="email" id="register-email" placeholder="you@southernct.edu" required>
+        </div>
+
+        <div class="auth-input-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" placeholder="••••••••" required>
+        </div>
+
+        <div class="auth-input-group">
+            <label for="register-confirm">Confirm Password</label>
+            <input type="password" id="register-confirm" placeholder="••••••••" required>
+        </div>
+
         <button class="auth-signin-button" type="submit">Create Account</button>
     </form>
 
     <p class="auth-links">
-        <a href="/">Already have an account? Log in</a>
+        <a href="/">Already have an account? Sign in</a>
     </p>
 </div>
 

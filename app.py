@@ -1,17 +1,19 @@
+from dotenv import load_dotenv
+load_dotenv()  # loads .env before anything else reads os.environ
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_mail import Mail, Message as MailMessage
 import os
 import json
-import uuid  # For unique image names
+import uuid
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from models import db, Account, Post, Message, User, Admin, Report
 import random
 
 app = Flask(__name__)
-app.secret_key = 'super_secret_key'  # Needed to keep users logged in
-# Custom JSON Encoder to handle datetime objects
+app.secret_key = os.environ.get('SECRET_KEY', 'change_me_in_production')
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -23,35 +25,30 @@ class DateTimeEncoder(json.JSONEncoder):
 
 app.json_encoder = DateTimeEncoder
 
-
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
-
-# Gmail account used by the app to SEND emails
-app.config["MAIL_USERNAME"] = "josephofei24@gmail.com"
-
-# Your Gmail App Password (16 characters, no spaces)
-app.config["MAIL_PASSWORD"] = "Paste_your_app_password_here"
-
-# Sender email
-app.config["MAIL_DEFAULT_SENDER"] = "josephofei24@gmail.com"
+app.config["MAIL_USERNAME"] = os.environ["MAIL_USERNAME"]
+app.config["MAIL_PASSWORD"] = os.environ["MAIL_PASSWORD"]
+app.config["MAIL_DEFAULT_SENDER"] = os.environ["MAIL_USERNAME"]
 
 mail = Mail(app)
 
-# Configuration for image uploads
 app.config['UPLOAD_FOLDER'] = 'static/images'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# DATABASE CONFIGURATION
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lostandfound.db'
+# PostgreSQL via DATABASE_URL env var; falls back to SQLite for local dev
+db_url = os.environ.get('DATABASE_URL', 'sqlite:///lostandfound.db')
+# Heroku/Railway use postgres:// but SQLAlchemy requires postgresql://
+if db_url.startswith('postgres://'):
+    db_url = db_url.replace('postgres://', 'postgresql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Bind the database to this app
 db.init_app(app)
 
 
-# UI HTML ROUTES (Pages users see)
+# UI HTML ROUTES
 
 @app.route("/")
 def login():
@@ -70,7 +67,6 @@ def forgot_password():
 
 @app.route("/dashboard")
 def dashboard():
-    # Fetch all listings from the database, newest first
     posts = Post.query.order_by(Post.post_date.desc()).all()
     return render_template("dashboard.html", posts=posts)
 
@@ -91,16 +87,11 @@ def create_listing():
 
 @app.route("/my_listings")
 def my_listings():
-    # Redirect to login if not logged in
     if 'user_id' not in session:
         return redirect("/")
-
     current_user_id = session['user_id']
-
-    # Get only the posts made by this user
     user_posts = Post.query.filter_by(
         user_id=current_user_id).order_by(Post.post_date.desc()).all()
-
     return render_template("my_listings.html", listings=user_posts)
 
 
@@ -108,24 +99,21 @@ def my_listings():
 def edit_listing():
     if 'user_id' not in session:
         return redirect("/")
-
-    # Get the ID from the URL (e.g., /edit_listing?edit=5)
     post_id = request.args.get('edit', type=int)
     post_to_edit = Post.query.get(post_id)
-
-    # Security check: Make sure this post belongs to the logged-in user
     if not post_to_edit or post_to_edit.user_id != session['user_id']:
         return redirect("/my_listings")
-
     return render_template("edit_listing.html", post=post_to_edit)
 
 
 @app.route("/messages")
 def messages():
+    if 'user_id' not in session:
+        return redirect("/")
     return render_template("messages.html")
 
 
-# API ROUTES (Backend logic for saving data)
+# API ROUTES
 
 @app.route("/api/register", methods=["POST"])
 def api_register():
@@ -136,23 +124,13 @@ def api_register():
         return jsonify({"success": False, "message": "Email already registered."})
 
     hashed_password = generate_password_hash(data['password'])
-
-    # 1. Create the Account
-    new_account = Account(
-        name=data['name'],
-        email=data['email'],
-        password=hashed_password
-    )
+    new_account = Account(name=data['name'], email=data['email'], password=hashed_password)
 
     try:
         db.session.add(new_account)
-        db.session.commit()  # Save to generate the Account ID
+        db.session.commit()
 
-        # 2. Automatically create the linked User profile
-        new_user = User(
-            account_id=new_account.id,
-            username=data['name']
-        )
+        new_user = User(account_id=new_account.id, username=data['name'])
         db.session.add(new_user)
         db.session.commit()
 
@@ -165,7 +143,6 @@ def api_register():
 @app.route("/api/login", methods=["POST"])
 def api_login():
     data = request.get_json()
-
     email = data.get("email")
     password = data.get("password")
 
@@ -192,57 +169,39 @@ def api_login():
         return jsonify({"success": False, "message": "Invalid email or password"})
 
     user_profile = User.query.filter_by(account_id=user_account.id).first()
-
     if not user_profile:
-        user_profile = User(
-            account_id=user_account.id,
-            username=user_account.name
-        )
+        user_profile = User(account_id=user_account.id, username=user_account.name)
         db.session.add(user_profile)
         db.session.commit()
 
     session["user_id"] = user_profile.id
     session["account_id"] = user_account.id
     session["user_email"] = user_account.email
+    session["user_name"] = user_account.name
 
     admin = Admin.query.filter_by(user_id=user_profile.id).first()
-
     if admin:
         session["is_admin"] = True
         session["admin_id"] = admin.id
-        return jsonify({
-            "success": True,
-            "message": "Admin login successful!",
-            "redirect": "/admin"
-        })
+        return jsonify({"success": True, "message": "Admin login successful!", "redirect": "/admin"})
 
     session["is_admin"] = False
-
-    return jsonify({
-        "success": True,
-        "message": "Login successful!",
-        "redirect": "/dashboard"
-    })
-
-# New API Route for Creating Listings with Images
+    return jsonify({"success": True, "message": "Login successful!", "redirect": "/dashboard"})
 
 
 @app.route("/api/listings", methods=["POST"])
 def api_create_listing():
-    # Make sure they are logged in first
     if 'user_id' not in session:
         return jsonify({"success": False, "message": "Please log in first."})
 
-    user_id = session['user_id']  # Get ID from the logged-in session
-
+    user_id = session['user_id']
     image_url = None
+
     if 'image' in request.files:
         file = request.files['image']
         if file.filename != '':
-            # Create a unique random name using uuid
             extension = file.filename.rsplit('.', 1)[1].lower()
             unique_name = str(uuid.uuid4()) + "." + extension
-
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_name)
             file.save(filepath)
             image_url = f"images/{unique_name}"
@@ -269,7 +228,6 @@ def api_create_listing():
 def api_claim_listing(post_id):
     post = Post.query.get_or_404(post_id)
     post.is_claimed = True
-
     try:
         db.session.commit()
         return jsonify({"success": True})
@@ -293,21 +251,16 @@ def api_unclaim_listing(post_id):
 @app.route("/api/listings/update/<int:post_id>", methods=["POST"])
 def api_update_listing(post_id):
     post = Post.query.get_or_404(post_id)
-
-    # Update the fields with the new data from the form
     post.item_name = request.form.get("item_name")
     post.location = request.form.get("location")
     post.category = request.form.get("category")
-    # Add any other fields you want to edit here
-
     db.session.commit()
-    return redirect("/my-listings")  # Go back to the management page
+    return redirect("/my_listings")
 
 
 @app.route("/api/listings/delete/<int:post_id>", methods=["DELETE"])
 def api_delete_listing(post_id):
     post = Post.query.get_or_404(post_id)
-
     try:
         db.session.delete(post)
         db.session.commit()
@@ -317,29 +270,90 @@ def api_delete_listing(post_id):
         return jsonify({"success": False, "message": str(e)})
 
 
-# Real-time Messaging API scaffolding
+# Messaging API
+
+@app.route("/api/conversations", methods=["GET"])
+def api_conversations():
+    if 'user_id' not in session:
+        return jsonify([])
+
+    user_id = session['user_id']
+
+    msgs = Message.query.filter(
+        (Message.sender_id == user_id) | (Message.receiver_id == user_id)
+    ).order_by(Message.timestamp.desc()).all()
+
+    seen = set()
+    conversations = []
+    for msg in msgs:
+        other_id = msg.receiver_id if msg.sender_id == user_id else msg.sender_id
+        key = (msg.post_id, other_id)
+        if key not in seen:
+            seen.add(key)
+            post = Post.query.get(msg.post_id) if msg.post_id else None
+            other_user = User.query.get(other_id)
+            other_account = Account.query.get(other_user.account_id) if other_user else None
+            conversations.append({
+                "post_id": msg.post_id,
+                "post_name": post.item_name if post else "General",
+                "other_user_id": other_id,
+                "other_user_name": other_account.name if other_account else "Unknown",
+                "last_message": msg.message_text,
+                "timestamp": msg.timestamp.isoformat() if msg.timestamp else None
+            })
+
+    return jsonify(conversations)
 
 
 @app.route("/api/messages/<int:post_id>", methods=["GET", "POST"])
 def api_messages(post_id):
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Please log in."})
+
+    user_id = session['user_id']
+
     if request.method == "POST":
         data = request.get_json()
+        receiver_id = data.get('receiver_id')
+
+        if not receiver_id:
+            post = Post.query.get(post_id)
+            receiver_id = post.user_id if post else None
+
+        if not receiver_id:
+            return jsonify({"success": False, "message": "No receiver specified."})
+
         new_msg = Message(
             message_text=data['text'],
-            sender_id=1,   # Mock sender ID
-            receiver_id=2  # Mock receiver ID
+            sender_id=user_id,
+            receiver_id=int(receiver_id),
+            post_id=post_id
         )
         db.session.add(new_msg)
         db.session.commit()
         return jsonify({"success": True})
 
-    # GET method
-    messages = Message.query.all()  # In production, filter by sender_id/receiver_id
+    # GET
+    other_user_id = request.args.get('other_user_id', type=int)
+    if other_user_id:
+        msgs = Message.query.filter(
+            Message.post_id == post_id,
+            (
+                ((Message.sender_id == user_id) & (Message.receiver_id == other_user_id)) |
+                ((Message.sender_id == other_user_id) & (Message.receiver_id == user_id))
+            )
+        ).order_by(Message.timestamp.asc()).all()
+    else:
+        msgs = Message.query.filter_by(post_id=post_id).order_by(Message.timestamp.asc()).all()
+
     return jsonify([{
+        "id": m.id,
         "text": m.message_text,
         "sender_id": m.sender_id,
-        "timestamp": m.timestamp.isoformat() if m.timestamp else None
-    } for m in messages])
+        "receiver_id": m.receiver_id,
+        "timestamp": m.timestamp.isoformat() if m.timestamp else None,
+        "is_mine": m.sender_id == user_id
+    } for m in msgs])
 
 
 reset_codes = {}
@@ -354,7 +368,6 @@ def api_forgot_password():
         return jsonify({"success": False, "message": "Please enter a valid SouthernCT email."})
 
     user = Account.query.filter_by(email=email).first()
-
     if not user:
         return jsonify({"success": False, "message": "Account not found."})
 
@@ -368,17 +381,9 @@ def api_forgot_password():
             body=f"Your password reset verification code is: {code}"
         )
         mail.send(msg)
-
-        return jsonify({
-            "success": True,
-            "message": "Verification code sent to your email."
-        })
-
+        return jsonify({"success": True, "message": "Verification code sent to your email."})
     except Exception as e:
-        return jsonify({
-            "success": False,
-            "message": f"Email failed to send: {str(e)}"
-        })
+        return jsonify({"success": False, "message": f"Email failed to send: {str(e)}"})
 
 
 @app.route("/api/verify-reset-code", methods=["POST"])
@@ -400,7 +405,6 @@ def api_reset_password():
     password = data.get("password")
 
     user = Account.query.filter_by(email=email).first()
-
     if not user:
         return jsonify({"success": False, "message": "Account not found."})
 
@@ -422,21 +426,61 @@ def admin_login_page():
     return render_template("admin_login.html")
 
 
+@app.route("/admin-register")
+def admin_register_page():
+    return render_template("admin_register.html")
+
+
 @app.route("/api/admin-login", methods=["POST"])
 def api_admin_login():
     data = request.get_json()
-
     username = data.get("username")
     password = data.get("password")
 
     admin = Admin.query.filter_by(admin_username=username).first()
+    if not admin:
+        return jsonify({"success": False, "message": "Invalid admin username or password."})
 
-    if admin and admin.admin_password == password:
-        session["is_admin"] = True
-        session["admin_id"] = admin.id
-        return jsonify({"success": True, "message": "Admin login successful."})
+    password_matches = (
+        admin.admin_password == password or
+        check_password_hash(admin.admin_password, password)
+    )
 
-    return jsonify({"success": False, "message": "Invalid admin username or password."})
+    if not password_matches:
+        return jsonify({"success": False, "message": "Invalid admin username or password."})
+
+    session["is_admin"] = True
+    session["admin_id"] = admin.id
+    return jsonify({"success": True, "message": "Admin login successful."})
+
+
+@app.route("/api/admin-register", methods=["POST"])
+def api_admin_register():
+    data = request.get_json()
+
+    setup_key = data.get("setup_key")
+    expected_key = os.environ.get("ADMIN_SETUP_KEY", "change_this_before_deploying")
+
+    if setup_key != expected_key:
+        return jsonify({"success": False, "message": "Invalid setup key."})
+
+    username = data.get("username", "").strip()
+    password = data.get("password", "").strip()
+
+    if not username or not password:
+        return jsonify({"success": False, "message": "Username and password are required."})
+
+    if Admin.query.filter_by(admin_username=username).first():
+        return jsonify({"success": False, "message": "Username already taken."})
+
+    new_admin = Admin(
+        admin_username=username,
+        admin_password=generate_password_hash(password)
+    )
+    db.session.add(new_admin)
+    db.session.commit()
+
+    return jsonify({"success": True, "message": f"Admin '{username}' created successfully."})
 
 
 @app.route("/admin")
@@ -469,15 +513,11 @@ def admin_dashboard():
 def admin_delete_post(post_id):
     if not admin_required():
         return jsonify({"success": False, "message": "Unauthorized"})
-
     post = Post.query.get(post_id)
-
     if not post:
         return jsonify({"success": False, "message": "Post not found"})
-
     db.session.delete(post)
     db.session.commit()
-
     return jsonify({"success": True, "message": "Post deleted"})
 
 
@@ -485,15 +525,11 @@ def admin_delete_post(post_id):
 def admin_toggle_ban(account_id):
     if not admin_required():
         return jsonify({"success": False, "message": "Unauthorized"})
-
     account = Account.query.get(account_id)
-
     if not account:
         return jsonify({"success": False, "message": "Account not found"})
-
     account.is_banned = not account.is_banned
     db.session.commit()
-
     return jsonify({"success": True, "message": "User status updated"})
 
 
@@ -501,15 +537,11 @@ def admin_toggle_ban(account_id):
 def admin_toggle_claimed(post_id):
     if not admin_required():
         return jsonify({"success": False, "message": "Unauthorized"})
-
     post = Post.query.get(post_id)
-
     if not post:
         return jsonify({"success": False, "message": "Post not found"})
-
     post.is_claimed = not post.is_claimed
     db.session.commit()
-
     return jsonify({"success": True, "message": "Post claimed status updated"})
 
 

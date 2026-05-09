@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages</title>
+    <title>Messages — Lost & Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/app.css">
     <link rel="stylesheet" href="static/messages.css">
 </head>
@@ -16,44 +18,29 @@
 
     <div class="messenger-wrapper">
 
-        <!-- LEFT: Inbox -->
-        <aside class="inbox-list">
-
-            <div class="inbox-card active" onclick="loadChat('alex')">
-                <div class="inbox-header">
-                    <strong>Alex Rivera</strong>
-                    <span class="status-dot"></span>
-                </div>
-                <p class="preview">Listing: Purple Water Bottle</p>
+        <!-- LEFT: Conversation list -->
+        <aside class="inbox-list" id="inbox-list">
+            <div class="inbox-empty" id="inbox-empty">
+                <p>No conversations yet.</p>
+                <a href="/dashboard">Browse listings</a>
             </div>
-
-            <div class="inbox-card" onclick="loadChat('jordan')">
-                <div class="inbox-header">
-                    <strong>Jordan Smith</strong>
-                </div>
-                <p class="preview">Listing: Calculus Textbook</p>
-            </div>
-
-            <div class="inbox-card demo-highlight" onclick="loadChat('live')">
-                <div class="inbox-header">
-                    <strong>Live Demo User</strong>
-                    <span class="new-badge">New</span>
-                </div>
-                <p class="preview">Waiting for message...</p>
-            </div>
-
         </aside>
 
-        <!-- RIGHT: Chat -->
+        <!-- RIGHT: Chat panel -->
         <section class="chat-main">
 
-            <div class="chat-display" id="chat-box">
-                <p class="empty-chat-text">Select a conversation to start chatting...</p>
+            <div class="chat-header" id="chat-header">
+                <span id="chat-header-name"></span>
+                <span id="chat-header-listing"></span>
             </div>
 
-            <form class="message-input" onsubmit="return handleSend(event)">
-                <input type="text" id="user-input" placeholder="Write a reply...">
-                <button type="submit">Send</button>
+            <div class="chat-display" id="chat-box">
+                <p class="empty-chat-text">Select a conversation to start chatting.</p>
+            </div>
+
+            <form class="message-input" id="message-form" onsubmit="return handleSend(event)">
+                <input type="text" id="user-input" placeholder="Write a message..." autocomplete="off" disabled>
+                <button type="submit" id="send-btn" disabled>Send</button>
             </form>
 
         </section>
