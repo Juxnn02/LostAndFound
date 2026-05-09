@@ -13,7 +13,9 @@
     </div>
 
 <form class="form-container" id="edit-listing-form">
-        <div class="form-content">
+    <div style="display: flex; gap: 40px; align-items: flex-start;">
+        
+        <div class="form-left-column" style="flex: 1;">     
             
             <div class="form-group">
                 <label for="listing-date">Date:</label>
@@ -35,12 +37,15 @@
             <div class="form-group">
                 <label for="listing-location">Found at / Lost at:</label>
                 <select id="listing-location" required title="Select the location where item was found or lost">
-                    <option value="">-Select-</option>
-                    <option value="Buley Library" {% if post.location == 'Buley Library' %}selected{% endif %}>Buley Library</option>
-                    <option value="Engleman Hall" {% if post.location == 'Engleman Hall' %}selected{% endif %}>Engleman Hall</option>
-                    <option value="Jennings Hall" {% if post.location == 'Jennings Hall' %}selected{% endif %}>Jennings Hall</option>
-                    <option value="Morrill Hall" {% if post.location == 'Morrill Hall' %}selected{% endif %}>Morrill Hall</option>
-                    <option value="Student Center" {% if post.location == 'Student Center' %}selected{% endif %}>Student Center</option>
+                     <option value="">— Select location —</option>
+                    <option value="Buley Library">Buley Library</option>
+                    <option value="Engleman Hall">Engleman Hall</option>
+                    <option value="Jennings Hall">Jennings Hall</option>
+                    <option value="Morrill Hall">Morrill Hall</option>
+                    <option value="Student Center">Student Center</option>
+                    <option value="Farnham Hall">Farnham Hall</option>
+                    <option value="Outside / Grounds">Outside / Grounds</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
 
@@ -48,26 +53,83 @@
                 <label for="listing-description">Description:</label>
                 <textarea id="listing-description" required rows="4">{{ post.description }}</textarea>
             </div>
-
+            
+          <div class="form-group">
             <div class="form-buttons">
                 <button type="button" class="btn-form btn-cancel-form" onclick="location.href='/my_listings'">Cancel</button>
                 <button type="submit" class="btn-form btn-save">Save</button>
             </div>
+          </div>
         </div>
-
-        <div class="form-right-column">
-            
+        
+         <div class="form-right-column" style="flex: 1;"> 
             <div class="form-group">
                 <label for="listing-title">Title:</label>
-                <input type="text" id="listing-title" value="{{ post.item_name }}" required>
+                <input type="text" id="listing-title" required>
             </div>
 
-            <div class="image-upload-area">
-                <span class="image-upload-text">Update Image</span>
-                <input type="file" id="listing-image" accept="image/*" class="image-upload-input" title="Select image file">
+            <div style="border: none; padding: 0; margin: 0;">
+                <label class="image-upload-text">Update Image</label>
+                <input type="file" id="listing-image" accept="image/*" style="border: none;" title="Select image file">
             </div>
-            
-        </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>Current Image:</label>
+            <img id="image-preview" src="{{ post.image_url }}" style="max-width: 300px; display: block; margin-top: 6px;">
+            </div>
+          </div>
+        
     </form>
+    
+    <script>
+        document.getElementById('listing-image').addEventListener('change', function() {
+            const file = this.files[0];
+            const preview = document.getElementById('image-preview');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else { 
+                preview.scr = '';
+                previewContainer.style.display = 'none';
+            }
+        });
+                            
+        
+        document.getElementById('edit-listing-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const postId = {{ post.id }};
+
+        const formData = new FormData();
+
+        formData.append('item_name', document.getElementById('listing-title').value);
+        formData.append('description', document.getElementById('listing-description').value);
+        formData.append('category', document.getElementById('listing-category').value);
+        formData.append('location', document.getElementById('listing-location').value);
+
+        const imageInput = document.getElementById('listing-image');
+        if (imageInput.files.length > 0) { formData.append('image', imageInput.files[0]);
+        }
+
+        fetch(`/listings/update/${postId}`, {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+          .then(data => { 
+              if (data.success) {
+                  window.location.href = '/my_listings';
+              } else { 
+                  alert('Update failed: ' + data.message);
+              }
+          }).catch(error => {
+              console.error('Error:', error);
+              alert('An error occured.');
+          });
+        });                                                                                                                                                                                          
+    </script>   
 </body>
 </html>
