@@ -50,13 +50,23 @@
                 <textarea id="listing-description" required rows="4">{{ post.description }}</textarea>
             </div>
             
-          <div class="form-group">
+          <div class="form-group" style="position: relative; display: inline-block; width: max-content;">
     <label>Current Image:</label>
-    <img id="image-preview" src="{{ post.image_url }}" 
-        alt="Image Preview" 
-        style="max-width: 200px; display: block; margin-top:10px;">
+    <img id="image-preview" src="{{ post.image_url }}" alt="Image Preview" style="max-width: 200px; display: block; margin-top:10px;">
+    <button id="update-image-btn" style="
+        position: absolute; 
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%);
+        background-color: #333;
+        color: #fff;
+        padding: 4px 8px;
+        font-size: 12px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        pointer-events: auto;">Update Image</button>
             </div>
-                
             <div class="form-buttons">
                 <button type="button" class="btn-form btn-cancel-form" onclick="location.href='/my_listings'">Cancel</button>
                 <button type="submit" class="btn-form btn-save">Save</button>
@@ -133,6 +143,8 @@
               console.error('Error:', error);
               alert('An error occured.');
           });
+        document. getElementById('update-image-btn').addEenetListner('click, function() {
+            document.getElementById('listing-image').click();
         });                                                                                                                                                                                          
     </script>   
 </body>
