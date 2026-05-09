@@ -72,14 +72,11 @@
                 <input type="file" id="listing-image" accept="image/*" class="image-upload-input" title="Select image file">
             </div>
             <div class="form-group" id="new-image-preview-container" style="display:none;">
-                <label>Updated Image preview:</label>
                 <img id="image-preview" scr"" alt="Updated Image 
-                Preview" style="max-width: 200px; display: block: margin-top:10px;">
+                Preview" style="max-width: 1px; display: block: margin-top:1px;">
             </div>
         </div>
     </form>
-    <input  type="file" id="listing-image" accept="image/*" class="image-upload-input"/>
-    <img id="image-preview" src="{{ post.image_url }}" alt=Image Preview" style="max-width: 200px; display:block; margin-top: 10px;">
     
     <script>
         document.getElementById('listing-image').addEventListener('change', function() {
