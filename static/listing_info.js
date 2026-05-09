@@ -15,16 +15,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Read post and owner IDs from the container
+    // Read post and owner info from the container
     const container = document.querySelector('[data-post-id]');
-    const postId = container ? container.dataset.postId : null;
-    const ownerId = container ? container.dataset.ownerId : null;
+    const postId    = container ? container.dataset.postId    : null;
+    const ownerId   = container ? container.dataset.ownerId   : null;
+    const postName  = container ? container.dataset.postName  : '';
+    const ownerName = container ? container.dataset.ownerName : '';
 
-    // Connect button → redirect to messages page for this listing
+    // Connect button → redirect to messages page with all context
     if (connectBtn) {
         connectBtn.addEventListener('click', () => {
             if (postId && ownerId) {
-                window.location.href = `/messages?post_id=${postId}&user_id=${ownerId}`;
+                const params = new URLSearchParams({
+                    post_id:    postId,
+                    user_id:    ownerId,
+                    post_name:  postName,
+                    owner_name: ownerName
+                });
+                window.location.href = `/messages?${params.toString()}`;
             } else {
                 window.location.href = '/messages';
             }

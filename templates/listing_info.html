@@ -12,7 +12,11 @@
 
     <a href="/dashboard" class="listing-back-link">&larr; Back to Dashboard</a>
 
-    <div class="listing-container" data-post-id="{{ post.id if post else '' }}" data-owner-id="{{ post.author.id if post and post.author else '' }}">
+    <div class="listing-container"
+         data-post-id="{{ post.id if post else '' }}"
+         data-owner-id="{{ post.author.id if post and post.author else '' }}"
+         data-post-name="{{ post.item_name if post else '' }}"
+         data-owner-name="{{ post.author.account.name if post and post.author and post.author.account else '' }}">
 
         <h1 class="listing-title">{{ post.item_name if post else 'Listing Not Found' }}</h1>
 

@@ -3,17 +3,16 @@ let activePostId = null;
 let activeOtherUserId = null;
 let pollInterval = null;
 
-// On page load: fetch conversations and auto-select from URL params
 document.addEventListener('DOMContentLoaded', () => {
-    loadConversations();
-
-    const params = new URLSearchParams(window.location.search);
-    const urlPostId = params.get('post_id') ? parseInt(params.get('post_id')) : null;
-    const urlUserId = params.get('user_id') ? parseInt(params.get('user_id')) : null;
+    const params      = new URLSearchParams(window.location.search);
+    const urlPostId   = params.get('post_id')   ? parseInt(params.get('post_id'))   : null;
+    const urlUserId   = params.get('user_id')   ? parseInt(params.get('user_id'))   : null;
+    const urlPostName = params.get('post_name')  || '';
+    const urlOwnerName= params.get('owner_name') || '';
 
     if (urlPostId && urlUserId) {
-        // Auto-open the conversation linked from listing-info
-        loadConversations().then(() => openChat(urlPostId, urlUserId));
+        // Came from a listing's Connect button — load inbox then open that chat
+        loadConversations().then(() => openChat(urlPostId, urlUserId, urlOwnerName, urlPostName));
     } else {
         loadConversations();
     }
@@ -23,10 +22,9 @@ async function loadConversations() {
     const res = await fetch('/api/conversations');
     const convos = await res.json();
 
-    const list = document.getElementById('inbox-list');
+    const list  = document.getElementById('inbox-list');
     const empty = document.getElementById('inbox-empty');
 
-    // Remove old cards (keep the empty placeholder)
     list.querySelectorAll('.inbox-card').forEach(el => el.remove());
 
     if (convos.length === 0) {
@@ -64,7 +62,7 @@ function openChat(postId, otherUserId, otherUserName, postName) {
     activePostId = postId;
     activeOtherUserId = otherUserId;
 
-    // Highlight active card
+    // Highlight active inbox card
     document.querySelectorAll('.inbox-card').forEach(c => {
         c.classList.toggle('active',
             parseInt(c.dataset.postId) === postId &&
@@ -73,20 +71,19 @@ function openChat(postId, otherUserId, otherUserName, postName) {
     });
 
     // Update header
-    document.getElementById('chat-header-name').textContent = otherUserName || '';
-    document.getElementById('chat-header-listing').textContent = postName ? `Re: ${postName}` : '';
+    const headerName    = document.getElementById('chat-header-name');
+    const headerListing = document.getElementById('chat-header-listing');
+    if (headerName)    headerName.textContent    = otherUserName || 'User';
+    if (headerListing) headerListing.textContent = postName ? `Re: ${postName}` : '';
 
     // Enable input
     const input = document.getElementById('user-input');
-    const btn = document.getElementById('send-btn');
-    input.disabled = false;
-    btn.disabled = false;
-    input.focus();
+    const btn   = document.getElementById('send-btn');
+    if (input) { input.disabled = false; input.focus(); }
+    if (btn)   { btn.disabled   = false; }
 
-    // Load messages immediately
     fetchMessages();
 
-    // Poll every 3 seconds for new messages
     if (pollInterval) clearInterval(pollInterval);
     pollInterval = setInterval(fetchMessages, 3000);
 }
@@ -99,12 +96,14 @@ async function fetchMessages() {
     if (!Array.isArray(msgs)) return;
 
     const box = document.getElementById('chat-box');
+    if (!box) return;
+
     const wasAtBottom = box.scrollHeight - box.scrollTop <= box.clientHeight + 40;
 
     box.innerHTML = '';
 
     if (msgs.length === 0) {
-        box.innerHTML = '<p class="empty-chat-text">No messages yet. Say hi!</p>';
+        box.innerHTML = '<p class="empty-chat-text">No messages yet — say hi! 👋</p>';
         return;
     }
 
@@ -116,24 +115,22 @@ async function fetchMessages() {
         box.appendChild(bubble);
     });
 
-    if (wasAtBottom) {
-        box.scrollTop = box.scrollHeight;
-    }
+    if (wasAtBottom) box.scrollTop = box.scrollHeight;
 }
 
 async function handleSend(event) {
     event.preventDefault();
 
     const input = document.getElementById('user-input');
-    const text = input.value.trim();
+    const text  = input ? input.value.trim() : '';
     if (!text || !activePostId) return false;
 
     input.value = '';
 
     const res = await fetch(`/api/messages/${activePostId}`, {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, receiver_id: activeOtherUserId })
+        body:    JSON.stringify({ text, receiver_id: activeOtherUserId })
     });
 
     const data = await res.json();
