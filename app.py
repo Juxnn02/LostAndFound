@@ -68,7 +68,15 @@ def forgot_password():
 @app.route("/dashboard")
 def dashboard():
     posts = Post.query.order_by(Post.post_date.desc()).all()
-    return render_template("dashboard.html", posts=posts)
+    user_name = session.get('user_name', '')
+    parts = user_name.split()
+    if len(parts) >= 2:
+        initials = parts[0][0].upper() + parts[-1][0].upper()
+    elif parts:
+        initials = parts[0][:2].upper()
+    else:
+        initials = 'ME'
+    return render_template("dashboard.html", posts=posts, user_initials=initials, user_email=session.get('user_email', ''))
 
 
 @app.route("/listing-info")

@@ -3,9 +3,9 @@
 */
 
 :root {
-    --primary: #4F46E5;
-    --primary-hover: #4338CA;
-    --primary-light: rgba(79, 70, 229, 0.1);
+    --primary: #003DA5;
+    --primary-hover: #002E86;
+    --primary-light: rgba(0, 61, 165, 0.1);
     --success: #10B981;
     --danger: #EF4444;
     --bg-app: #F1F5F9;

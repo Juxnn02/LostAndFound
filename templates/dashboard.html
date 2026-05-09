@@ -18,9 +18,9 @@
 <div class="navbar">
     <!-- LEFT: User avatar + dropdown -->
     <div class="navbar-flex">
-        <div class="avatar" id="user-menu-btn" onclick="toggleUserMenu()" title="Account">AM</div>
+        <div class="avatar" id="user-menu-btn" onclick="toggleUserMenu()" title="Account">{{ user_initials }}</div>
         <div id="user-dropdown" class="user-dropdown hidden">
-            <p class="email" id="nav-user-email">studentemail@southernct.edu</p>
+            <p class="email" id="nav-user-email">{{ user_email }}</p>
             <hr class="dropdown-divider">
             <a href="/my_listings">My Listings</a>
             <a href="/messages">Messages</a>
