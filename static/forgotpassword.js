@@ -5,29 +5,37 @@ function handleForgotSubmit(event) {
 
     const email = document.getElementById("forgot-email").value;
     const errorDiv = document.getElementById("forgot-error");
+    const btn = event.target.querySelector("button[type='submit']");
+
+    errorDiv.textContent = "";
+    btn.disabled = true;
+    btn.textContent = "Sending…";
 
     fetch("/api/forgot-password", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email })
     })
         .then(response => response.json())
         .then(data => {
+            btn.disabled = false;
+            btn.textContent = "Send Code";
             if (data.success) {
                 resetEmail = email;
                 errorDiv.style.color = "green";
                 errorDiv.textContent = data.message;
-
                 document.getElementById("forgot-step-1").classList.remove("active");
                 document.getElementById("forgot-step-2").classList.add("active");
-
-
             } else {
                 errorDiv.style.color = "red";
                 errorDiv.textContent = data.message;
             }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.textContent = "Send Code";
+            errorDiv.style.color = "red";
+            errorDiv.textContent = "Could not reach the server. Please try again.";
         });
 }
 
@@ -37,27 +45,33 @@ function handleForgotVerify(event) {
     const code = document.getElementById("verification-code").value;
     const errorDiv = document.getElementById("forgot-error");
 
+    const btn = event.target.querySelector("button[type='submit']");
+    btn.disabled = true;
+    btn.textContent = "Verifying…";
+
     fetch("/api/verify-reset-code", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            email: resetEmail,
-            code: code
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail, code: code })
     })
         .then(response => response.json())
         .then(data => {
+            btn.disabled = false;
+            btn.textContent = "Verify Code";
             if (data.success) {
                 errorDiv.textContent = "";
-
                 document.getElementById("forgot-step-2").classList.remove("active");
                 document.getElementById("forgot-step-3").classList.add("active");
             } else {
                 errorDiv.style.color = "red";
                 errorDiv.textContent = data.message;
             }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.textContent = "Verify Code";
+            errorDiv.style.color = "red";
+            errorDiv.textContent = "Could not reach the server. Please try again.";
         });
 }
 
