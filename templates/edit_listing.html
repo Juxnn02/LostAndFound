@@ -51,9 +51,6 @@
             </div>
             
           <div class="form-group">
-    <label>Current Image:</label>
-    <img id="image-preview" src="{{ post.image_url }}" style="max-width: 200px; display: block; margin-top:10px;">
-          </div>
             <div class="form-buttons">
                 <button type="button" class="btn-form btn-cancel-form" onclick="location.href='/my_listings'">Cancel</button>
                 <button type="submit" class="btn-form btn-save">Save</button>
@@ -71,6 +68,11 @@
                 <label class="image-upload-text">Update Image</label>
                 <input type="file" id="listing-image" accept="image/*" style="border: none;" title="Select image file">
             </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>Current Image:</label>
+            <img id="image-preview" src="{{ post.image_url }}" style="max-width: 200px; display: block; margin-top: 5px;">
+            </div>
+          </div>
         </div>
     </form>
     
