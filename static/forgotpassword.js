@@ -20,8 +20,8 @@ function handleForgotSubmit(event) {
                 errorDiv.style.color = "green";
                 errorDiv.textContent = data.message;
 
-                document.getElementById("forgot-step-1").style.display = "none";
-                document.getElementById("forgot-step-2").style.display = "block";
+                document.getElementById("forgot-step-1").classList.remove("active");
+                document.getElementById("forgot-step-2").classList.add("active");
 
 
             } else {
@@ -52,8 +52,8 @@ function handleForgotVerify(event) {
             if (data.success) {
                 errorDiv.textContent = "";
 
-                document.getElementById("forgot-step-2").style.display = "none";
-                document.getElementById("forgot-step-3").style.display = "block";
+                document.getElementById("forgot-step-2").classList.remove("active");
+                document.getElementById("forgot-step-3").classList.add("active");
             } else {
                 errorDiv.style.color = "red";
                 errorDiv.textContent = data.message;

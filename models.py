@@ -67,5 +67,6 @@ class Report(db.Model):
     reporting_email = db.Column(db.String(255), nullable=False)
     reportee_email = db.Column(db.String(255), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    reason = db.Column(db.String(255), nullable=True)
     status = db.Column(db.String(50), default='Pending')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

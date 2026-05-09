@@ -135,19 +135,35 @@
             <table>
                 <tr>
                     <th>ID</th>
-                    <th>Reporting Email</th>
-                    <th>Reportee Email</th>
+                    <th>Reported Listing</th>
+                    <th>Reason</th>
+                    <th>Reported By</th>
+                    <th>Owner</th>
                     <th>Status</th>
+                    <th>Date</th>
                 </tr>
 
                 {% for report in reports %}
                 <tr>
                     <td>{{ report.id }}</td>
+                    <td>
+                        {% if report.post %}
+                            <a href="/listing-info?id={{ report.post.id }}">{{ report.post.item_name }}</a>
+                        {% else %}
+                            (deleted)
+                        {% endif %}
+                    </td>
+                    <td>{{ report.reason or '—' }}</td>
                     <td>{{ report.reporting_email }}</td>
                     <td>{{ report.reportee_email }}</td>
                     <td>{{ report.status }}</td>
+                    <td>{{ report.created_at.strftime('%Y-%m-%d') if report.created_at else '—' }}</td>
                 </tr>
                 {% endfor %}
+
+                {% if not reports %}
+                <tr><td colspan="7" class="table-empty">No reports yet.</td></tr>
+                {% endif %}
             </table>
         </div>
 

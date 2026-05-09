@@ -86,6 +86,12 @@ table td {
     padding: 12px;
 }
 
+.table-empty {
+    text-align: center;
+    color: #94A3B8;
+    padding: 20px;
+}
+
 /* BUTTONS */
 
 button {

@@ -431,6 +431,40 @@ def api_reset_password():
     return jsonify({"success": True, "message": "Password updated."})
 
 
+@app.route("/api/report", methods=["POST"])
+def api_report():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "You must be logged in to report."}), 401
+
+    data = request.get_json()
+    post_id = data.get("post_id")
+    reason  = data.get("reason", "")
+
+    post = Post.query.get(post_id)
+    if not post:
+        return jsonify({"success": False, "message": "Post not found."}), 404
+
+    reporter_user = User.query.get(session['user_id'])
+    reporter_account = Account.query.get(reporter_user.account_id) if reporter_user else None
+    reporting_email = reporter_account.email if reporter_account else session.get('user_email', '')
+
+    owner_user = User.query.get(post.user_id)
+    owner_account = Account.query.get(owner_user.account_id) if owner_user else None
+    reportee_email = owner_account.email if owner_account else ''
+
+    report = Report(
+        reporting_email=reporting_email,
+        reportee_email=reportee_email,
+        post_id=post_id,
+        reason=reason,
+        status='Pending'
+    )
+    db.session.add(report)
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "Report submitted."})
+
+
 def admin_required():
     return session.get("is_admin") == True
 

@@ -52,8 +52,25 @@ document.addEventListener('DOMContentLoaded', () => {
         reportForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const reason = new FormData(reportForm).get('report-reason');
-            alert(`Report submitted: "${reason}". An admin will review this listing.`);
-            reportModal.classList.remove('active');
+
+            fetch('/api/report', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ post_id: postId, reason: reason })
+            })
+            .then(r => r.json())
+            .then(data => {
+                reportModal.classList.remove('active');
+                if (data.success) {
+                    alert('Report submitted. An admin will review this listing.');
+                } else {
+                    alert('Could not submit report: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(() => {
+                reportModal.classList.remove('active');
+                alert('Could not reach the server. Please try again.');
+            });
         });
     }
 });
