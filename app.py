@@ -111,7 +111,41 @@ def edit_listing():
     post_to_edit = Post.query.get(post_id)
     if not post_to_edit or post_to_edit.user_id != session['user_id']:
         return redirect("/my_listings")
+        
     return render_template("edit_listing.html", post=post_to_edit)
+
+@app.route("/listings/update/<int:post_id>", methods=["POST"])
+def update_listing(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    if 'user_id' not in session or post.user_id != session['user_id']:
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+
+    post.item_name = request.form.get("item_name")
+    post.description = request.form.get("description")
+    post.category = request.form.get("category")
+    post.location = request.form.get("location")
+
+    if 'image' in request.files:
+        file = request.files['image']
+        if file and file.filename != '':
+            extension = file.filename.rsplit('.', 1)[1].lower()
+            unique_name = str(uuid.uuid4()) + "." + extension
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_name)
+            file.save(filepath)
+            post.image_url = f"images/{unique_name}"
+
+    try: 
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)})
+
+
+
+
 
 
 @app.route("/messages")
