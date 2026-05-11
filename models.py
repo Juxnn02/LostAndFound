@@ -49,7 +49,7 @@ class Post(db.Model):
     is_claimed = db.Column(db.Boolean, default=False)
 
     reports = db.relationship('Report', backref='post')
-    messages = db.relationship('Message', backref='post', cascade="all, delete-orphan")
+    messages = db.relationship('Message', backref='post')
 
 class Message(db.Model):
     __tablename__ = 'message'
