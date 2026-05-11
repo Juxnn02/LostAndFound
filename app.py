@@ -154,6 +154,10 @@ def messages():
         return redirect("/")
     return render_template("messages.html")
 
+@app.route("/feedback")
+def feedback():
+    return render_template("feedback.html")
+
 
 # API ROUTES
 
@@ -300,22 +304,17 @@ def api_update_listing(post_id):
     return redirect("/my_listings")
 
 
-@app.route("/api/listings/delete/<int:post_id>", methods=["DELETE"])
-def api_delete_listing(post_id):
-    if 'user_id' not in session:
-        return jsonify({"success": False, "message": "Not logged in"}), 401
-    post = Post.query.get_or_404(post_id)
-    if post.user_id != session['user_id']:
-        return jsonify({"success": False, "message": "Not authorized"}), 403
+@app.route('/delete-listing/<int:id>', methods=['POST'])
+def delete_listing(id):
+    listing = Post.query.get_or_404(id)
     try:
-        Message.query.filter_by(post_id=post_id).delete()
-        Report.query.filter_by(post_id=post_id).delete()
-        db.session.delete(post)
+        db.session.delete(listing)
         db.session.commit()
-        return jsonify({"success": True})
+        return {"success": True}, 200
     except Exception as e:
-        db.session.rollback()
-        return jsonify({"success": False, "message": str(e)})
+        db.session.rollback() # This is the "key" to fixing OperationalErrors
+        print(f"Error occurred: {e}")
+        return {"success": False, "error": str(e)}, 500
 
 
 # Messaging API

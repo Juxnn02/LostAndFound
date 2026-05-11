@@ -18,14 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTimestamps();
     setInterval(updateTimestamps, 60000);
 
-    // CLOSE DROPDOWN OUTSIDE CLICK
-    window.addEventListener('click', (e) => {
-        const menu = document.getElementById('user-dropdown');
-        const btn = document.getElementById('user-menu-btn');
-        if (!menu.classList.contains('hidden') && !btn.contains(e.target)) {
-            menu.classList.add('hidden');
-        }
-    });
 
     // SEARCH LOGIC
     if (searchInput) {
@@ -44,12 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // FILTER — uses data-filter attribute to avoid innerText locale issues
+    // FILTER LOGIC
     filterLinks.forEach(link => {
+
         link.addEventListener('click', (e) => {
             e.preventDefault();
 
-            const filter = link.dataset.filter;
+            const category = link.innerText.toLowerCase();
 
             filterLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
@@ -57,28 +50,32 @@ document.addEventListener('DOMContentLoaded', () => {
             let visibleCount = 0;
 
             cards.forEach(card => {
+
                 const cardCategory = card.dataset.category;
                 const status = card.dataset.status;
-                let show;
 
-                if (filter === 'all') {
+                let show = false;
+
+                if (category === "all items") {
                     show = true;
-                } else if (filter === 'claimed') {
-                    show = status === 'claimed';
-                } else {
-                    show = cardCategory === filter && status !== 'claimed';
+                }
+                else if (category === "claimed") {
+                    show = (status === "claimed");
+                }
+                else {
+                    show = (cardCategory === category && status !== "claimed");
                 }
 
                 card.style.display = show ? '' : 'none';
                 if (show) visibleCount++;
             });
 
-            if (filter === 'claimed') {
-                if (noClaimed) noClaimed.style.display = visibleCount === 0 ? 'block' : 'none';
-                if (noResults) noResults.style.display = 'none';
+            if (category === "claimed listings") {
+                noClaimed.style.display = visibleCount === 0 ? 'block' : 'none';
+                noResults.style.display = 'none';
             } else {
-                if (noResults) noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-                if (noClaimed) noClaimed.style.display = 'none';
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+                noClaimed.style.display = 'none';
             }
         });
     });
@@ -96,6 +93,5 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function toggleUserMenu() {
-    document.getElementById('user-dropdown').classList.toggle('hidden');
-}
+
+
