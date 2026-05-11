@@ -20,14 +20,15 @@
     <aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
             <div class="profile-header">
-                <div class="avatar">AM</div>
+                <a href="/profile">
+                    <div class="avatar">{{ user_initials }}</div>
+                </a>
                 <div class="user-info">
-                    <h3>Angel M.</h3>
+                    <h3>SCSU Lost & Found</h3>
                 </div>
             </div>
             
             <nav class="sidepanel-nav">
-                <a href="#"><span class="material-symbols-outlined">person</span>Profile</a>
                 <a href="/dashboard" class="active"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
                 <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
                 <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
@@ -96,7 +97,7 @@
 
                 <div class="card-body">
                     <strong>{{ post.item_name }}</strong>
-                    <p class="card-location">&#128205; {{ post.location }}</p>
+                    <p class="card-location"><span class="material-symbols-outlined">location_on</span> {{ post.location }}</p>
                 </div>
 
             </div>

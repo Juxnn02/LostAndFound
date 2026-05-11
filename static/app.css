@@ -65,6 +65,7 @@ input:focus, select:focus, textarea:focus {
     border-radius: 14px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     margin-bottom: 35px;
+    margin-top: -20px;
 }
 
 /* Search Bar */
@@ -154,35 +155,68 @@ input:focus, select:focus, textarea:focus {
     flex-direction: column;
 }
 
+/* This forces every page to calculate sizes the exact same way */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .profile-header {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 0 20px 25px 20px;
+    flex-direction: column; 
+    align-items: center;    
+    gap: 25px;              
+    justify-content: center;
+    padding: 0 15px 10px 15px;
+    margin-top: -18px;
     border-bottom: 2px solid var(--accent-color);
+    text-align: center;
+    box-sizing: border-box;
 }
 
 /* Avatar */
 .avatar {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    margin-left: 8px;
     background-color: var(--primary);
     color: var(--bg-app);
-    font-size: 24px;
+    font-size: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    margin-bottom: -20px; 
+    transition: 0.2s;
+}
+
+.profile-header a {
+    text-decoration: none !important;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    display: flex;
+    justify-content: center;
+    width: 100%; 
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    transition: background-color 0.2s ease;
+}
+
+.profile-header a:hover {
+    background: transparent !important;
 }
 
 .user-info h3 {
     margin: 0;
-    font-size: 16px;
+    font-size: 18px;
+    display: block;
     color: var(--text-color);
+    margin-top: -6px;
+    margin-bottom: 12px;
+    line-height: 1.1;
 }
-
 
 .sidepanel a .material-symbols-outlined {
     font-size: 22px;
@@ -190,7 +224,6 @@ input:focus, select:focus, textarea:focus {
     align-items: center;
     justify-content: center;
 }
-
 
 .sidepanel a {
     display: flex;
@@ -397,9 +430,18 @@ input:focus, select:focus, textarea:focus {
 }
 
 .card-location {
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14.5px;
     color: var(--text-muted);
-    margin: 0;
+}
+
+.card-location .material-symbols-outlined {
+    font-size: 20px !important;
+    width: 19px;
+    height: 19px;
+    display: inline-block;
 }
 
 .card p {
@@ -410,9 +452,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .card strong {
-    font-size: 15px;
+    font-size: 18px;
     color: var(--text-dark);
     display: block;
+    margin-left: 6px;
     margin-bottom: 2px;
 }
 
@@ -437,9 +480,9 @@ input:focus, select:focus, textarea:focus {
 /* Main container */
 .listing-container {
     max-width: 700px;
-    margin: 20px auto;
+    margin: 18px auto;
     background: white;
-    padding: 30px;
+    padding: 25px;
     border-radius: 15px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
@@ -513,14 +556,15 @@ input:focus, select:focus, textarea:focus {
     margin-left: 15px;
     justify-content: center;
     align-items: center;
-    font-weight: 700;
     font-size: 18px;
     flex-shrink: 0;
     transition: transform 0.2s ease;
 }
 
-.listing-avatar:hover {
-    background-color: var(--primary-dark);
+.avatar:hover {
+    background-color: var(--primary) !important;
+    color: var(--bg-app) !important;
+    cursor: default; 
 }
 
 .listing-details h3 {

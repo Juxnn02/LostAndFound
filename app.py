@@ -64,6 +64,18 @@ def register():
 def forgot_password():
     return render_template("forgotpassword.html")
 
+@app.route("/profile")
+def profile():
+    if 'user_id' not in session:
+        return redirect("/")
+
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+    account = Account.query.get(user.account_id) if user else None
+    user_email = account.email if account else ''
+
+    return render_template("profile.html", user_initials=session.get('user_initials', ''), user_email=user_email)
+
 
 @app.route("/dashboard")
 def dashboard():
