@@ -12,14 +12,14 @@ function editListing(id) {
 /* DELETE LISTING */
 function deleteListing(id) {
     if (confirm("Are you sure you want to delete this listing? This action cannot be undone.")) {
-        fetch(`/delete-listing/${id}`, {
-            method: "POST"
-        })
+        fetch(`/delete-listing/${id}`, { method: "POST" })
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                // Remove the card from the screen immediately or reload
-                location.reload(); 
+                // Remove the card from DOM instantly
+                const card = document.getElementById(`listing-${id}`);
+                if (card) card.remove();
+                updateTotalCount(); // optional: update counters
             } else {
                 alert("Error deleting listing: " + data.error);
             }
@@ -28,25 +28,12 @@ function deleteListing(id) {
     }
 }
 
-/* Update Total Count */
 function updateTotalCount() {
-    const countElement = document.getElementById('listing-count');
-    // Finds every div with the class 'listing-card'
-    const totalCards = document.querySelectorAll('.listing-card').length;
-    
-    if (countElement) {
-        countElement.innerHTML = `<strong>Total Listings:</strong> ${totalCards}`;
-    }
-}
+    const total = document.querySelectorAll('.ml-card').length;
+    const active = document.querySelectorAll('.ml-card:not(.ml-card-claimed)').length;
+    const claimed = document.querySelectorAll('.ml-card-claimed').length;
 
-const scrollBtn = document.getElementById('scrollTopBtn');
-
-window.addEventListener('scroll', () => {
-    if (scrollBtn) {
-        scrollBtn.style.display = document.documentElement.scrollTop > 20 ? 'block' : 'none';
-    }
-});
-
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('total-count').textContent = total;
+    document.getElementById('active-count').textContent = active;
+    document.getElementById('claimed-count').textContent = claimed;
 }
