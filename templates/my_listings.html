@@ -80,7 +80,7 @@
                     {% set active = listings | selectattr('is_claimed', 'equalto', false) | list %}
                     {% if active %}
                         {% for listing in active %}
-                        <div class="ml-card">
+                        <div class="ml-card" id="listing-{{ listing.id }}">
                             <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}'">
                                 {% if listing.image_url %}
                                     <img src="{{ url_for('static', filename=listing.image_url) }}" alt="{{ listing.item_name }}">
