@@ -12,8 +12,8 @@ function editListing(id) {
 /* DELETE LISTING */
 function deleteListing(id) {
     if (confirm("Are you sure you want to delete this listing? This action cannot be undone.")) {
-        fetch(`/api/listings/delete/${id}`, {
-            method: "DELETE"
+        fetch(`/delete-listing/${id}`, {
+            method: "POST"
         })
         .then(res => res.json())
         .then(data => {
@@ -21,7 +21,7 @@ function deleteListing(id) {
                 // Remove the card from the screen immediately or reload
                 location.reload(); 
             } else {
-                alert("Error deleting listing: " + data.message);
+                alert("Error deleting listing: " + data.error);
             }
         })
         .catch(err => console.error("Delete failed:", err));
