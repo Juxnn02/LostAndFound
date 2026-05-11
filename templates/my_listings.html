@@ -96,8 +96,10 @@
                                 <p class="ml-card-loc">&#128205; {{ listing.location }}</p>
                             </div>
                             <div class="ml-card-actions">
-                                <button class="ml-btn ml-btn-edit">
-                                   Edit<span class="material-symbols-outlined">edit</span>
+                                <button class="ml-btn ml-btn-edit"
+                                    onclick="window.location.href='/edit_listing?edit={{ listing.id }}'">
+                                   Edit
+                                    <span class="material-symbols-outlined">edit</span>
                                 </button>
                                 <button class="ml-btn ml-btn-delete">
                                     Delete<span class="material-symbols-outlined">delete</span>
