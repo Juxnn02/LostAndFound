@@ -306,17 +306,23 @@ def api_update_listing(post_id):
 
 @app.route('/delete-listing/<int:id>', methods=['POST'])
 def delete_listing(id):
+    if 'user_id' not in session:
+        return {"success": False, "error": "Unauthorized"}, 401
+
     listing = Post.query.get_or_404(id)
+
+    if listing.user_id != session['user_id']:
+        return {"success": False, "error": "Forbidden"}, 403
     try:
         db.session.delete(listing)
         db.session.commit()
         return {"success": True}, 200
+        
     except Exception as e:
         db.session.rollback() # This is the "key" to fixing OperationalErrors
-        print(f"Error occurred: {e}")
+        
         return {"success": False, "error": str(e)}, 500
-
-
+        
 # Messaging API
 
 @app.route("/api/conversations", methods=["GET"])
