@@ -6,6 +6,7 @@
     <title>Lost &amp; Found — SCSU</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="static/auth.css">
 </head>
 <body class="auth-split">
@@ -26,21 +27,21 @@
 
     <ul class="hero-features">
         <li>
-            <span class="feat-icon">📍</span>
+            <span class="material-symbols-outlined">location_on</span>
             <div class="feat-text">
                 <strong>Browse found items</strong>
                 <span>See everything reported across campus</span>
             </div>
         </li>
         <li>
-            <span class="feat-icon">💬</span>
+            <span class="material-symbols-outlined">chat</span>
             <div class="feat-text">
                 <strong>Chat directly with finders</strong>
-                <span>No middlemen — just connect</span>
+                <span>No middleman — just connect</span>
             </div>
         </li>
         <li>
-            <span class="feat-icon">⚡</span>
+            <span class="material-symbols-outlined">bolt</span>
             <div class="feat-text">
                 <strong>Post a listing in 60 seconds</strong>
                 <span>Help get it back to its owner</span>
@@ -49,8 +50,8 @@
     </ul>
 
     <div class="hero-footer">
-        <img src="static/magnify glass.png" alt="">
-        <span>Lost &amp; Found &bull; SCSU 2025</span>
+        
+        <span>Lost &amp; Found &bull; SCSU 2026</span>
     </div>
 </div>
 
@@ -58,19 +59,18 @@
 <div class="auth-panel">
     <div class="auth-inner">
         <div class="auth-brand">
-            <span class="auth-brand-icon">🔍</span>
             <span>Lost &amp; Found</span>
         </div>
 
-        <h2 class="auth-heading">Welcome back</h2>
+        <h2 class="auth-heading">Welcome back!</h2>
         <p class="auth-sub">Sign in with your SCSU email to continue</p>
 
         <p id="login-error" class="auth-error"></p>
 
         <form onsubmit="handleLoginSubmit(event)">
             <div class="auth-input-group">
-                <label for="login-email">School Email</label>
-                <input type="email" id="login-email" placeholder="you@southernct.edu" required>
+                <label for="login-email">SCSU Email</label>
+                <input type="email" id="login-email" placeholder="johndoe@southernct.edu" required>
             </div>
 
             <div class="auth-input-group">
@@ -78,7 +78,7 @@
                 <input type="password" id="login-password" placeholder="••••••••" required>
             </div>
 
-            <button class="auth-signin-button" type="submit">Sign In &rarr;</button>
+            <button class="auth-signin-button" type="submit">Sign In</button>
         </form>
 
         <p class="auth-links">

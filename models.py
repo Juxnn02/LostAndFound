@@ -25,8 +25,8 @@ class User(db.Model):
     student_id = db.Column(db.Integer, unique=True)
 
     posts = db.relationship('Post', backref='author', cascade="all, delete-orphan")
-    sent_messages = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', lazy='dynamic')
-    received_messages = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy='dynamic')
+    sent_messages = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', cascade="all, delete-orphan")
+    received_messages = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', cascade="all, delete-orphan")
 
 class Admin(db.Model):
     __tablename__ = 'admin'

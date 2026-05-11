@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportModal = document.getElementById('report-modal');
     const cancelReportBtn = document.getElementById('cancel-report-btn');
     const reportForm = document.getElementById('report-form');
+    const claimToggle = document.getElementById('claim-toggle');
+    const claimLabel = document.querySelector('.claim-label');
 
     // Format the listing timestamp
     const timestampEl = document.getElementById('listing-timestamp');
@@ -38,6 +40,46 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+        /* CLAIM / UNCLAIM TOGGLE */
+if (claimToggle) {
+
+    claimToggle.addEventListener('change', () => {
+
+        const postId = claimToggle.dataset.postId;
+
+        const endpoint = claimToggle.checked
+            ? `/api/listings/claim/${postId}`
+            : `/api/listings/unclaim/${postId}`;
+
+        fetch(endpoint, {
+            method: "POST"
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            if (data.success) {
+
+                claimLabel.textContent = claimToggle.checked
+                    ? "Claimed"
+                    : "Active";
+
+            } else {
+
+                alert("Error: " + data.message);
+
+                claimToggle.checked = !claimToggle.checked;
+            }
+        })
+        .catch(err => {
+            console.error("Toggle failed:", err);
+
+            claimToggle.checked = !claimToggle.checked;
+        });
+
+    });
+
+}
 
     // Report modal
     if (reportBtn) {

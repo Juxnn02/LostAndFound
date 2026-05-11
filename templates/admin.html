@@ -72,7 +72,7 @@
                     </td>
 
                     <td>
-                        <button onclick="toggleBan({{ user.id }})">
+                        <button onclick="toggleBan('{{ user.id }}')">
                             {% if user.is_banned %}
                             Unban
                             {% else %}
@@ -115,11 +115,11 @@
                     </td>
 
                     <td>
-                        <button onclick="toggleClaimed({{ post.id }})">
+                        <button onclick="toggleClaimed('{{ post.id }}')">
                             Toggle Claimed
                         </button>
 
-                        <button onclick="deletePost({{ post.id }})">
+                        <button onclick="deletePost('{{ post.id }}')">
                             Delete
                         </button>
                     </td>

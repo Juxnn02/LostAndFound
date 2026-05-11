@@ -6,13 +6,38 @@
     <title>New Listing — Lost &amp; Found</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="static/app.css">
 </head>
 <body class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidepanel" id="sidePanel">
+        <div class="sidepanel-top">
+            <div class="profile-header">
+                <div class="avatar">AM</div>
+                <div class="user-info">
+                    <h3>Angel M.</h3>
+                </div>
+            </div>
+            
+            <nav class="sidepanel-nav">
+                <a href="#"><span class="material-symbols-outlined">person</span>Profile</a>
+                <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+                <a href="/createlisting" class="active"><span class="material-symbols-outlined">add</span>New Listing</a>
+                <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
+                <a href="/messages"><span class="material-symbols-outlined">chat</span>Messages</a>
+                <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
+                
+            </nav>
+        </div>
 
+        <div class="sidepanel-footer">
+            <hr> <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
+        </div>
+    </aside>
+    
     <div class="edit-listing-header">
-        <a href="/dashboard" class="listing-back-link create-back-link">&larr; Back</a>
-        <h1>Create a Listing</h1>
+        <h1>New Listing</h1>
     </div>
 
     <p id="create-error" class="create-error"></p>
@@ -63,7 +88,6 @@
             <p class="required-note"><span class="required-star">*</span> Required fields</p>
 
             <div class="form-buttons">
-                <button type="button" class="btn-form btn-cancel-form" onclick="location.href='/dashboard'">Cancel</button>
                 <button type="submit" class="btn-form btn-submit-form">Submit Listing</button>
             </div>
         </div>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Feedback</title>
+
+    <link rel="stylesheet" href="static/app.css">
+</head>
+
+<body class="app-layout">
+
+    <div class="feedback-page">
+
+        <!-- PAGE TEXT -->
+        <div class="feedback-header">
+            <h1 class="feedback-title">
+                Rate Your Lost & Found Experience
+            </h1>
+
+            <p class="feedback-subtitle">
+                We highly value your opinion. Let us know about your overall experience, and how we can improve 
+                the platform for you and other students on campus!
+            </p>
+
+            <p class="feedback-hint">
+                Please share your feedback below.
+            </p>
+        </div>
+
+        <!-- FEEDBACK FORM -->
+        <div class="feedback-card">
+            <!-- STAR RATING -->
+            <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+            </div>
+
+            <!-- COMMENT -->
+            <textarea class="feedback-textarea" placeholder="Tell us about your experience..." rows="6"></textarea>
+
+            <!-- BUTTONS -->
+            <div class="feedback-buttons">
+                <a href="/dashboard" class="btn-cancel">Cancel</a>
+                <button class="btn-submit">Submit</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

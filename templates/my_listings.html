@@ -8,128 +8,145 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/app.css">
     <link rel="stylesheet" href="static/my_listings.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
+
+<button onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
+    ↑ Back to Top
+</button>
+
 <body class="app-layout">
-
-    <!-- HEADER -->
-    <div class="ml-header">
-        <a href="/dashboard" class="ml-back">&larr; Dashboard</a>
-        <h1 class="ml-title">My Listings</h1>
-        <a href="/createlisting" class="ml-new-btn">&#43; New Listing</a>
-    </div>
-
-    <!-- STATS ROW -->
-    <div class="ml-stats">
-        <div class="ml-stat">
-            <span class="ml-stat-num">{{ listings|length }}</span>
-            <span class="ml-stat-label">Total</span>
-        </div>
-        <div class="ml-stat-divider"></div>
-        <div class="ml-stat">
-            <span class="ml-stat-num">{{ listings | selectattr('is_claimed', 'equalto', false) | list | length }}</span>
-            <span class="ml-stat-label">Active</span>
-        </div>
-        <div class="ml-stat-divider"></div>
-        <div class="ml-stat">
-            <span class="ml-stat-num">{{ listings | selectattr('is_claimed') | list | length }}</span>
-            <span class="ml-stat-label">Claimed</span>
-        </div>
-    </div>
-
-    <!-- SPLIT VIEW -->
-    <main class="ml-split">
-
-        <!-- ACTIVE -->
-        <section class="ml-col">
-            <h2 class="ml-col-heading">
-                <span class="ml-col-dot active-dot"></span>
-                Active
-            </h2>
-
-            <div class="ml-grid">
-                {% set active = listings | selectattr('is_claimed', 'equalto', false) | list %}
-                {% if active %}
-                    {% for listing in active %}
-                    <div class="ml-card">
-                        <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}'">
-                            {% if listing.image_url %}
-                                <img src="{{ url_for('static', filename=listing.image_url) }}" alt="{{ listing.item_name }}">
-                            {% else %}
-                                <div class="ml-no-image">
-                                    <span class="ml-no-image-icon">📷</span>
-                                    <span class="ml-no-image-label">No photo</span>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="ml-card-body">
-                            <p class="ml-card-name">{{ listing.item_name }}</p>
-                            <p class="ml-card-loc">&#128205; {{ listing.location }}</p>
-                            {% if listing.category %}
-                            <span class="ml-card-badge">{{ listing.category }}</span>
-                            {% endif %}
-                        </div>
-                        <div class="ml-card-actions">
-                            <button type="button" class="ml-btn ml-btn-edit" onclick="editListing('{{ listing.id }}')" title="Edit">
-                                ✏️ Edit
-                            </button>
-                            <button type="button" class="ml-btn ml-btn-claim" onclick="claimListing('{{ listing.id }}')" title="Mark as claimed">
-                                🏷️ Claim
-                            </button>
-                            <button type="button" class="ml-btn ml-btn-delete" onclick="deleteListing('{{ listing.id }}')" title="Delete">
-                                🗑️
-                            </button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="ml-empty">No active listings yet.<br><a href="/createlisting">Post one now →</a></p>
-                {% endif %}
+    <!-- SIDEBAR -->
+    <aside class="sidepanel" id="sidePanel">
+        <div class="sidepanel-top">
+            <div class="profile-header">
+                <div class="avatar">AM</div>
+                <div class="user-info">
+                    <h3>Angel M.</h3>
+                </div>
             </div>
-        </section>
+            
+            <nav class="sidepanel-nav">
+                <a href="#"><span class="material-symbols-outlined">person</span>Profile</a>
+                <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+                <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
+                <a href="/my_listings" class="active"><span class="material-symbols-outlined">list</span>My Listings</a>
+                <a href="/messages"><span class="material-symbols-outlined">chat</span>Messages</a>
+                <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
+                
+            </nav>
+        </div>
 
-        <div class="ml-divider"></div>
+        <div class="sidepanel-footer">
+            <hr> <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
+        </div>
+    </aside>
 
-        <!-- CLAIMED -->
-        <section class="ml-col">
-            <h2 class="ml-col-heading">
-                <span class="ml-col-dot claimed-dot"></span>
-                Claimed
-            </h2>
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        
+        <!-- NAVBAR WITH TITLE AND STATS -->
+        <div class="navbar">
+            <h1 class="ml-title">My Listings</h1>
 
-            <div class="ml-grid">
-                {% set claimed = listings | selectattr('is_claimed') | list %}
-                {% if claimed %}
-                    {% for listing in claimed %}
-                    <div class="ml-card ml-card-claimed">
-                        <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}'">
-                            {% if listing.image_url %}
-                                <img src="{{ url_for('static', filename=listing.image_url) }}" alt="{{ listing.item_name }}">
-                            {% else %}
-                                <div class="ml-no-image">
-                                    <span class="ml-no-image-icon">📷</span>
-                                    <span class="ml-no-image-label">No photo</span>
-                                </div>
-                            {% endif %}
-                            <span class="ml-claimed-badge">CLAIMED</span>
-                        </div>
-                        <div class="ml-card-body">
-                            <p class="ml-card-name">{{ listing.item_name }}</p>
-                            <p class="ml-card-loc">&#128205; {{ listing.location }}</p>
-                        </div>
-                        <div class="ml-card-actions">
-                            <button type="button" class="ml-btn ml-btn-unclaim" onclick="unclaimListing('{{ listing.id }}')">
-                                ↩️ Unclaim
-                            </button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="ml-empty">Nothing claimed yet.</p>
-                {% endif %}
+            <div class="ml-stats-inline">
+                <div class="ml-stat">
+                    <span class="ml-stat-num">{{ listings|length }}</span>
+                    <span class="ml-stat-label">Total</span>
+                </div>
+                <div class="ml-stat-divider"></div>
+                <div class="ml-stat">
+                    <span class="ml-stat-num">{{ listings | selectattr('is_claimed', 'equalto', false) | list | length }}</span>
+                    <span class="ml-stat-label">Active</span>
+                </div>
+                <div class="ml-stat-divider"></div>
+                <div class="ml-stat">
+                    <span class="ml-stat-num">{{ listings | selectattr('is_claimed') | list | length }}</span>
+                    <span class="ml-stat-label">Claimed</span>
+                </div>
             </div>
-        </section>
 
-    </main>
+            <a href="/createlisting" class="ml-new-btn">&#43; New Listing</a>
+        </div>
+
+        <!-- LISTING GRID AREA -->
+        <main class="ml-split">
+            <!-- ACTIVE COLUMN -->
+            <section class="ml-col">
+                <h2 class="ml-col-heading">
+                    <span class="ml-col-dot active-dot"></span> Active
+                </h2>
+                <div class="ml-grid">
+                    {% set active = listings | selectattr('is_claimed', 'equalto', false) | list %}
+                    {% if active %}
+                        {% for listing in active %}
+                        <div class="ml-card">
+                            <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}'">
+                                {% if listing.image_url %}
+                                    <img src="{{ url_for('static', filename=listing.image_url) }}" alt="{{ listing.item_name }}">
+                                {% else %}
+                                    <div class="ml-no-image">
+                                        <span class="ml-no-image-icon">📷</span>
+                                        <span class="ml-no-image-label">No photo</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="ml-card-body">
+                                <p class="ml-card-name">{{ listing.item_name }}</p>
+                                <p class="ml-card-loc">&#128205; {{ listing.location }}</p>
+                            </div>
+                            <div class="ml-card-actions">
+                                <button class="ml-btn ml-btn-edit">
+                                   Edit<span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="ml-btn ml-btn-delete">
+                                    Delete<span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="ml-empty">No active listings yet.</p>
+                    {% endif %}
+                </div>
+            </section>
+
+            <div class="ml-divider"></div>
+
+            <!-- CLAIMED COLUMN -->
+            <section class="ml-col">
+                <h2 class="ml-col-heading">
+                    <span class="ml-col-dot claimed-dot"></span> Claimed
+                </h2>
+                <div class="ml-grid">
+                    {% set claimed = listings | selectattr('is_claimed') | list %}
+                    {% if claimed %}
+                        {% for listing in claimed %}
+                        <div class="ml-card ml-card-claimed">
+                            <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}'">
+                                {% if listing.image_url %}
+                                    <img src="{{ url_for('static', filename=listing.image_url) }}" alt="{{ listing.item_name }}">
+                                {% else %}
+                                    <div class="ml-no-image">
+                                        <span class="ml-no-image-icon">📷</span>
+                                        <span class="ml-no-image-label">No photo</span>
+                                    </div>
+                                {% endif %}
+                                <span class="ml-claimed-badge">CLAIMED</span>
+                            </div>
+                            <div class="ml-card-body">
+                                <p class="ml-card-name">{{ listing.item_name }}</p>
+                                <p class="ml-card-loc">&#128205; {{ listing.location }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="ml-empty">Nothing claimed yet.</p>
+                    {% endif %}
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script src="static/my_listings.js"></script>
 </body>
