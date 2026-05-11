@@ -1,15 +1,20 @@
-/* MY LISTINGS — Pinterest-style redesign */
-
 /* ── Header ── */
+* {font-family: 'Inter', -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-color);
+}
+
 .ml-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 32px;
-    border-bottom: 1px solid var(--border);
+    padding: 35px 35px;
+    border-bottom: 2px solid var(--border);
     background: white;
-    top: 0;
-    z-index: 50;
 }
 
 .ml-back {
@@ -104,9 +109,9 @@
 }
 
 .ml-divider {
-    width: 1px;
-    background: var(--border);
-    flex-shrink: 0;
+    width: 1.5px;
+    background: rgb(177, 177, 177);
+    
 }
 
 /* ── Column heading ── */
@@ -132,7 +137,6 @@
 .active-dot  { background: var(--success, #1bd094); }
 .claimed-dot { background: var(--primary); }
 
-/* ── Masonry grid ── */
 .ml-grid {
     columns: 2;
     column-gap: 12px;
@@ -166,7 +170,7 @@
     position: relative;
     background: #F1F5F9;
     width: 100%;
-    min-height: 50px;
+    height: 255px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -176,27 +180,25 @@
 
 .ml-card-img img {
     width: 100%;
-    height: auto;
-    max-height: 255px;
-    object-fit: cover;
+    height: 100%;
+    object-fit: cover; 
     display: block;
     transition: transform 0.2s;
 }
 
-.ml-card-img:hover img {
-    transform: scale(1.03);
-}
-
 .ml-no-image {
     width: 100%;
-    min-height: 100px;
+    height: 100%; 
     background: linear-gradient(135deg, #F1F5F9 0%, #E8EDF4 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    padding: 20px 0;
+    gap: 8px;
+    }
+
+.ml-card-img:hover .ml-no-image {
+    filter: brightness(0.98);
 }
 
 .ml-no-image-icon {
@@ -244,8 +246,16 @@
 
 .ml-card-loc {
     font-size: 12px;
+     display: flex;
+    align-items: center;
+    gap: 4px;
     color: var(--text-muted);
-    margin: 0 0 6px;
+}
+
+.ml-card-loc .material-symbols-outlined{
+    font-size: 12px !important;
+    color: var(--text-muted);
+    display: inline-block;
 }
 
 .ml-card-badge {

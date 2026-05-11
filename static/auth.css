@@ -195,12 +195,12 @@ body.auth-split {
 .auth-sub {
     font-size: 14px;
     color: var(--text-muted);
-    margin-bottom: 18px;
+    margin-bottom: 14px;
 }
 
 /* Input groups with labels */
 .auth-input-group {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 .auth-input-group label {

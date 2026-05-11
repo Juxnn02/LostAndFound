@@ -15,19 +15,18 @@
     ↑ Back to Top
 </button>
 
-<body class="app-layout">
-    <!-- SIDEBAR -->
-    <aside class="sidepanel" id="sidePanel">
+<aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
             <div class="profile-header">
-                <div class="avatar">AM</div>
+                <a href="/profile">
+                    <div class="avatar">{{ user_initials }}</div>
+                </a>
                 <div class="user-info">
-                    <h3>Angel M.</h3>
+                    <h3>SCSU Lost & Found</h3>
                 </div>
             </div>
             
             <nav class="sidepanel-nav">
-                <a href="#"><span class="material-symbols-outlined">person</span>Profile</a>
                 <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
                 <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
                 <a href="/my_listings" class="active"><span class="material-symbols-outlined">list</span>My Listings</a>
@@ -93,7 +92,7 @@
                             </div>
                             <div class="ml-card-body">
                                 <p class="ml-card-name">{{ listing.item_name }}</p>
-                                <p class="ml-card-loc">&#128205; {{ listing.location }}</p>
+                                <p class="ml-card-loc"><span class="material-symbols-outlined">location_on</span> {{ listing.location }}</p>
                             </div>
                             <div class="ml-card-actions">
                                 <button class="ml-btn ml-btn-edit">
