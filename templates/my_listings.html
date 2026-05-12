@@ -11,9 +11,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
 
-<button onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
-    ↑ Back to Top
-</button>
+<body class="app-layout">
 
 <aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
@@ -22,7 +20,7 @@
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>SCSU Lost & Found</h3>
+                    <h3>{{ user_name }}</h3>
                 </div>
             </div>
             
@@ -50,17 +48,17 @@
 
             <div class="ml-stats-inline">
                 <div class="ml-stat">
-                    <span class="ml-stat-num">{{ listings|length }}</span>
+                    <span class="ml-stat-num" id="total-count">{{ listings|length }}</span>
                     <span class="ml-stat-label">Total</span>
                 </div>
                 <div class="ml-stat-divider"></div>
                 <div class="ml-stat">
-                    <span class="ml-stat-num">{{ listings | selectattr('is_claimed', 'equalto', false) | list | length }}</span>
+                    <span class="ml-stat-num" id="active-count">{{ listings | selectattr('is_claimed', 'equalto', false) | list | length }}</span>
                     <span class="ml-stat-label">Active</span>
                 </div>
                 <div class="ml-stat-divider"></div>
                 <div class="ml-stat">
-                    <span class="ml-stat-num">{{ listings | selectattr('is_claimed') | list | length }}</span>
+                    <span class="ml-stat-num" id="claimed-count">{{ listings | selectattr('is_claimed') | list | length }}</span>
                     <span class="ml-stat-label">Claimed</span>
                 </div>
             </div>
@@ -95,13 +93,13 @@
                                 <p class="ml-card-loc"><span class="material-symbols-outlined">location_on</span> {{ listing.location }}</p>
                             </div>
                             <div class="ml-card-actions">
-                                <button class="ml-btn ml-btn-edit"
+                                <button type="button" class="ml-btn ml-btn-edit"
                                     onclick="window.location.href='/edit_listing?edit={{ listing.id }}'">
-                                   Edit
+                                    Edit
                                     <span class="material-symbols-outlined">edit</span>
                                 </button>
-                                <button class="ml-btn ml-btn-delete" 
-                                    onclick="deleteListing "({{ listing.id }})">
+                                <button type="button" class="ml-btn ml-btn-delete"
+                                    onclick="deleteListing({{ listing.id }})">
                                     Delete<span class="material-symbols-outlined">delete</span>
                                 </button>
                             </div>
@@ -150,6 +148,10 @@
         </main>
     </div>
 
-    <script src="{{ url_for('static', filename='my_listings.js') }}"> </script>
+    <button type="button" onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
+        ↑ Back to Top
+    </button>
+
+    <script src="{{ url_for('static', filename='my_listings.js') }}"></script>
 </body>
 </html>

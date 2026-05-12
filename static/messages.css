@@ -1,3 +1,39 @@
+/* Page wrapper — offsets the fixed sidebar */
+.messages-page-content {
+    margin-left: 260px;
+    padding: 0 25px 40px;
+}
+
+/* ─── Welcome / empty-chat state ─── */
+.chat-welcome {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: #fafafa;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    padding: 40px;
+}
+
+.chat-welcome .material-symbols-outlined {
+    font-size: 56px;
+    opacity: 0.25;
+    color: var(--primary);
+}
+
+/* Active chat panel */
+.chat-active {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
 /* Messages page layout */
 .messenger-wrapper {
     display: flex;

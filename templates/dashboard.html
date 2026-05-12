@@ -10,10 +10,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
 
-<button onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
-    ↑ Back to Top
-</button>
-
 <body class="app-layout">
 
 <!-- SIDEBAR -->
@@ -24,7 +20,7 @@
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>SCSU Lost & Found</h3>
+                    <h3>{{ user_name }}</h3>
                 </div>
             </div>
             
@@ -68,49 +64,63 @@
 <!-- GRID -->
         <div class="grid-container" id="listings-grid">
 
-            {% for post in posts %}
-            <div class="card"
-                data-category="{{ post.category|lower }}"
-                data-status="{{ 'claimed' if post.is_claimed else 'active' }}"
-                onclick="location.href='/listing-info?id={{ post.id }}'">
+            {% if posts %}
+                {% for post in posts %}
+                <div class="card"
+                    data-category="{{ post.category|lower }}"
+                    data-status="{{ 'claimed' if post.is_claimed else 'active' }}"
+                    onclick="location.href='/listing-info?id={{ post.id }}'">
 
-                <div class="card-img-wrapper">
-                    <div class="card-img">
-                        {% if post.image_url %}
-                            <img src="{{ url_for('static', filename=post.image_url) }}">
-                        {% else %}
-                           <div class="card-no-image">
-                                <span class="card-no-image-icon">📷</span>
-                                <span class="card-no-image-label">No photo</span>
-                            </div>
+                    <div class="card-img-wrapper">
+                        <div class="card-img">
+                            {% if post.image_url %}
+                                <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}">
+                            {% else %}
+                               <div class="card-no-image">
+                                    <span class="card-no-image-icon">📷</span>
+                                    <span class="card-no-image-label">No photo</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if post.is_claimed %}
+                            <div class="claimed-overlay">CLAIMED</div>
+                        {% endif %}
+
+                        {% if post.category %}
+                            <span class="card-badge">{{ post.category }}</span>
                         {% endif %}
                     </div>
 
-                    {% if post.is_claimed %}
-                        <div class="claimed-overlay">CLAIMED</div>
-                    {% endif %}
+                    <div class="card-body">
+                        <strong>{{ post.item_name }}</strong>
+                        <p class="card-location"><span class="material-symbols-outlined">location_on</span> {{ post.location }}</p>
+                    </div>
 
-                    {% if post.category %}
-                        <span class="card-badge">{{ post.category }}</span>
-                    {% endif %}
                 </div>
-
-                <div class="card-body">
-                    <strong>{{ post.item_name }}</strong>
-                    <p class="card-location"><span class="material-symbols-outlined">location_on</span> {{ post.location }}</p>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state" id="empty-state">
+                    <span class="material-symbols-outlined empty-state-icon">travel_explore</span>
+                    <h2 class="empty-state-title">Nothing lost here... yet!</h2>
+                    <p class="empty-state-desc">Be the first to post a found item and help someone on campus reunite with their stuff.</p>
+                    <a href="/createlisting" class="empty-state-btn">
+                        <span class="material-symbols-outlined">add_circle</span>
+                        Post the First Listing
+                    </a>
                 </div>
+            {% endif %}
 
-            </div>
-            {% endfor %}
+            <p id="no-results" class="no-results">No items match your search.</p>
+            <p id="no-claimed" class="no-results">Nothing has been claimed yet.</p>
 
         </div>
 
     </div>
 
-</div>
-
-<p id="no-results" class="no-results">No items match your search.</p>
-<p id="no-claimed" class="no-results">Nothing has been claimed yet.</p>
+<button type="button" onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
+    ↑ Back to Top
+</button>
 
 <script src="static/dashboard.js"></script>
 <script src="static/darkmode.js" defer></script>

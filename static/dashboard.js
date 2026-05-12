@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (show) visibleCount++;
             });
 
-            if (category === "claimed listings") {
+            if (category === "claimed") {
                 noClaimed.style.display = visibleCount === 0 ? 'block' : 'none';
                 noResults.style.display = 'none';
             } else {

@@ -181,14 +181,16 @@ input:focus, select:focus, textarea:focus {
     height: 60px;
     border-radius: 50%;
     background-color: var(--primary);
-    color: var(--bg-app);
+    color: white;
     font-size: 22px;
+    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    margin-bottom: -20px; 
-    transition: 0.2s;
+    margin-bottom: -20px;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .profile-header a {
@@ -198,14 +200,19 @@ input:focus, select:focus, textarea:focus {
     outline: none !important;
     display: flex;
     justify-content: center;
-    width: 100%; 
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    transition: background-color 0.2s ease;
+    width: 100%;
 }
 
 .profile-header a:hover {
     background: transparent !important;
+    transform: none !important;
+    color: inherit !important;
+}
+
+.avatar:hover {
+    background-color: var(--primary) !important;
+    color: white !important;
+    cursor: pointer;
 }
 
 .user-info h3 {
@@ -269,9 +276,14 @@ input:focus, select:focus, textarea:focus {
     color: var(--primary);
 }
 
+.sidepanel-footer {
+    margin-top: auto;
+    padding: 0 10px 20px;
+}
+
 .sidepanel-footer hr {
     border: 0;
-    border-top: 2px solid var(--accent-color); 
+    border-top: 2px solid var(--accent-color);
     margin: 0 0 8px 0;
     width: 100%;
 }
@@ -351,7 +363,7 @@ input:focus, select:focus, textarea:focus {
     backdrop-filter: blur(4px);
 }
 
-* CARD CONTENT WRAPPER EFFECT */
+/* CARD CONTENT WRAPPER EFFECT */
 .card[data-status="claimed"] {
     position: relative;
 }
@@ -678,7 +690,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .btn-report:hover {
-    background: rgba(239, 68, 68, 0.08);
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
 }
@@ -885,15 +898,8 @@ input:focus, select:focus, textarea:focus {
 /* ─── Messages Page header ─── */
 .messages-header {
     text-align: center;
-    padding-top: 30px; 
+    padding-top: 30px;
     margin-bottom: 24px;
-    position: relative;
-    width: 100%;
-}
-
-.main-content {
-    padding-top: 60px; 
-    min-height: 100vh;
 }
 
 .messages-header h1 {
@@ -998,6 +1004,12 @@ input:focus, select:focus, textarea:focus {
 
 .upload-clear-btn:hover {
     background: rgba(239, 68, 68, 0.14);
+}
+
+/* Shared page wrapper (offsets the fixed sidebar) */
+.page-content {
+    margin-left: 260px;
+    padding: 0 25px 40px;
 }
 
 /* Create / Edit Listing Page */
@@ -1141,6 +1153,64 @@ input:focus, select:focus, textarea:focus {
     width: 100%;
     height: 100%;
     cursor: pointer;
+}
+
+/* ─── Dashboard empty state ─── */
+.empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px 60px;
+    text-align: center;
+    gap: 14px;
+}
+
+.empty-state-icon {
+    font-size: 72px;
+    color: var(--primary);
+    opacity: 0.2;
+    line-height: 1;
+}
+
+.empty-state-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.empty-state-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 380px;
+    line-height: 1.65;
+    margin: 0;
+}
+
+.empty-state-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.empty-state-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.empty-state-btn .material-symbols-outlined {
+    font-size: 20px;
 }
 
 /* No results / empty states */

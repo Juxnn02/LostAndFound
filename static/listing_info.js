@@ -59,10 +59,27 @@ if (claimToggle) {
         .then(data => {
 
             if (data.success) {
+                const isClaimed = claimToggle.checked;
+                claimLabel.textContent = isClaimed ? "Claimed" : "Active";
 
-                claimLabel.textContent = claimToggle.checked
-                    ? "Claimed"
-                    : "Active";
+                // Live-update the overlay and grayscale without a page reload
+                const imageWrapper = document.querySelector('.listing-image-wrapper');
+                let overlay = imageWrapper ? imageWrapper.querySelector('.claimed-overlay') : null;
+
+                if (isClaimed) {
+                    if (imageWrapper && !overlay) {
+                        overlay = document.createElement('div');
+                        overlay.className = 'claimed-overlay';
+                        overlay.textContent = 'CLAIMED';
+                        imageWrapper.appendChild(overlay);
+                    } else if (overlay) {
+                        overlay.style.display = '';
+                    }
+                    if (container) container.dataset.postStatus = 'claimed';
+                } else {
+                    if (overlay) overlay.style.display = 'none';
+                    if (container) container.dataset.postStatus = 'active';
+                }
 
             } else {
 

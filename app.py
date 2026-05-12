@@ -7,7 +7,9 @@ from flask_mail import Mail, Message as MailMessage
 import os
 import json
 import uuid
-from datetime import datetime
+import threading
+import time
+from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from models import db, Account, Post, Message, User, Admin, Report
 import random
@@ -46,6 +48,29 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+
+# Add claimed_at column to existing databases that pre-date this field
+from sqlalchemy import text as _sql_text
+with app.app_context():
+    try:
+        with db.engine.connect() as _conn:
+            _conn.execute(_sql_text("ALTER TABLE post ADD COLUMN claimed_at DATETIME"))
+            _conn.commit()
+    except Exception:
+        pass  # Column already exists or DB not yet created
+
+
+@app.context_processor
+def inject_user_info():
+    user_name = session.get('user_name', '')
+    parts = user_name.split()
+    if len(parts) >= 2:
+        initials = parts[0][0].upper() + parts[-1][0].upper()
+    elif parts:
+        initials = parts[0][:2].upper()
+    else:
+        initials = ''
+    return dict(user_name=user_name, user_initials=initials, user_email=session.get('user_email', ''))
 
 
 # UI HTML ROUTES
@@ -264,13 +289,22 @@ def api_create_listing():
             file.save(filepath)
             image_url = f"images/{unique_name}"
 
+    date_str = request.form.get('date_found', '').strip()
+    post_date = datetime.utcnow()
+    if date_str:
+        try:
+            post_date = datetime.strptime(date_str, '%Y-%m-%d')
+        except ValueError:
+            pass
+
     new_post = Post(
         user_id=user_id,
         item_name=request.form.get('title'),
         description=request.form.get('description'),
         category=request.form.get('category'),
         location=request.form.get('location'),
-        image_url=image_url
+        image_url=image_url,
+        post_date=post_date
     )
 
     try:
@@ -286,6 +320,7 @@ def api_create_listing():
 def api_claim_listing(post_id):
     post = Post.query.get_or_404(post_id)
     post.is_claimed = True
+    post.claimed_at = datetime.utcnow()
     try:
         db.session.commit()
         return jsonify({"success": True})
@@ -298,6 +333,7 @@ def api_claim_listing(post_id):
 def api_unclaim_listing(post_id):
     post = Post.query.get_or_404(post_id)
     post.is_claimed = False
+    post.claimed_at = None
     try:
         db.session.commit()
         return jsonify({"success": True})
@@ -308,7 +344,11 @@ def api_unclaim_listing(post_id):
 
 @app.route("/api/listings/update/<int:post_id>", methods=["POST"])
 def api_update_listing(post_id):
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
     post = Post.query.get_or_404(post_id)
+    if post.user_id != session['user_id']:
+        return jsonify({"success": False, "message": "Forbidden"}), 403
     post.item_name = request.form.get("item_name")
     post.location = request.form.get("location")
     post.category = request.form.get("category")
@@ -326,13 +366,14 @@ def delete_listing(id):
     if listing.user_id != session['user_id']:
         return {"success": False, "error": "Forbidden"}, 403
     try:
+        # Nullify post_id on messages so conversation history isn't lost
+        Message.query.filter_by(post_id=id).update({'post_id': None})
         db.session.delete(listing)
         db.session.commit()
         return {"success": True}, 200
-        
+
     except Exception as e:
-        db.session.rollback() # This is the "key" to fixing OperationalErrors
-        
+        db.session.rollback()
         return {"success": False, "error": str(e)}, 500
         
 # Messaging API
@@ -649,6 +690,39 @@ def admin_logout():
     session.pop("is_admin", None)
     session.pop("admin_id", None)
     return redirect("/admin-login")
+
+
+AUTO_DELETE_DAYS = 7
+
+
+def _cleanup_claimed_posts():
+    """Remove claimed listings that have been claimed longer than AUTO_DELETE_DAYS."""
+    with app.app_context():
+        cutoff = datetime.utcnow() - timedelta(days=AUTO_DELETE_DAYS)
+        old_posts = Post.query.filter(
+            Post.is_claimed == True,
+            Post.claimed_at != None,
+            Post.claimed_at <= cutoff
+        ).all()
+        for post in old_posts:
+            Message.query.filter_by(post_id=post.id).update({'post_id': None})
+            db.session.delete(post)
+        if old_posts:
+            db.session.commit()
+
+
+def _scheduler_loop():
+    while True:
+        try:
+            _cleanup_claimed_posts()
+        except Exception:
+            pass
+        time.sleep(86400)  # run once every 24 hours
+
+
+# Daemon thread — stops automatically when the main process exits
+_cleanup_thread = threading.Thread(target=_scheduler_loop, daemon=True)
+_cleanup_thread.start()
 
 
 if __name__ == "__main__":

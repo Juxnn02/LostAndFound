@@ -18,17 +18,16 @@
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>SCSU Lost & Found</h3>
+                    <h3>{{ user_name }}</h3>
                 </div>
             </div>
-            
+
             <nav class="sidepanel-nav">
                 <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
                 <a href="/createlisting" class="active"><span class="material-symbols-outlined">add</span>New Listing</a>
                 <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
                 <a href="/messages"><span class="material-symbols-outlined">chat</span>Messages</a>
                 <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
-                
             </nav>
         </div>
 
@@ -36,85 +35,93 @@
             <hr> <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
         </div>
     </aside>
-    
-    <div class="edit-listing-header">
-        <h1>New Listing</h1>
-    </div>
 
-    <p id="create-error" class="create-error"></p>
+    <!-- MAIN CONTENT -->
+    <div class="page-content">
 
-    <form class="form-container" id="create-listing-form" enctype="multipart/form-data">
-
-        <!-- LEFT: Text fields -->
-        <div class="form-content">
-
-            <div class="form-group">
-                <label for="listing-title">Title <span class="required-star">*</span></label>
-                <input type="text" id="listing-title" placeholder="e.g. Blue Water Bottle" required>
-            </div>
-
-
-            <div class="form-group">
-                <label for="listing-category">Category</label>
-                <select id="listing-category" title="Select category">
-                    <option value="">— Select category —</option>
-                    <option value="Accessories">Accessories</option>
-                    <option value="Apparel">Apparel</option>
-                    <option value="Books">Books</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="listing-location">Found at / lost at: <span class="required-star">*</span></label>
-                <select id="listing-location" required title="Select location">
-                    <option value="">— Select location —</option>
-                    <option value="Buley Library">Buley Library</option>
-                    <option value="Engleman Hall">Engleman Hall</option>
-                    <option value="Jennings Hall">Jennings Hall</option>
-                    <option value="Morrill Hall">Morrill Hall</option>
-                    <option value="Student Center">Student Center</option>
-                    <option value="Farnham Hall">Farnham Hall</option>
-                    <option value="Outside / Grounds">Outside / Grounds</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="listing-description">Description <span class="required-star">*</span></label>
-                <textarea id="listing-description" required rows="4"
-                    placeholder="Color, brand, any identifying features..."></textarea>
-            </div>
-
-            <p class="required-note"><span class="required-star">*</span> Required fields</p>
-
-            <div class="form-buttons">
-                <button type="submit" class="btn-form btn-submit-form">Submit Listing</button>
-            </div>
+        <div class="edit-listing-header">
+            <h1>New Listing</h1>
         </div>
 
-        <!-- RIGHT: Image upload -->
-        <div class="form-right-column">
-            <div class="form-group">
-                <label>Photo <span class="form-label-hint">(optional)</span></label>
-            </div>
+        <p id="create-error" class="create-error"></p>
 
-            <div class="image-upload-area" id="image-upload-area">
-                <img id="image-preview" class="upload-preview" alt="Image preview">
-                <div class="upload-placeholder" id="upload-placeholder">
-                    <span class="upload-icon">📷</span>
-                    <span class="image-upload-text">Click to upload a photo</span>
-                    <span class="upload-hint">JPG, PNG, GIF — any size</span>
+        <form class="form-container" id="create-listing-form" enctype="multipart/form-data">
+
+            <!-- LEFT: Text fields -->
+            <div class="form-content">
+
+                <div class="form-group">
+                    <label for="listing-title">Title <span class="required-star">*</span></label>
+                    <input type="text" id="listing-title" placeholder="e.g. Blue Water Bottle" required>
                 </div>
-                <input type="file" id="listing-image" name="image" accept="image/*"
-                       class="image-upload-input" title="Select image file">
+
+                <div class="form-group">
+                    <label for="listing-date">Date Found / Lost <span class="required-star">*</span></label>
+                    <input type="date" id="listing-date" required max="">
+                </div>
+
+                <div class="form-group">
+                    <label for="listing-category">Category</label>
+                    <select id="listing-category" title="Select category">
+                        <option value="">— Select category —</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Apparel">Apparel</option>
+                        <option value="Books">Books</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="listing-location">Found at / Lost at <span class="required-star">*</span></label>
+                    <select id="listing-location" required title="Select location">
+                        <option value="">— Select location —</option>
+                        <option value="Buley Library">Buley Library</option>
+                        <option value="Engleman Hall">Engleman Hall</option>
+                        <option value="Jennings Hall">Jennings Hall</option>
+                        <option value="Morrill Hall">Morrill Hall</option>
+                        <option value="Student Center">Student Center</option>
+                        <option value="Farnham Hall">Farnham Hall</option>
+                        <option value="Outside / Grounds">Outside / Grounds</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="listing-description">Description <span class="required-star">*</span></label>
+                    <textarea id="listing-description" required rows="4"
+                        placeholder="Color, brand, any identifying features..."></textarea>
+                </div>
+
+                <p class="required-note"><span class="required-star">*</span> Required fields</p>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn-form btn-submit-form">Submit Listing</button>
+                </div>
             </div>
 
-            <button type="button" class="upload-clear-btn" id="clear-image-btn">Remove photo</button>
-        </div>
+            <!-- RIGHT: Image upload -->
+            <div class="form-right-column">
+                <div class="form-group">
+                    <label>Photo <span class="form-label-hint">(optional)</span></label>
+                </div>
 
-    </form>
+                <div class="image-upload-area" id="image-upload-area">
+                    <img id="image-preview" class="upload-preview" alt="Image preview">
+                    <div class="upload-placeholder" id="upload-placeholder">
+                        <span class="upload-icon">📷</span>
+                        <span class="image-upload-text">Click to upload a photo</span>
+                        <span class="upload-hint">JPG, PNG, GIF — any size</span>
+                    </div>
+                    <input type="file" id="listing-image" name="image" accept="image/*"
+                           class="image-upload-input" title="Select image file">
+                </div>
+
+                <button type="button" class="upload-clear-btn" id="clear-image-btn">Remove photo</button>
+            </div>
+
+        </form>
+    </div>
 
     <script src="static/createlisting.js"></script>
 </body>

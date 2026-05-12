@@ -12,24 +12,23 @@
 </head>
 <body class="app-layout">
     <!-- SIDEBAR -->
-     <aside class="sidepanel" id="sidePanel">
+    <aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
             <div class="profile-header">
                 <a href="/profile">
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>SCSU Lost & Found</h3>
+                    <h3>{{ user_name }}</h3>
                 </div>
             </div>
-            
+
             <nav class="sidepanel-nav">
                 <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
                 <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
                 <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
                 <a href="/messages" class="active"><span class="material-symbols-outlined">chat</span>Messages</a>
                 <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
-                
             </nav>
         </div>
 
@@ -38,39 +37,50 @@
         </div>
     </aside>
 
-    <div class="messages-header">
-        <h1>Messages</h1>
-    </div>
+    <!-- MAIN CONTENT -->
+    <div class="messages-page-content">
 
-    <div class="messenger-wrapper">
+        <div class="messages-header">
+            <h1>Messages</h1>
+        </div>
 
-        <!-- LEFT: Conversation list -->
-        <aside class="inbox-list" id="inbox-list">
-            <div class="inbox-empty" id="inbox-empty">
-                <p>No conversations yet.</p>
-                <a href="/dashboard">Browse listings</a>
-            </div>
-        </aside>
+        <div class="messenger-wrapper">
 
-        <!-- RIGHT: Chat panel -->
-        <section class="chat-main">
+            <!-- LEFT: Conversation list -->
+            <aside class="inbox-list" id="inbox-list">
+                <div class="inbox-empty" id="inbox-empty">
+                    <p>No conversations yet.</p>
+                    <a href="/dashboard">Browse listings</a>
+                </div>
+            </aside>
 
-            <div class="chat-header" id="chat-header">
-                <span id="chat-header-name"></span>
-                <span id="chat-header-listing"></span>
-            </div>
+            <!-- RIGHT: Chat panel -->
+            <section class="chat-main">
 
-            <div class="chat-display" id="chat-box">
-                <p class="empty-chat-text">Select a conversation to start chatting.</p>
-            </div>
+                <!-- Shown when no conversation is selected -->
+                <div class="chat-welcome" id="chat-welcome">
+                    <span class="material-symbols-outlined">forum</span>
+                    <p>Select a conversation to start chatting</p>
+                </div>
 
-            <form class="message-input" id="message-form" onsubmit="return handleSend(event)">
-                <input type="text" id="user-input" placeholder="Write a message..." autocomplete="off" disabled>
-                <button type="submit" id="send-btn" disabled>Send</button>
-            </form>
+                <!-- Shown when a conversation is active -->
+                <div class="chat-active" id="chat-active">
+                    <div class="chat-header" id="chat-header">
+                        <span id="chat-header-name"></span>
+                        <span id="chat-header-listing"></span>
+                    </div>
 
-        </section>
+                    <div class="chat-display" id="chat-box"></div>
 
+                    <form class="message-input" id="message-form" onsubmit="return handleSend(event)">
+                        <input type="text" id="user-input" placeholder="Write a message..." autocomplete="off" disabled>
+                        <button type="submit" id="send-btn" disabled>Send</button>
+                    </form>
+                </div>
+
+            </section>
+
+        </div>
     </div>
 
     <script src="static/timeformat.js"></script>

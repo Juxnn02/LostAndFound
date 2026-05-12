@@ -62,6 +62,12 @@ function openChat(postId, otherUserId, otherUserName, postName) {
     activePostId = postId;
     activeOtherUserId = otherUserId;
 
+    // Swap welcome → active panel
+    const welcome = document.getElementById('chat-welcome');
+    const active  = document.getElementById('chat-active');
+    if (welcome) welcome.style.display = 'none';
+    if (active)  active.style.display  = 'flex';
+
     // Highlight active inbox card
     document.querySelectorAll('.inbox-card').forEach(c => {
         c.classList.toggle('active',

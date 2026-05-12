@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Set today as the max date and default value for the date picker
+    const dateInput = document.getElementById('listing-date');
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.max = today;
+        dateInput.value = today;
+    }
+
     const imageInput    = document.getElementById('listing-image');
     const imagePreview  = document.getElementById('image-preview');
     const uploadArea    = document.getElementById('image-upload-area');
@@ -43,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const title    = document.getElementById('listing-title');
+        const dateEl   = document.getElementById('listing-date');
         const desc     = document.getElementById('listing-description');
         const location = document.getElementById('listing-location');
         const category = document.getElementById('listing-category');
@@ -68,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formData = new FormData();
         formData.append('title',       title.value.trim());
+        formData.append('date_found',  dateEl ? dateEl.value : '');
         formData.append('description', desc.value.trim());
         formData.append('location',    location.value);
         formData.append('category',    category ? category.value : '');
