@@ -911,13 +911,14 @@ input:focus, select:focus, textarea:focus {
 
 .required-star {
     color: var(--danger);
+    margin-top: 5px;
     font-size: 13px;
 }
 
 .required-note {
     font-size: 12px;
     color: var(--text-muted);
-    margin: 0 0 4px;
+    margin: 10px 8px 4px;
 }
 
 .form-label-hint {
@@ -1071,7 +1072,7 @@ input:focus, select:focus, textarea:focus {
     cursor: pointer;
     padding: 10px 20px;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     font-family: inherit;
     transition: background 0.15s, transform 0.1s;
@@ -1081,25 +1082,29 @@ input:focus, select:focus, textarea:focus {
     background: var(--bg-app);
     color: var(--text-dark);
     border: 1.5px solid var(--border);
+    
 }
 
 .btn-save {
-    background: var(--primary);
+    background: var(--success);
     color: white;
     height: 42px;
-    padding: 0 24px;
+    margin-left: 10px;
+    padding: 12px 25px;
 }
 
-.btn-save:hover { background: var(--primary-hover); }
+.btn-save:hover { background:  #298e6e;}
 
 .btn-submit-form {
     background: var(--success);
     color: white;
     height: 42px;
-    padding: 0 24px;
+    margin-top: 10px;
+    width: 300px;
+    padding: 12px 24px;
 }
 
-.btn-submit-form:hover { background: #059669; }
+.btn-submit-form:hover { background: #298e6e; }
 
 .form-right-column {
     flex: 1;
