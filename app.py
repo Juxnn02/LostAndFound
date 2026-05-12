@@ -272,6 +272,20 @@ def api_login():
     return jsonify({"success": True, "message": "Login successful!", "redirect": "/dashboard"})
 
 
+@app.route("/api/listings/feed", methods=["GET"])
+def api_listings_feed():
+    since_id = request.args.get('since_id', 0, type=int)
+    posts = Post.query.filter(Post.id > since_id).order_by(Post.id.desc()).all()
+    return jsonify([{
+        "id": p.id,
+        "item_name": p.item_name,
+        "category": p.category or "",
+        "location": p.location or "",
+        "image_url": p.image_url,
+        "is_claimed": p.is_claimed,
+    } for p in posts])
+
+
 @app.route("/api/listings", methods=["POST"])
 def api_create_listing():
     if 'user_id' not in session:

@@ -62,7 +62,7 @@
         </div>
 
 <!-- GRID -->
-        <div class="grid-container" id="listings-grid">
+        <div class="grid-container" id="listings-grid" data-latest-id="{{ (posts | map(attribute='id') | max) if posts else 0 }}">
 
             {% if posts %}
                 {% for post in posts %}

@@ -1225,6 +1225,43 @@ input:focus, select:focus, textarea:focus {
 
 .no-results { display: none; }
 
+/* New card pop-in animation (live polling) */
+.card-highlight {
+    animation: card-pop-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+    transition: outline 1s ease-out;
+}
+@keyframes card-pop-in {
+    from { opacity: 0; transform: scale(0.94) translateY(-6px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+/* Toast notification for new listings */
+.new-listings-toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 999;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(54, 112, 211, 0.35);
+}
+.new-listings-toast.toast-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
 /* Back to top button */
 #scrollTopBtn {
     position: fixed;
