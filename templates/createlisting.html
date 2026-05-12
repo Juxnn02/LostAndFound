@@ -53,14 +53,21 @@
                 <input type="text" id="listing-title" placeholder="e.g. Blue Water Bottle" required>
             </div>
 
+
             <div class="form-group">
-                <label for="listing-description">Description <span class="required-star">*</span></label>
-                <textarea id="listing-description" required rows="4"
-                    placeholder="Color, brand, any identifying features..."></textarea>
+                <label for="listing-category">Category</label>
+                <select id="listing-category" title="Select category">
+                    <option value="">— Select category —</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Apparel">Apparel</option>
+                    <option value="Books">Books</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label for="listing-location">Where was it found / lost? <span class="required-star">*</span></label>
+                <label for="listing-location">Found at / lost at: <span class="required-star">*</span></label>
                 <select id="listing-location" required title="Select location">
                     <option value="">— Select location —</option>
                     <option value="Buley Library">Buley Library</option>
@@ -75,15 +82,9 @@
             </div>
 
             <div class="form-group">
-                <label for="listing-category">Category</label>
-                <select id="listing-category" title="Select category">
-                    <option value="">— Select category —</option>
-                    <option value="Accessories">Accessories</option>
-                    <option value="Apparel">Apparel</option>
-                    <option value="Books">Books</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Other">Other</option>
-                </select>
+                <label for="listing-description">Description <span class="required-star">*</span></label>
+                <textarea id="listing-description" required rows="4"
+                    placeholder="Color, brand, any identifying features..."></textarea>
             </div>
 
             <p class="required-note"><span class="required-star">*</span> Required fields</p>
