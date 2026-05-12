@@ -57,8 +57,10 @@
                     {% if post and post.image_url %}
                         <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}" style="max-width: 100%; border-radius: 12px;">
                     {% else %}
-                        <span class="card-no-image-icon">📷</span>
-                        <div class="card-no-image">No Image</div>
+                        <div class="listing-no-image">
+                            <span class="listing-no-image-icon">📷</span>
+                            <span class="listing-no-image-label">No Photo</span>
+                        </div>
                     {% endif %}
                 </div>
 
@@ -82,18 +84,21 @@
                     </div>
 
                     <div class="listing-details">
+                        <p class="poster-name">{{ post.author.account.name if post and post.author and post.author.account else 'Unknown' }}</p>
                         <h3>{{ post.location if post else '' }}</h3>
                         <p>{{ post.description if post else '' }}</p>
                         <span class="listing-timestamp" id="listing-timestamp"
-                              data-timestamp="{{ post.post_date.isoformat() if post else '' }}"></span>
+                              data-timestamp="{{ post.post_date.isoformat() + 'Z' if post else '' }}"></span>
 
                         {% if post %}
                         <div class="listing-actions-row">
                             <div class="action-buttons">
+                                {% if session.get('user_id') == post.user_id %}
                                 <div class="toggle-wrapper">
                                     <label class="claim-switch">
                                         <input type="checkbox"
                                             id="claim-toggle"
+                                            aria-label="Mark listing as claimed"
                                             data-post-id="{{ post.id }}"
                                             {% if post.is_claimed %}checked{% endif %}>
                                         <span class="slider"></span>
@@ -102,13 +107,14 @@
                                         {{ 'Claimed' if post.is_claimed else 'Active' }}
                                     </span>
                                 </div>
-                                
+                                {% else %}
                                 <button type="button" id="connect-btn" class="btn-connect">
-                                   Connect<span class="material-symbols-outlined">chat</span>
+                                    Connect<span class="material-symbols-outlined">chat</span>
                                 </button>
-                                <button type="button" id="report-btn" class="btn-report">Report
-                                Report<span class="material-symbols-outlined">report</span>
+                                <button type="button" id="report-btn" class="btn-report">
+                                    Report<span class="material-symbols-outlined">report</span>
                                 </button>
+                                {% endif %}
                             </div>
                         </div>
                         {% endif %}
