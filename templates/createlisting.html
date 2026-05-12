@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="static/app.css">
 </head>
 <body class="app-layout">
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <!-- SIDEBAR -->
     <aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
@@ -37,6 +38,12 @@
     </aside>
 
     <!-- MAIN CONTENT -->
+    <div class="mobile-topbar">
+        <button type="button" class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <span class="mobile-topbar-title">New Listing</span>
+    </div>
     <div class="page-content">
 
         <div class="edit-listing-header">

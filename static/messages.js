@@ -1,3 +1,13 @@
+function toggleSidebar() {
+    document.getElementById('sidePanel').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+function closeSidebar() {
+    document.getElementById('sidePanel').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
 // Active conversation state
 let activePostId = null;
 let activeOtherUserId = null;

@@ -1,3 +1,13 @@
+function toggleSidebar() {
+    document.getElementById('sidePanel').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+function closeSidebar() {
+    document.getElementById('sidePanel').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Set today as the max date and default value for the date picker
     const dateInput = document.getElementById('listing-date');

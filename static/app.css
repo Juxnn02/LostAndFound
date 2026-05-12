@@ -1203,6 +1203,14 @@ input:focus, select:focus, textarea:focus {
     cursor: pointer;
 }
 
+/* edit listing image preview */
+.edit-image-preview {
+    max-width: 100%;
+    display: block;
+    margin-top: 6px;
+    border-radius: 8px;
+}
+
 /* ─── Dashboard empty state ─── */
 .empty-state {
     grid-column: 1 / -1;
@@ -1637,6 +1645,36 @@ textarea:focus {
 
     /* dashboard grid */
     .grid-container { columns: 2; padding: 12px 10px 48px; column-gap: 8px; }
+
+    /* pages that use .page-content (New Listing, Edit Listing) */
+    .page-content {
+        margin-left: 0;
+        padding: 0 0 48px;
+    }
+
+    /* form header — remove negative margin that looks bad on mobile */
+    .edit-listing-header h1 { margin-top: 16px; }
+
+    /* two-column form → single column */
+    .form-container {
+        flex-direction: column;
+        margin: 0 12px;
+        padding: 20px 16px;
+        gap: 0;
+    }
+
+    .form-right-column { gap: 12px; }
+
+    /* edit listing image preview */
+    .edit-image-preview {
+        max-width: 100%;
+        display: block;
+        margin-top: 6px;
+        border-radius: 8px;
+    }
+
+    /* submit button full width */
+    .btn-submit-form { width: 100%; }
 }
 
 @media (max-width: 480px) {
