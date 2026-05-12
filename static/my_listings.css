@@ -344,36 +344,56 @@ body {
 }
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
-    .ml-split {
-        flex-direction: column;
-    }
-    .ml-divider {
-        width: auto;
-        height: 1px;
-    }
-}
-
 @media (max-width: 768px) {
+    /* Sticky top bar — 2 rows:
+       Row 1: ☰  My Listings  + New Listing
+       Row 2: stats bar        */
     .navbar {
         flex-wrap: wrap;
-        padding: 14px 16px;
-        gap: 10px;
-        border-radius: 0 0 14px 14px;
+        padding: 10px 14px;
+        gap: 8px;
+        border-radius: 0;
         margin-top: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0,51,153,0.35);
+        margin-bottom: 0;
     }
+
+    /* Row 1 ordering */
+    .hamburger-btn { order: 1; }
+    .ml-title      { order: 2; flex: 1; text-align: left; font-size: 17px; margin: 0 4px; }
+    .ml-new-btn    { order: 3; padding: 7px 11px; font-size: 13px; }
+
+    /* Row 2: stats span the full bar width */
     .ml-stats-inline {
-        order: 3;
+        order: 4;
         width: 100%;
+        padding: 8px 0 4px;
+        border-top: 1px solid rgba(255,255,255,0.2);
+        gap: 0;
         justify-content: center;
-        padding-bottom: 4px;
     }
-    .ml-title { font-size: 20px; }
+    .ml-stat { padding: 0 20px; }
+    .ml-stats-inline .ml-stat-num  { font-size: 22px; }
+    .ml-stats-inline .ml-stat-label { font-size: 9px; }
+
+    /* Content area */
+    .ml-split {
+        flex-direction: column;
+        padding: 16px 12px 48px;
+        gap: 0;
+        min-height: unset;
+    }
+    .ml-divider { width: auto; height: 1px; margin: 4px 0 20px; }
+    .ml-col { padding: 0 0 8px; }
+    .ml-grid { columns: 1; }
+    .ml-card { width: 100%; }
+    .ml-card-img { height: 200px; }
 }
 
-@media (max-width: 600px) {
-    .ml-grid { columns: 1; }
-    .ml-header { padding: 16px; }
-    .ml-col { padding: 16px; }
-    .ml-card { width: 100%; }
+@media (max-width: 900px) and (min-width: 769px) {
+    .ml-split { flex-direction: column; }
+    .ml-divider { width: auto; height: 1px; }
 }

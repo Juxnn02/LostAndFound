@@ -1501,7 +1501,7 @@ textarea:focus {
     background: rgba(255,255,255,0.15);
     border: none;
     cursor: pointer;
-    padding: 7px;
+    padding: 7px 8px;
     border-radius: 8px;
     align-items: center;
     justify-content: center;
@@ -1510,12 +1510,13 @@ textarea:focus {
 }
 
 .hamburger-btn .material-symbols-outlined {
-    font-size: 24px;
+    font-size: 26px;
     color: white;
     display: block;
+    line-height: 1;
 }
 
-.hamburger-btn:hover { background: rgba(255,255,255,0.25); }
+.hamburger-btn:hover { background: rgba(255,255,255,0.28); }
 
 .sidebar-overlay {
     display: none;
@@ -1524,46 +1525,68 @@ textarea:focus {
     background: rgba(0,0,0,0.45);
     z-index: 150;
 }
-
 .sidebar-overlay.active { display: block; }
 
-/* Mobile topbar for pages without a .navbar (e.g. listing_info) */
+/* Sticky topbar for pages that don't have a .navbar (e.g. listing_info) */
 .mobile-topbar {
     display: none;
-    background: var(--primary);
-    padding: 10px 16px;
-    align-items: center;
-    gap: 12px;
-    border-radius: 0 0 14px 14px;
-    margin-bottom: 16px;
-}
-
-.mobile-topbar-title {
-    font-size: 17px;
-    font-weight: 700;
-    color: white;
 }
 
 @media (max-width: 768px) {
+    /* Hamburger visible everywhere on mobile */
     .hamburger-btn { display: flex; }
-    .mobile-topbar { display: flex; }
 
+    /* Sidebar slides in from left as drawer */
     .sidepanel {
         transform: translateX(-100%);
-        transition: transform 0.25s ease;
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 200;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.18);
     }
-
     .sidepanel.open { transform: translateX(0); }
 
+    /* All main content: full width, no offset */
     .main-content {
         margin-left: 0 !important;
-        padding: 0 0 40px !important;
+        padding: 0 !important;
     }
 
-    /* listing info mobile fixes */
-    .listing-image-wrapper { height: 260px !important; }
-    .listing-image { width: 100% !important; }
+    /* listing_info main content gets its own padding since there's no inner navbar */
+    .listing-page-body .main-content {
+        padding: 16px 16px 48px !important;
+    }
+
+    /* Show the topbar on listing_info (and any page that uses it) */
+    .mobile-topbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--primary);
+        padding: 0 16px;
+        height: 56px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0,51,153,0.35);
+    }
+    /* The hamburger inside topbar is always visible when topbar shows */
+    .mobile-topbar .hamburger-btn { display: flex; background: rgba(255,255,255,0.12); }
+    .mobile-topbar-title {
+        flex: 1;
+        font-size: 17px;
+        font-weight: 700;
+        color: white;
+    }
+
+    /* Remove body padding so topbar reaches screen edges */
+    .listing-page-body { padding: 0; }
+
+    /* listing info page */
+    .listing-back-link { padding: 8px 4px; margin-bottom: 10px; }
+    .listing-image-wrapper { height: auto !important; }
+    .listing-image { width: 100% !important; height: 240px; }
+    .listing-container { padding: 16px; margin: 0; border-radius: 12px; }
+    .listing-title { font-size: 1.35rem; margin-bottom: 14px; }
     .listing-actions-row {
         margin-left: 0 !important;
         margin-right: 0 !important;
@@ -1571,33 +1594,60 @@ textarea:focus {
         padding-right: 0 !important;
         width: 100%;
     }
-    .listing-avatar {
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+    .listing-avatar { margin-left: 0 !important; margin-right: 0 !important; }
+
+    /* ── Dashboard navbar on mobile ── */
+    .navbar {
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        gap: 8px;
+        border-radius: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
-    .listing-container { padding: 16px; margin: 0 12px; }
-    .listing-title { font-size: 1.5rem; }
+    /* Row 1: ☰  Lost & Found */
+    .navbar .hamburger-btn { order: 1; }
+    .navbar h2             { order: 2; flex: 1; font-size: 17px; }
+    /* Row 2: search bar full width */
+    .search-bar {
+        order: 10;
+        width: 100%;
+        max-width: none;
+    }
+    /* Row 3: filter pills — horizontally scrollable */
+    .filter-menu {
+        order: 11;
+        width: 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 8px;
+        padding: 6px 0 4px;
+        border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .filter-menu::-webkit-scrollbar { display: none; }
+    .filter-menu a {
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 12px;
+        padding: 5px 12px;
+    }
 
-    /* dashboard grid on mobile */
-    .grid-container { columns: 2; padding: 12px 12px 40px; column-gap: 10px; }
-    .filter-menu { padding: 10px 16px 6px; flex-wrap: wrap; }
+    /* dashboard grid */
+    .grid-container { columns: 2; padding: 12px 10px 48px; column-gap: 8px; }
 }
 
-@media (max-width: 400px) {
-    .grid-container { columns: 1; }
+@media (max-width: 480px) {
+    .grid-container { columns: 1; padding: 12px 12px 48px; }
 }
 
-/* Responsive */
-@media (max-width: 1400px) {
-    .grid-container { columns: 4; }
-}
-@media (max-width: 1100px) {
-    .grid-container { columns: 3; }
-}
+/* ── Desktop breakpoints ── */
+@media (max-width: 1400px) { .grid-container { columns: 4; } }
+@media (max-width: 1100px) { .grid-container { columns: 3; } }
 @media (max-width: 700px) {
-    .navbar { padding: 0 16px; }
     .grid-container { columns: 2; padding: 12px 14px 40px; column-gap: 10px; }
     .filter-menu { padding: 12px 16px 8px; }
     .search-bar { width: 180px; }
-    .navbar-links .nav-link span { display: none; }
 }
