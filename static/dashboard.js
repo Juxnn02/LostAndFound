@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const card = document.createElement('div');
         card.className = 'card card-highlight';
+        card.dataset.id = post.id;
         card.dataset.category = (post.category || '').toLowerCase();
         card.dataset.status = post.is_claimed ? 'claimed' : 'active';
         card.addEventListener('click', () => { location.href = `/listing-info?id=${post.id}`; });
@@ -145,15 +146,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function pollNewListings() {
         fetch(`/api/listings/feed?since_id=${latestId}`)
             .then(r => r.json())
-            .then(newPosts => {
-                if (!newPosts.length) return;
+            .then(data => {
+                const { new_posts, active_ids } = data;
+
+                // Remove cards that no longer exist in the database
+                const activeSet = new Set(active_ids);
+                document.querySelectorAll('.card[data-id]').forEach(card => {
+                    if (!activeSet.has(parseInt(card.dataset.id))) {
+                        card.remove();
+                    }
+                });
+
+                if (!new_posts.length) return;
 
                 // Remove empty state if it exists
                 const emptyState = document.getElementById('empty-state');
                 if (emptyState) emptyState.remove();
 
-                // newPosts is newest-first; insert in reverse so newest ends up at top
-                [...newPosts].reverse().forEach(post => {
+                // new_posts is newest-first; insert in reverse so newest ends up at top
+                [...new_posts].reverse().forEach(post => {
                     if (post.id > latestId) latestId = post.id;
                     const card = buildCard(post);
                     const firstCard = grid.querySelector('.card');
@@ -162,13 +173,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         grid.prepend(card);
                     }
-                    // Remove highlight after animation finishes
                     setTimeout(() => card.classList.remove('card-highlight'), 1500);
                 });
 
-                showToast(newPosts.length);
+                showToast(new_posts.length);
             })
-            .catch(() => {}); // silently ignore network errors
+            .catch(() => {});
     }
 
     setInterval(pollNewListings, 30000);
