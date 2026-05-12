@@ -39,7 +39,7 @@ Built for **CSC 330** at SCSU.
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/<Juxnn02>/LostAndFound.git
+git clone https://github.com/Juxnn02/LostAndFound.git
 cd LostAndFound
 ```
 
