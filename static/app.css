@@ -608,13 +608,21 @@ input:focus, select:focus, textarea:focus {
     color: var(--text-dark);
 }
 
-.listing-details h3 {
-    margin: 0 0 4px 0;
-    font-size: 16px;
-    color: var(--text-dark);
+.listing-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 2px 0 8px 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
 }
 
-.listing-details p {
+.listing-location .material-symbols-outlined {
+    font-size: 15px;
+}
+
+.listing-description {
     color: var(--text-muted);
     margin: 0;
     font-size: 14px;

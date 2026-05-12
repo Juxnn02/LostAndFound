@@ -85,8 +85,8 @@
 
                     <div class="listing-details">
                         <p class="poster-name">{{ post.author.account.name if post and post.author and post.author.account else 'Unknown' }}</p>
-                        <h3>{{ post.location if post else '' }}</h3>
-                        <p>{{ post.description if post else '' }}</p>
+                        <p class="listing-location"><span class="material-symbols-outlined">location_on</span>{{ post.location if post else '' }}</p>
+                        <p class="listing-description">{{ post.description if post else '' }}</p>
                         <span class="listing-timestamp" id="listing-timestamp"
                               data-timestamp="{{ post.post_date.isoformat() + 'Z' if post else '' }}"></span>
 
