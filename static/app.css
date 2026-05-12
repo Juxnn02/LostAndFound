@@ -483,6 +483,18 @@ input:focus, select:focus, textarea:focus {
     padding: 30px;
 }
 
+.listing-page-body .main-content {
+    padding: 40px;
+}
+
+.listing-back-link {
+    margin-bottom: 20px;
+}
+
+.listing-image img {
+    max-width: 100%;
+}
+
 .listing-back-link {
     text-decoration: none;
     font-size: 15px;
@@ -586,8 +598,6 @@ input:focus, select:focus, textarea:focus {
     height: 50px;
     border-radius: 50%;
     display: flex;
-    margin-right: 15px;
-    margin-left: 15px;
     justify-content: center;
     align-items: center;
     font-size: 18px;
@@ -1483,6 +1493,98 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     text-decoration: none;
+}
+
+/* ─── Mobile Sidebar Toggle ─── */
+.hamburger-btn {
+    display: none;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.hamburger-btn .material-symbols-outlined {
+    font-size: 24px;
+    color: white;
+    display: block;
+}
+
+.hamburger-btn:hover { background: rgba(255,255,255,0.25); }
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 150;
+}
+
+.sidebar-overlay.active { display: block; }
+
+/* Mobile topbar for pages without a .navbar (e.g. listing_info) */
+.mobile-topbar {
+    display: none;
+    background: var(--primary);
+    padding: 10px 16px;
+    align-items: center;
+    gap: 12px;
+    border-radius: 0 0 14px 14px;
+    margin-bottom: 16px;
+}
+
+.mobile-topbar-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .hamburger-btn { display: flex; }
+    .mobile-topbar { display: flex; }
+
+    .sidepanel {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 200;
+    }
+
+    .sidepanel.open { transform: translateX(0); }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 0 40px !important;
+    }
+
+    /* listing info mobile fixes */
+    .listing-image-wrapper { height: 260px !important; }
+    .listing-image { width: 100% !important; }
+    .listing-actions-row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100%;
+    }
+    .listing-avatar {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .listing-container { padding: 16px; margin: 0 12px; }
+    .listing-title { font-size: 1.5rem; }
+
+    /* dashboard grid on mobile */
+    .grid-container { columns: 2; padding: 12px 12px 40px; column-gap: 10px; }
+    .filter-menu { padding: 10px 16px 6px; flex-wrap: wrap; }
+}
+
+@media (max-width: 400px) {
+    .grid-container { columns: 1; }
 }
 
 /* Responsive */

@@ -1,4 +1,23 @@
+function toggleSidebar() {
+    document.getElementById('sidePanel').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+function closeSidebar() {
+    document.getElementById('sidePanel').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Set back link based on where user came from
+    const from = new URLSearchParams(window.location.search).get('from');
+    if (from === 'my_listings') {
+        const backLink = document.getElementById('back-link');
+        const backText = document.getElementById('back-text');
+        if (backLink) backLink.href = '/my_listings';
+        if (backText) backText.textContent = 'Back to My Listings';
+    }
+
     const connectBtn = document.getElementById('connect-btn');
     const reportBtn = document.getElementById('report-btn');
     const reportModal = document.getElementById('report-modal');

@@ -11,8 +11,10 @@
 </head>
 <body class="app-layout listing-page-body">
 
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
     <!-- SIDEBAR -->
-     <aside class="sidepanel" id="sidePanel">
+    <aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
             <div class="profile-header">
                 <a href="/profile">
@@ -37,10 +39,16 @@
     </aside>
 
     <!-- MAIN CONTENT AREA -->
-    <div class="main-content" style="margin-left: 260px; padding: 40px;">
-        
-        <a href="/dashboard" class="listing-back-link" style="text-decoration: none; display: flex; align-items: center; gap: 8px; color: #64748b; margin-bottom: 20px;">
-            <span class="material-symbols-outlined">arrow_back</span> Back to Dashboard
+    <div class="mobile-topbar">
+        <button type="button" class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <span class="mobile-topbar-title">Listing Details</span>
+    </div>
+    <div class="main-content">
+
+        <a href="/dashboard" class="listing-back-link" id="back-link">
+            <span class="material-symbols-outlined">arrow_back</span> <span id="back-text">Back to Dashboard</span>
         </a>
 
         <div class="listing-container"
@@ -55,7 +63,7 @@
             <div class="listing-image-wrapper">
                 <div class="listing-image">
                     {% if post and post.image_url %}
-                        <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}" style="max-width: 100%; border-radius: 12px;">
+                        <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}">
                     {% else %}
                         <div class="listing-no-image">
                             <span class="listing-no-image-icon">📷</span>

@@ -35,23 +35,24 @@ body {
 .ml-title {
     font-size: 24px;
     font-weight: 800;
-    color: var(--text-dark);
+    color: white;
     margin: 0;
 }
 
 .ml-new-btn {
     text-decoration: none;
-    background: var(--primary);
-    color: white;
+    background: white;
+    color: var(--primary);
     font-size: 14px;
     font-weight: 600;
     padding: 9px 18px;
     border-radius: 8px;
     transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
 }
 
 .ml-new-btn:hover {
-    background: var(--primary-hover);
+    background: rgba(255,255,255,0.88);
     transform: translateY(-1px);
 }
 
@@ -73,13 +74,13 @@ body {
 .ml-stats-inline .ml-stat-num {
     font-size: 30px;
     font-weight: 600;
-    color: var(--primary);
+    color: white;
     line-height: 1;
 }
 
 .ml-stats-inline .ml-stat-label {
     font-size: 10px;
-    color: var(--text-muted);
+    color: rgba(255,255,255,0.75);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -88,7 +89,7 @@ body {
 .ml-stats-inline .ml-stat-divider {
     width: 1.5px;
     height: 25px;
-    background: rgb(152, 152, 152)
+    background: rgba(255,255,255,0.35);
 }
 
 /* ── Split view ── */
@@ -353,8 +354,26 @@ body {
     }
 }
 
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        padding: 14px 16px;
+        gap: 10px;
+        border-radius: 0 0 14px 14px;
+        margin-top: 0;
+    }
+    .ml-stats-inline {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        padding-bottom: 4px;
+    }
+    .ml-title { font-size: 20px; }
+}
+
 @media (max-width: 600px) {
     .ml-grid { columns: 1; }
     .ml-header { padding: 16px; }
     .ml-col { padding: 16px; }
+    .ml-card { width: 100%; }
 }
