@@ -152,11 +152,11 @@ input:focus, select:focus, textarea:focus {
 .sidepanel {
     width: 260px;
     height: 100vh;
-    background: #003399;
+    background: #ffffff;
     position: fixed;
     top: 0;
     left: 0;
-    border-right: none;
+    border-right: 1px solid #e2e8f0;
     padding-top: 30px;
     display: flex;
     flex-direction: column;
@@ -1202,6 +1202,11 @@ input:focus, select:focus, textarea:focus {
     color: var(--primary);
     opacity: 0.2;
     line-height: 1;
+}
+
+.empty-state-emoji {
+    color: inherit;
+    opacity: 0.75;
 }
 
 .empty-state-title {
