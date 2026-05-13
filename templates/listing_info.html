@@ -21,7 +21,7 @@
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>{{ user_name }}</h3>
+                    <h3> Welcome, {{ user_name.split(' ')[0] }}!</h3>
                 </div>
             </div>
             
@@ -77,51 +77,75 @@
                 {% endif %}
             </div>
 
-            <div class="listing-content">
-                <div class="listing-info-group">
-                    
-                    <!-- THE AVATAR -->
-                    <div class="listing-avatar" 
-                        title="{{ post.author.account.name if post and post.author and post.author.account else 'User' }}">
-                        {% if post and post.author and post.author.account %}
-                            {% set names = post.author.account.name.split() %}
-                            {{ names[0][0]|upper }}{{ names[-1][0]|upper }}
-                        {% else %}
-                            UI
-                        {% endif %}
-                    </div>
+            <div class="listing-details">
+                        <div class="listing-info-flex">
+                            
+                            <!-- LEFT: User Identity Group -->
+                            <div class="listing-user-info">
+                                <div class="listing-avatar">
+                                    {% if post and post.author and post.author.account %}
+                                        {% set names = post.author.account.name.split() %}
+                                        {{ names[0][0]|upper }}{{ names[-1][0]|upper }}
+                                    {% else %}
+                                        UI
+                                    {% endif %}
+                                </div>
 
-                    <div class="listing-details">
-                        <p class="poster-name">{{ post.author.account.name if post and post.author and post.author.account else 'Unknown' }}</p>
-                        <p class="listing-location"><span class="material-symbols-outlined">location_on</span>{{ post.location if post else '' }}</p>
-                        <p class="listing-description">{{ post.description if post else '' }}</p>
-                        <span class="listing-timestamp" id="listing-timestamp"
-                              data-timestamp="{{ post.post_date.isoformat() + 'Z' if post else '' }}"></span>
+                                <div class="listing-identity-column">
+                                    <p class="poster-name">
+                                        <strong>{{ post.author.account.name if post else 'Unknown' }}</strong>
+                                    </p>
+                                    <p class="listing-location">
+                                        <span class="material-symbols-outlined">location_on</span>
+                                        {{ post.location if post else '' }}
+                                    </p>
+                                    <span class="listing-timestamp" id="listing-timestamp" 
+                                        data-timestamp="{{ post.post_date.isoformat() + 'Z' if post else '' }}">
+                                    </span>
+                                </div>
+                            </div>
 
+                            <!-- MIDDLE: Vertical Divider -->
+                            <div class="listing-column-divider"></div>
+
+                            <!-- RIGHT: Description -->
+                        <div class="listing-description-column">
+                            <div class="description-content-flex">
+                                <div class="description-text-lane">
+                                    <p class="listing-description">
+                                        {{ post.description if post else '' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        </div> 
+                        <!-- BOTTOM ROW: Actions-->
                         {% if post %}
                         <div class="listing-actions-row">
                             <div class="action-buttons">
                                 {% if session.get('user_id') == post.user_id %}
-                                <div class="toggle-wrapper">
-                                    <label class="claim-switch">
-                                        <input type="checkbox"
-                                            id="claim-toggle"
-                                            aria-label="Mark listing as claimed"
-                                            data-post-id="{{ post.id }}"
-                                            {% if post.is_claimed %}checked{% endif %}>
-                                        <span class="slider"></span>
-                                    </label>
-                                    <span id="toggle-text" class="claim-label">
-                                        {{ 'Claimed' if post.is_claimed else 'Active' }}
-                                    </span>
-                                </div>
+                                    <!-- Owner Toggle moved here -->
+                                    <div class="owner-status-lane">
+                                        <div class="toggle-wrapper">
+                                            <label class="claim-switch">
+                                                <input type="checkbox" id="claim-toggle" 
+                                                    data-post-id="{{ post.id }}" 
+                                                    {% if post.is_claimed %}checked{% endif %}>
+                                                <span class="slider"></span>
+                                            </label>
+                                            <span id="toggle-text" class="claim-label">
+                                                {{ 'Claimed' if post.is_claimed else 'Active' }}
+                                            </span>
+                                        </div>
+                                    </div>
                                 {% else %}
-                                <button type="button" id="connect-btn" class="btn-connect">
-                                    Connect<span class="material-symbols-outlined">chat</span>
-                                </button>
-                                <button type="button" id="report-btn" class="btn-report">
-                                    Report<span class="material-symbols-outlined">report</span>
-                                </button>
+                                    <!-- Other User Buttons -->
+                                    <button type="button" id="connect-btn" class="btn-connect">
+                                        Connect <span class="material-symbols-outlined">chat</span>
+                                    </button>
+                                    <button type="button" id="report-btn" class="btn-report">
+                                        Report <span class="material-symbols-outlined">report</span>
+                                    </button>
                                 {% endif %}
                             </div>
                         </div>

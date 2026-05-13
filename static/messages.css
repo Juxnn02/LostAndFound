@@ -1,9 +1,3 @@
-/* Page wrapper — offsets the fixed sidebar */
-.messages-page-content {
-    margin-left: 260px;
-    padding: 0 25px 40px;
-}
-
 /* ─── Welcome / empty-chat state ─── */
 .chat-welcome {
     flex: 1;
@@ -52,7 +46,7 @@
 .inbox-list {
     flex: 0 0 240px; 
     width: 240px;
-    background: var(--bg-app);
+    background: rgb(193, 200, 207);
     border-right: 1px solid var(--border);
     overflow-y: auto;
     padding: 12px;
@@ -113,17 +107,17 @@
 .inbox-empty {
     padding: 32px 20px;
     text-align: center;
-    color: var(--text-muted);
-    font-size: 14px;
+    color: rgba(8, 77, 138, 0.826);
+    font-size: 15px;
 }
 
 .inbox-empty a {
     display: inline-block;
     margin-top: 10px;
-    color: var(--primary);
+    color: rgb(5, 37, 93);
     text-decoration: none;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 14.5px;
 }
 
 /* ─── Chat panel ─── */

@@ -3,14 +3,14 @@
 */
 
 :root {
-    --primary: #003399;              /* SCSU Reflex Blue */
+    --primary: #16387e;              /* SCSU Reflex Blue */
     --primary-hover: #002275;
     --primary-light: rgba(0, 51, 153, 0.1);
     --scsu-cyan: #00ADEB;
     --scsu-gold: #FFCC40;
     --success: #10B981;
     --danger: #EF4444;
-    --bg-app: #eef1f8;
+    --bg-app: #dddee0d6;
     --bg-card: #ffffff;
     --border: #E2E8F0;
     --text-dark: #1E293B;
@@ -25,6 +25,7 @@
 * { box-sizing: border-box; }
 
 body.app-layout {
+    background-color: var(--bg-app);
     display: block;
     min-height: 100vh;
     background-color: var(--bg-app);
@@ -57,8 +58,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .navbar {
-    background: #003399;
-
+    background: var(--primary);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -89,20 +89,20 @@ input:focus, select:focus, textarea:focus {
 
 /* Navbar Title */
 .navbar h2 {
-    font-size: 24px;
-    font-weight: 800;
-    color: #ffffff;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--bg-card);
     margin: 0;
     white-space: nowrap;
     letter-spacing: -0.3px;
 }
 
 .search-bar input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.811);
 }
 
 .search-bar input {
-    border: none;
+    border: rgba(255, 255, 255, 0.25);
     outline: none;
     background: transparent;
     color: #ffffff;
@@ -120,7 +120,7 @@ input:focus, select:focus, textarea:focus {
 
 .filter-menu a {
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.811);
     font-weight: 500;
     font-size: 14px;
     padding: 8px 16px;
@@ -190,7 +190,7 @@ input:focus, select:focus, textarea:focus {
     background-color: var(--primary);
     color: white;
     font-size: 22px;
-    font-weight: 700;
+    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -224,7 +224,7 @@ input:focus, select:focus, textarea:focus {
 
 .user-info h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     display: block;
     color: var(--text-color);
     margin-top: -6px;
@@ -438,7 +438,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .card-body strong {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-dark);
     display: block;
@@ -471,11 +471,11 @@ input:focus, select:focus, textarea:focus {
 }
 
 .card strong {
-    font-size: 18px;
+    font-size: 17px;
     color: var(--text-dark);
     display: block;
     margin-left: 6px;
-    margin-bottom: 2px;
+    margin-bottom: -6px;
 }
 
 /* ─── LISTING INFO PAGE ─── */
@@ -577,30 +577,70 @@ input:focus, select:focus, textarea:focus {
 .listing-no-image-icon { font-size: 52px; opacity: 0.35; line-height: 1; }
 .listing-no-image-label { font-size: 14px; font-weight: 500; }
 
-.listing-content {
+.listing-info-flex {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
+    align-items: stretch;
+    width: 100%;
+    gap: 0;
 }
 
-.listing-info-group {
+/* Identity block (Left) */
+.listing-user-info {
     display: flex;
-    gap: 14px;
     align-items: flex-start;
-    flex: 1;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.listing-avatar {
+    margin: 0; /* Clear previous margins */
+}
+
+/* Identity stack (Name, Location, Time) */
+.listing-identity-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.owner-inline-actions {
+    margin-top: 12px;
+}
+
+.owner-inline-actions .toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.poster-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Vertical Divider */
+.listing-column-divider {
+    width: 1.5px;
+    background-color: var(--accent-color);
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: -20px;
+    height: auto;
+    flex-shrink: 0;
 }
 
 .listing-avatar {
     background: var(--primary);
-    color: var(--bg-app);
+    color: var(--bg-card);
     width: 50px;
     height: 50px;
     border-radius: 50%;
     display: flex;
+    margin-left: 15px;
     justify-content: center;
     align-items: center;
     font-size: 18px;
+    font-weight: 500;
     flex-shrink: 0;
     transition: transform 0.2s ease;
 }
@@ -611,19 +651,31 @@ input:focus, select:focus, textarea:focus {
     cursor: default; 
 }
 
-.listing-details .poster-name {
-    margin: 0 0 2px 0;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-dark);
+/* Description block (Right) */
+.listing-description-column {
+    flex: 1;
+}
+
+.description-content-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    width: 100%;
+    gap: 15px;
+}
+
+.description-text-lane {
+    flex: 1; 
+    min-width: 0; 
+    max-width: 100%; 
 }
 
 .listing-location {
     display: flex;
     align-items: center;
     gap: 4px;
-    margin: 2px 0 8px 0;
-    font-size: 13px;
+    margin: 8px 0 8px 0;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-muted);
 }
@@ -633,56 +685,54 @@ input:focus, select:focus, textarea:focus {
 }
 
 .listing-description {
-    color: var(--text-muted);
     margin: 0;
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.5;
+    color: var(--text-muted);
+
+    overflow-wrap: anywhere; 
+    word-break: break-all; 
+    white-space: normal;
 }
 
 .listing-timestamp {
     color: var(--text-muted);
     font-size: 12px;
     display: block;
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
-
 .listing-actions-row {
-    margin-top: 20px;
-    padding-top: 25px;
-    width: fit-content;
-    border-top: 1.5px solid #bdc3c7; 
-   margin-left: -50px !important; 
-    margin-right: -50px !important;
-    padding-left: 80px;
-    padding-right: 60px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1.5px solid #bdc3c7;
     display: flex;
     justify-content: center;
-    box-sizing: border-box;
+    width: 100%;
 }
 
 .action-buttons {
     display: flex;
-    align-items: center; 
-    justify-content: center;
-    gap: 25px;
-    width: 100%;
+    gap: 20px;
+}
+.owner-status-lane {
+    flex: 0 0 60px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .toggle-wrapper {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 4px;
-    min-width: -webkit-fill-available;
-    min-width: fit-content;
+    gap: 5px;              
 }
 
 .claim-label {
-    font-size: 16px;
+    font-size: 12px;       
     font-weight: 600;
     color: var(--text-dark);
-    margin-left: 0 !important;
-    line-height: 1;
+    text-transform: capitalize;
 }
 
 .btn-connect {
@@ -752,6 +802,14 @@ input:focus, select:focus, textarea:focus {
     background: #377dcd !important;
 }
 
+.listing-container .claimed-overlay {
+    top: 16px;
+    left: 70px;
+    padding: 8px 16px;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+}
+
 /* CLAIM TOGGLE SWITCH */
 .claim-switch {
     position: relative;
@@ -794,79 +852,6 @@ input:focus, select:focus, textarea:focus {
 .claim-switch input:checked + .slider:before {
     transform: translateX(28px);
 }
-
-/* Chat thread on listing page */
-.chat-thread {
-    display: none;
-    margin-top: 28px;
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
-    background: #FAFAFA;
-}
-
-.chat-thread.active { display: block; }
-
-.chat-thread h4 {
-    margin: 0 0 12px 0;
-    color: var(--text-dark);
-    font-size: 15px;
-}
-
-.chat-message {
-    padding: 10px 14px;
-    border-radius: 12px;
-    margin-bottom: 8px;
-    width: fit-content;
-    max-width: 80%;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.chat-message.received {
-    background: #F1F5F9;
-    color: var(--text-dark);
-}
-
-.chat-message.sent {
-    background: var(--primary);
-    color: white;
-    margin-left: auto;
-}
-
-.chat-message-time {
-    font-size: 11px;
-    opacity: 0.65;
-    display: block;
-    margin-top: 2px;
-}
-
-.chat-form {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
-}
-
-.chat-form input {
-    flex: 1;
-    height: 42px;
-    border-radius: 8px;
-}
-
-.chat-form button {
-    background: var(--success);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 0 18px;
-    cursor: pointer;
-    font-weight: 600;
-    font-family: inherit;
-    height: 42px;
-    transition: background 0.15s;
-}
-
-.chat-form button:hover { background: #059669; }
 
 /* Report Modal */
 .report-modal {
@@ -945,15 +930,13 @@ input:focus, select:focus, textarea:focus {
 
 /* ─── Messages Page header ─── */
 .messages-header {
-    text-align: center;
-    padding-top: 30px;
-    margin-bottom: 24px;
-}
-
-.messages-header h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--text-dark);
+    color: white;
+    font-family: 'Inter', sans-serif; 
+    font-size: 28px; 
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    letter-spacing: -0.5px;
 }
 
 .empty-chat-text {
@@ -965,14 +948,14 @@ input:focus, select:focus, textarea:focus {
 
 .required-star {
     color: var(--danger);
-    margin-top: 5px;
+    margin-top: -5px;
     font-size: 13px;
 }
 
 .required-note {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-muted);
-    margin: 10px 8px 4px;
+    margin: -35px 8px -5px;
 }
 
 .form-label-hint {
@@ -1054,24 +1037,18 @@ input:focus, select:focus, textarea:focus {
     background: rgba(239, 68, 68, 0.14);
 }
 
-/* Shared page wrapper (offsets the fixed sidebar) */
-.page-content {
-    margin-left: 260px;
-    padding: 0 25px 40px;
-}
+/* Shared page wrapper */
 
 /* Create / Edit Listing Page */
+.create-listing-header, 
 .edit-listing-header {
-    text-align: center;
-    margin: 24px 0;
-    position: relative;
-}
-
-.edit-listing-header h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-top: -20px;
-    color: var(--text-dark);
+    color: white;
+    font-family: 'Inter', sans-serif; 
+    font-size: 28px; 
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    letter-spacing: -0.5px;
 }
 
 .form-container {
@@ -1091,7 +1068,7 @@ input:focus, select:focus, textarea:focus {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
 }
 
 .form-group {
@@ -1165,6 +1142,27 @@ input:focus, select:focus, textarea:focus {
 }
 
 .btn-submit-form:hover { background: #298e6e; }
+
+/* Container for the counter text */
+.char-counter-wrapper {
+    text-align: right;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+/* Visual cue when the limit is reached */
+.limit-reached {
+    color: var(--danger) !important; 
+    font-weight: bold;
+}
+
+#listing-description {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+}
 
 .form-right-column {
     flex: 1;

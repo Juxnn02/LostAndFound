@@ -181,25 +181,23 @@ body.auth-split {
     margin-bottom: 25px;
 }
 
-
-
-
 .auth-heading {
     font-size: 22px;
     font-weight: 800;
     color: rgb(29, 54, 134); 
-    margin-bottom: 6px;
+    margin-bottom: 10px;
     letter-spacing: -0.5px;
 }
 
 .auth-sub {
     font-size: 14px;
     color: var(--text-muted);
-    margin-bottom: 14px;
+    margin-bottom: 28px;
 }
 
 /* Input groups with labels */
 .auth-input-group {
+    margin-top: 20px;
     margin-bottom: 18px;
 }
 

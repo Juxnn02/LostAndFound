@@ -85,6 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (!category || !category.value || category.value === "") {
+            showError('Please select a category.');
+            category && category.focus();
+            return;
+        }
+
         const formData = new FormData();
         formData.append('title',       title.value.trim());
         formData.append('date_found',  dateEl ? dateEl.value : '');
@@ -120,5 +126,30 @@ document.addEventListener('DOMContentLoaded', () => {
             errorEl.textContent = msg;
             errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+    }
+});
+
+// Handles character counting for listing descriptions //
+document.addEventListener('DOMContentLoaded', function() {
+    const descriptionArea = document.getElementById('listing-description');
+    const charDisplay = document.getElementById('current-chars');
+
+    if (descriptionArea && charDisplay) {
+        const updateCounter = () => {
+            const len = descriptionArea.value.length;
+            charDisplay.textContent = len;
+
+            // Add red color class if at maximum capacity
+            if (len >= 150) {
+                charDisplay.classList.add('limit-reached');
+            } else {
+                charDisplay.classList.remove('limit-reached');
+            }
+        };
+
+        // Listen for typing, pasting, and deleting
+        descriptionArea.addEventListener('input', updateCounter);
+
+        updateCounter();
     }
 });

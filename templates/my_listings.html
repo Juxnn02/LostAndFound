@@ -13,7 +13,6 @@
 
 <body class="app-layout">
 
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
             <div class="profile-header">
@@ -21,7 +20,7 @@
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>{{ user_name }}</h3>
+                    <h3> Welcome, {{ user_name.split(' ')[0] }}!</h3>
                 </div>
             </div>
             
@@ -45,9 +44,6 @@
         
         <!-- NAVBAR WITH TITLE AND STATS -->
         <div class="navbar">
-            <button type="button" class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
             <h1 class="ml-title">My Listings</h1>
 
             <div class="ml-stats-inline">
@@ -82,7 +78,7 @@
                     {% if active %}
                         {% for listing in active %}
                         <div class="ml-card" id="listing-{{ listing.id }}">
-                            <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}&from=my_listings'">
+                            <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}'">
                                 {% if listing.image_url %}
                                     <img src="{{ url_for('static', filename=listing.image_url) }}" alt="{{ listing.item_name }}">
                                 {% else %}
@@ -103,7 +99,7 @@
                                     <span class="material-symbols-outlined">edit</span>
                                 </button>
                                 <button type="button" class="ml-btn ml-btn-delete"
-                                    onclick="deleteListing({{ listing.id }})">
+                                    onclick="deleteListing "({{ listing.id }})">
                                     Delete<span class="material-symbols-outlined">delete</span>
                                 </button>
                             </div>
@@ -127,7 +123,7 @@
                     {% if claimed %}
                         {% for listing in claimed %}
                         <div class="ml-card ml-card-claimed">
-                            <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}&from=my_listings'">
+                            <div class="ml-card-img" onclick="location.href='/listing-info?id={{ listing.id }}'">
                                 {% if listing.image_url %}
                                     <img src="{{ url_for('static', filename=listing.image_url) }}" alt="{{ listing.item_name }}">
                                 {% else %}
