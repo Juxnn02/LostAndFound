@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — Lost & Found</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="main-content">
+
+
+  <div class="profile-left">
+      <a href="/dashboard" class="back-btn">← Back</a>
+
+      <div class="profile-header">
+          <div class="avatar global-avatar">
+              {% if not user.profile_image %}
+                  {{ user.username[:2] | upper }}
+              {% endif %}
+          </div>
+          <button id="editProfileBtn">Edit Name</button>
+      </div>
+
+      <div class="profile-info">
+          <p><strong>Name:</strong> <span id="name">{{ account.name }}</span></p>
+          <p><strong>Email:</strong> <span id="email">{{ account.email }}</span></p>
+      </div>
+
+      <div class="notifications">
+          <h3>Notifications</h3>
+          <span class="toggle" id="notificationsToggle">
+              <span class="toggle-circle"></span>
+          </span>
+      </div>
+
+      <div class="action-buttons">
+          <button id="saveProfile">Save Changes</button>
+          <form method="POST" action="/logout">
+              <button type="submit">Log Out</button>
+          </form>
+          <form method="POST" action="/delete-account">
+              <button type="submit" class="delete-btn">Delete Account</button>
+          </form>
+      </div>
+  </div>
+
+  <div class="profile-right">
+      <div class="appearance">
+          <h3>Appearance</h3>
+          <button id="lightBtn">Light</button>
+          <button id="darkBtn">Dark</button>
+          <input type="color" id="themeColor">
+          <p>Profile Image:</p>
+          <input type="file" id="profileImage">
+      </div>
+  </div>
+
+</div>
+
+
+<div class="modal" id="editModal">
+    <div class="modal-content">
+        <h3>Change Your Name</h3>
+        <input type="text" id="newName" value="{{ account.name }}">
+        <div class="modal-buttons">
+            <button id="saveNameBtn">Save</button>
+            <button id="cancelEditBtn">Don't Save</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='profile.js') }}"></script>
+</body>
+</html>
