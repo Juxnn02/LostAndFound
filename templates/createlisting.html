@@ -19,7 +19,7 @@
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>{{ user_name }}</h3>
+                    <h3> Welcome, {{ user_name.split(' ')[0] }}!</h3>
                 </div>
             </div>
 
@@ -44,10 +44,9 @@
         </button>
         <span class="mobile-topbar-title">New Listing</span>
     </div>
-    <div class="page-content">
-
-        <div class="edit-listing-header">
-            <h1>New Listing</h1>
+    <div class="main-content">
+        <div class="navbar">
+            <h1 class="create-listing-header">New Listing</h1>
         </div>
 
         <p id="create-error" class="create-error"></p>
@@ -68,8 +67,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="listing-category">Category</label>
-                    <select id="listing-category" title="Select category">
+                    <label for="listing-category">Category <span class="required-star">*</span></label>
+                    <select id="listing-category" title="Select category" required>
                         <option value="">— Select category —</option>
                         <option value="Accessories">Accessories</option>
                         <option value="Apparel">Apparel</option>
@@ -96,8 +95,17 @@
 
                 <div class="form-group">
                     <label for="listing-description">Description <span class="required-star">*</span></label>
-                    <textarea id="listing-description" required rows="4"
-                        placeholder="Color, brand, any identifying features..."></textarea>
+                    <textarea 
+                        id="listing-description" 
+                        name="description"
+                        required 
+                        rows="4"
+                        maxlength="150"
+                        placeholder="Color, brand, any identifying features...">{{ post.description if post else '' }}</textarea>
+                    
+                    <div class="char-counter-wrapper">
+                        <span id="current-chars">0</span>/150 characters
+                    </div>
                 </div>
 
                 <p class="required-note"><span class="required-star">*</span> Required fields</p>

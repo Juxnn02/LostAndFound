@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="static/messages.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
+
 <body class="app-layout">
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <!-- SIDEBAR -->
@@ -20,7 +21,7 @@
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>{{ user_name }}</h3>
+                    <h3> Welcome, {{ user_name.split(' ')[0] }}!</h3>
                 </div>
             </div>
 
@@ -45,10 +46,10 @@
         </button>
         <span class="mobile-topbar-title">Messages</span>
     </div>
-    <div class="messages-page-content">
 
-        <div class="messages-header">
-            <h1>Messages</h1>
+    <div class="main-content">
+        <div class="navbar">
+            <h1 class="messages-header">Messages</h1>
         </div>
 
         <div class="messenger-wrapper">

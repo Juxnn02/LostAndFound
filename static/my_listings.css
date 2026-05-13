@@ -8,33 +8,14 @@ body {
     color: var(--text-color);
 }
 
-.ml-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 35px 35px;
-    border-bottom: 2px solid var(--border);
-    background: white;
-}
-
-.ml-back {
-    text-decoration: none;
-    color: var(--text-muted);
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background 0.15s, color 0.15s;
-}
-
 .ml-back:hover {
     background: var(--primary-light);
     color: var(--primary);
 }
 
 .ml-title {
-    font-size: 24px;
-    font-weight: 800;
+    font-size: 28px;
+    font-weight: 600;
     color: white;
     margin: 0;
 }

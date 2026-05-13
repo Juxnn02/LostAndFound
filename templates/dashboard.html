@@ -12,8 +12,6 @@
 
 <body class="app-layout">
 
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
 <!-- SIDEBAR -->
     <aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
@@ -22,7 +20,9 @@
                     <div class="avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3>{{ user_name }}</h3>
+                    <h3> Welcome, {{ user_name.split(' ')[0] }}!
+                        
+                    </h3>
                 </div>
             </div>
             
@@ -44,9 +44,6 @@
     <div class="main-content">
 
         <div class="navbar">
-            <button type="button" class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
             <h2>Lost &amp; Found</h2>
             
             <div class="search-bar">
@@ -129,7 +126,6 @@
 </button>
 
 <script src="static/dashboard.js"></script>
-<script src="static/darkmode.js" defer></script>
 
 </body>
 </html>

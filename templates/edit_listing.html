@@ -45,9 +45,11 @@
         <span class="mobile-topbar-title">Edit Listing</span>
     </div>
 
-    <div class="edit-listing-header">
-        <h1>Edit Listing</h1>
-    </div>
+    <div class="main-content">
+        <div class="navbar">
+            <h1 class="edit-listing-header">Edit Listing</h1>
+        </div>
+
 
     <form class="form-container" id="edit-listing-form">
 
@@ -85,8 +87,18 @@
             </div>
 
             <div class="form-group">
-                <label for="listing-description">Description:</label>
-                <textarea id="listing-description" required rows="4">{{ post.description }}</textarea>
+                <label for="listing-description">Description <span class="required-star">*</span></label>
+                <textarea 
+                    id="listing-description" 
+                    name="description"
+                    required 
+                    rows="4"
+                    maxlength="150"
+                    placeholder="Color, brand, any identifying features...">{{ post.description }}</textarea>
+                
+                <div class="char-counter-wrapper">
+                    <span id="current-chars">0</span>/150 characters
+                </div>
             </div>
 
             <div class="form-group">
@@ -126,6 +138,25 @@ function closeSidebar() {
     document.getElementById('sidePanel').classList.remove('open');
     document.getElementById('sidebarOverlay').classList.remove('active');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const descriptionArea = document.getElementById('listing-description');
+    const charDisplay = document.getElementById('current-chars');
+
+    if (descriptionArea && charDisplay) {
+        const updateCounter = () => {
+            const len = descriptionArea.value.length;
+            charDisplay.textContent = len;
+            if (len >= 150) {
+                charDisplay.classList.add('limit-reached');
+            } else {
+                charDisplay.classList.remove('limit-reached');
+            }
+        };
+        descriptionArea.addEventListener('input', updateCounter);
+        updateCounter(); // This prevents the "stays at 0" issue
+    }
+});
 
 document.getElementById('listing-image').addEventListener('change', function() {
     const file = this.files[0];

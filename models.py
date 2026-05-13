@@ -47,10 +47,9 @@ class Post(db.Model):
     location = db.Column(db.String(255))
     image_url = db.Column(db.String(500))
     is_claimed = db.Column(db.Boolean, default=False)
-    claimed_at = db.Column(db.DateTime, nullable=True)
 
-    reports = db.relationship('Report', backref='post', cascade="all, delete-orphan")
-    messages = db.relationship('Message', backref='post', passive_deletes=True)
+    reports = db.relationship('Report', backref='post')
+    messages = db.relationship('Message', backref='post')
 
 class Message(db.Model):
     __tablename__ = 'message'
