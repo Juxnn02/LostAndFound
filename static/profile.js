@@ -1,26 +1,27 @@
 let userData = JSON.parse(localStorage.getItem('userData')) || {
     username: 'User Name',
     email: 'user@example.com',
-    avatar: null,
+    avatar: 'default-avatar.png',
     buttonColor: '#007bff'
 };
 
 // Elements
 const usernameDisplay = document.getElementById('username-display');
 const emailDisplay = document.getElementById('email-display');
-const sidebarUsername = document.getElementById('sidebar-username');
-const sidebarAvatar = document.getElementById('sidebar-avatar');
+const avatarImg = document.getElementById('user-avatar');
 const editNameBtn = document.getElementById('edit-name-btn');
+const saveChangesBtn = document.getElementById('save-changes-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const deleteAccountBtn = document.getElementById('delete-account-btn');
+const buttonColorInput = document.getElementById('button-color');
 const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
 const avatarInput = document.getElementById('avatar-input');
-const buttonColorInput = document.getElementById('button-color');
 
-// Initialize display
+// Initialize page
 function updateDisplay() {
     usernameDisplay.textContent = userData.username;
     emailDisplay.textContent = userData.email;
-    sidebarUsername.textContent = userData.username.split(' ')[0];
-    sidebarAvatar.textContent = userData.username.split(' ').map(n => n[0]).join('').toUpperCase();
+    avatarImg.src = userData.avatar || 'default-avatar.png';
     buttonColorInput.value = userData.buttonColor;
     document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
 }
@@ -28,19 +29,35 @@ updateDisplay();
 
 // Edit username
 editNameBtn.addEventListener('click', () => {
-    const newName = prompt('Enter your new username:', userData.username);
-    if (newName) {
+    const newName = prompt('Enter new username:', userData.username);
+    if(newName) {
         userData.username = newName;
-        localStorage.setItem('userData', JSON.stringify(userData));
         updateDisplay();
+        localStorage.setItem('userData', JSON.stringify(userData));
     }
 });
 
-// Change button color
-buttonColorInput.addEventListener('input', () => {
+// Save changes (button color)
+saveChangesBtn.addEventListener('click', () => {
     userData.buttonColor = buttonColorInput.value;
     localStorage.setItem('userData', JSON.stringify(userData));
-    document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
+    updateDisplay();
+    alert('Changes saved!');
+});
+
+// Logout
+logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+});
+
+// Delete account
+deleteAccountBtn.addEventListener('click', () => {
+    if(confirm('Are you sure you want to delete your account?')) {
+        localStorage.removeItem('userData');
+        localStorage.removeItem('currentUser');
+        window.location.href = 'login.html';
+    }
 });
 
 // Upload avatar
@@ -51,8 +68,8 @@ avatarInput.addEventListener('change', e => {
         const reader = new FileReader();
         reader.onload = () => {
             userData.avatar = reader.result;
+            updateDisplay();
             localStorage.setItem('userData', JSON.stringify(userData));
-            alert('Avatar updated! (Sidebar still shows initials)');
         };
         reader.readAsDataURL(file);
     }
