@@ -4,158 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile — Lost & Found</title>
-    <link rel="stylesheet" href="static/app.css">
-    <link rel="stylesheet" href="static/global.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <style>
-        /* Profile-specific overrides */
-        .profile-container {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            text-align: center;
+        :root {
+            --button-bg: {{ user.get('button_color', '#007bff') }};
+            --button-hover: #ffffff;
         }
-
         .avatar {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            font-size: 36px;
-            background: #007bff; /* default */
+            background: #007bff;
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto 1rem;
             cursor: pointer;
             overflow: hidden;
+            margin: 0 auto 1rem;
         }
-
         .avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
-        .profile-input {
-            width: 80%;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-
-        .profile-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .delete-btn:hover {
-            background-color: #ff4d4d !important;
-        }
-
-        .appearance-section {
-            margin-top: 2rem;
-            text-align: left;
-        }
-
-        .appearance-section label {
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .back-btn {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: var(--button-bg, #007bff);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body class="app-layout">
 
-    <button class="back-btn" onclick="location.href='/dashboard'">
-        <span class="material-symbols-outlined">arrow_back</span> Back
-    </button>
+<button class="back-btn" onclick="location.href='/dashboard'">
+    <span class="material-symbols-outlined">arrow_back</span> Back
+</button>
 
-    <div class="profile-container">
-        <div class="avatar" id="avatar">
-            <!-- Initials or uploaded image -->
-            {{ user_initials }}
-        </div>
-        
-        <h2>{{ user.username }}</h2>
-        <p>{{ user.account.email }}</p>
-
-        <input type="text" id="name-input" class="profile-input" placeholder="Enter your name" value="{{ user.account.name }}">
-
-        <div class="profile-buttons">
-            <button id="save-btn">Save Changes</button>
-            <button id="logout-btn">Logout</button>
-            <button id="delete-btn" class="delete-btn">Delete Account</button>
-        </div>
-
-        <div class="appearance-section">
-            <h3>Appearances</h3>
-            <label for="button-color">Button Color:</label>
-            <input type="color" id="button-color" value="#007bff">
-        </div>
+<div class="profile-container">
+    <div class="avatar" id="avatar" aria-label="User Avatar">
+        {{ user_initials }}
     </div>
 
-    <input type="file" id="avatar-upload" accept="image/*" style="display:none">
+    <h2>{{ user_name or 'Guest' }}</h2>
+    <p>{{ user_email }}</p>
 
-    <script src="static/profile.js"></script>
-</body>
-</html>          </span>
-      </div>
+    <input type="text" id="name-input" class="profile-input" placeholder="Enter your name" value="{{ user_name }}">
 
-      <div class="action-buttons">
-          <button id="saveProfile">Save Changes</button>
-          <form method="POST" action="/logout">
-              <button type="submit">Log Out</button>
-          </form>
-          <form method="POST" action="/delete-account">
-              <button type="submit" class="delete-btn">Delete Account</button>
-          </form>
-      </div>
-  </div>
+    <div class="profile-buttons">
+        <button id="save-btn">Save Changes</button>
+        <button id="logout-btn">Logout</button>
+        <button id="delete-btn" class="delete-btn">Delete Account</button>
+    </div>
 
-  <div class="profile-right">
-      <div class="appearance">
-          <h3>Appearance</h3>
-          <button id="lightBtn">Light</button>
-          <button id="darkBtn">Dark</button>
-          <input type="color" id="themeColor">
-          <p>Profile Image:</p>
-          <input type="file" id="profileImage">
-      </div>
-  </div>
-
-</div>
-
-
-<div class="modal" id="editModal">
-    <div class="modal-content">
-        <h3>Change Your Name</h3>
-        <input type="text" id="newName" value="{{ account.name }}">
-        <div class="modal-buttons">
-            <button id="saveNameBtn">Save</button>
-            <button id="cancelEditBtn">Don't Save</button>
-        </div>
+    <div class="appearance-section">
+        <h3>Appearances</h3>
+        <label for="button-color">Button Color:</label>
+        <input type="color" id="button-color" value="{{ user.get('button_color', '#007bff') }}">
     </div>
 </div>
 
+<input type="file" id="avatar-upload" accept="image/*" style="display:none">
 <script src="{{ url_for('static', filename='profile.js') }}"></script>
 </body>
 </html>
