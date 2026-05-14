@@ -48,8 +48,8 @@ body {
 /* Color picker: taller, thicker, longer */
 .profile-right input[type="color"],
 .btn-color {
-    width: 50px;       /* a bit longer */
-    height: 30px;      /* taller */
+    width: 60px;
+    height: 30px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
