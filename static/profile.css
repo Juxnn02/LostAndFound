@@ -1,8 +1,16 @@
-/* Layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
 .profile-container {
     max-width: 900px;
-    margin: 50px auto;
-    font-family: Arial, sans-serif;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
 }
 
 .profile-content {
@@ -10,7 +18,7 @@
     gap: 50px;
 }
 
-/* Left Column */
+/* Left column */
 .profile-left {
     flex: 1;
     text-align: center;
@@ -21,17 +29,18 @@
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
-.btn-medium {
-    display: block;
-    width: 80%;
-    margin: 10px auto;
-    padding: 10px 0;
+.profile-left h2 {
+    margin: 10px 0 5px 0;
 }
 
-/* Right Column */
+.profile-left p {
+    margin: 0 0 20px 0;
+}
+
+/* Right column */
 .profile-right {
     flex: 1;
 }
@@ -54,9 +63,17 @@
     border-radius: 5px;
     border: none;
     cursor: pointer;
+    margin: 10px 0;
 }
 
 /* Back button */
 #back-button {
     margin-bottom: 20px;
+}
+
+/* Medium size buttons */
+.btn-medium {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
 }
