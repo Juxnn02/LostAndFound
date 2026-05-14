@@ -97,10 +97,20 @@ def profile():
     user_id = session['user_id']
     user = User.query.get(user_id)
     account = Account.query.get(user.account_id) if user else None
-    user_email = account.email if account else ''
 
-    return render_template("profile.html", user_initials=session.get('user_initials', ''), user_email=user_email)
+    username = user.username if user else ''
+    email = account.email if account else ''
+    avatar = user.avatar if user and getattr(user, 'avatar', None) else 'default-avatar.png'
+    user_initials = session.get('user_initials', '')
 
+    return render_template(
+        "profile.html",
+        username=username,
+        email=email,
+        avatar=avatar,
+        user_initials=user_initials
+    )
+    
 
 @app.route("/dashboard")
 def dashboard():
