@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <button id="back-button" class="btn">Back</button>
+
+        <div class="avatar-section">
+            <img id="user-avatar" src="default-avatar.png" alt="User Avatar" class="avatar">
+            <input type="file" id="avatar-input" style="display:none">
+            <button id="edit-avatar-btn" class="btn">Edit Avatar</button>
+        </div>
+
+        <div class="user-info">
+            <div>
+                <label>Username:</label>
+                <input type="text" id="username-input">
+            </div>
+            <div>
+                <label>Email:</label>
+                <span id="email-display"></span>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="save-changes-btn" class="btn">Save Changes</button>
+            <button id="logout-btn" class="btn">Logout</button>
+            <button id="delete-account-btn" class="btn btn-danger">Delete Account</button>
+        </div>
+
+        <div class="appearances">
+            <h3>Appearances</h3>
+            <label for="button-color">Button Color:</label>
+            <input type="color" id="button-color">
+        </div>
+    </div>
+
+    <script src="global.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>
