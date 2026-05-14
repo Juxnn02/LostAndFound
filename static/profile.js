@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const avatar = document.getElementById('avatar');
     const avatarUpload = document.getElementById('avatar-upload');
@@ -23,8 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
         buttonColorInput.value = localStorage.getItem('buttonColor');
     }
 
+    // Click avatar opens file picker
     avatar.addEventListener('click', () => avatarUpload.click());
 
+    // Handle avatar upload
     avatarUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if(file) {
@@ -40,30 +41,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Save changes
     saveBtn.addEventListener('click', () => {
         const newName = nameInput.value.trim();
         if(newName) {
-            // Here you would normally send an AJAX request to backend to update
-            // For demo, just save locally
             localStorage.setItem('userName', newName);
+            document.getElementById('user-name').textContent = newName;
             alert('Changes saved!');
         }
 
-        // Save button color
         const color = buttonColorInput.value;
         localStorage.setItem('buttonColor', color);
         document.documentElement.style.setProperty('--button-bg', color);
         document.documentElement.style.setProperty('--button-hover', '#ffffff');
     });
 
+    // Logout
     logoutBtn.addEventListener('click', () => {
-        // Clear session if needed
         location.href = '/';
     });
 
+    // Delete account
     deleteBtn.addEventListener('click', () => {
         if(confirm('Are you sure you want to delete your account? This cannot be undone.')) {
-            // Send delete request to backend here
             alert('Account deleted!');
             location.href = '/';
         }
