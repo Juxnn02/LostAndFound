@@ -56,15 +56,22 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# Add claimed_at column to existing databases that pre-date this field
+# Add columns to existing databases that pre-date these fields
 from sqlalchemy import text as _sql_text
+_migrations = [
+    "ALTER TABLE post ADD COLUMN claimed_at TIMESTAMP",
+    "ALTER TABLE account ADD COLUMN created_at TIMESTAMP DEFAULT NOW()",
+    "ALTER TABLE \"user\" ADD COLUMN nickname VARCHAR(255)",
+    "ALTER TABLE \"user\" ADD COLUMN pronouns VARCHAR(100)",
+]
 with app.app_context():
-    try:
-        with db.engine.connect() as _conn:
-            _conn.execute(_sql_text("ALTER TABLE post ADD COLUMN claimed_at DATETIME"))
-            _conn.commit()
-    except Exception:
-        pass  # Column already exists or DB not yet created
+    for _stmt in _migrations:
+        try:
+            with db.engine.connect() as _conn:
+                _conn.execute(_sql_text(_stmt))
+                _conn.commit()
+        except Exception:
+            pass  # Column already exists or DB not yet created
 
 
 @app.context_processor
@@ -100,13 +107,50 @@ def forgot_password():
 def profile():
     if 'user_id' not in session:
         return redirect("/")
-
-    user_id = session['user_id']
-    user = User.query.get(user_id)
+    user = User.query.get(session['user_id'])
     account = Account.query.get(user.account_id) if user else None
-    user_email = account.email if account else ''
+    member_since = ''
+    if account and account.created_at:
+        member_since = account.created_at.strftime('%B %d, %Y')
+    return render_template(
+        "profile.html",
+        username=account.name if account else '',
+        email=account.email if account else '',
+        member_since=member_since,
+        nickname=user.nickname or '' if user else '',
+        pronouns=user.pronouns or '' if user else '',
+    )
 
-    return render_template("profile.html", user_initials=session.get('user_initials', ''), user_email=user_email)
+
+@app.route("/api/profile/update", methods=["POST"])
+def api_profile_update():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Not logged in"})
+    data = request.get_json()
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({"success": False, "message": "User not found"})
+    user.nickname = (data.get("nickname") or "").strip() or None
+    user.pronouns = (data.get("pronouns") or "").strip() or None
+    db.session.commit()
+    return jsonify({"success": True, "nickname": user.nickname or "", "pronouns": user.pronouns or ""})
+
+
+@app.route("/api/profile/delete-account", methods=["POST"])
+def api_profile_delete_account():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Not logged in"})
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({"success": False, "message": "User not found"})
+    account = Account.query.get(user.account_id)
+    if account:
+        db.session.delete(account)
+    else:
+        db.session.delete(user)
+    db.session.commit()
+    session.clear()
+    return jsonify({"success": True})
 
 
 @app.route("/dashboard")

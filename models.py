@@ -14,6 +14,7 @@ class Account(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     is_banned = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user_profile = db.relationship('User', backref='account', uselist=False, cascade="all, delete-orphan")
 
@@ -23,6 +24,8 @@ class User(db.Model):
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
     username = db.Column(db.String(255), nullable=False)
     student_id = db.Column(db.Integer, unique=True)
+    nickname = db.Column(db.String(255), nullable=True)
+    pronouns = db.Column(db.String(100), nullable=True)
 
     posts = db.relationship('Post', backref='author', cascade="all, delete-orphan")
     sent_messages = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', cascade="all, delete-orphan")

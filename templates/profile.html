@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — Lost & Found</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+</head>
+<body class="app-layout">
+
+<!-- Sidebar -->
+<aside class="sidepanel" id="sidePanel">
+    <div class="sidepanel-top">
+        <div class="profile-header">
+            <div class="avatar" id="sidebar-avatar">{{ user_initials }}</div>
+            <div class="user-info">
+                <h3 id="sidebar-username">{{ user_name.split(' ')[0] }}</h3>
+            </div>
+        </div>
+        <nav class="sidepanel-nav">
+            <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
+            <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
+            <a href="/messages"><span class="material-symbols-outlined">chat</span>Messages</a>
+            <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
+            <a href="/profile" class="active"><span class="material-symbols-outlined">person</span>Profile</a>
+        </nav>
+    </div>
+    <div class="sidepanel-footer">
+        <hr>
+        <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
+    </div>
+</aside>
+
+<!-- Main content -->
+<div class="main-content">
+    <div class="navbar"><h2>Profile</h2></div>
+
+    <div class="profile-card">
+
+        <!-- Account Info — read only -->
+        <section class="profile-section">
+            <h3 class="profile-section-title">Account Information</h3>
+            <div class="profile-info-grid">
+                <div class="profile-info-item">
+                    <span class="profile-info-label">Full Name</span>
+                    <span class="profile-info-value">{{ username }}</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="profile-info-label">Email</span>
+                    <span class="profile-info-value">{{ email }}</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="profile-info-label">Member Since</span>
+                    <span class="profile-info-value">{{ member_since if member_since else 'N/A' }}</span>
+                </div>
+            </div>
+        </section>
+
+        <hr class="profile-divider">
+
+        <!-- Personalization — editable -->
+        <section class="profile-section">
+            <h3 class="profile-section-title">Personalization</h3>
+            <div class="profile-form">
+                <div class="profile-field">
+                    <label class="profile-label" for="nickname-input">Nickname</label>
+                    <input type="text" id="nickname-input" class="profile-input"
+                           placeholder="How would you like to be called?"
+                           value="{{ nickname }}">
+                </div>
+                <div class="profile-field">
+                    <label class="profile-label" for="pronouns-input">Preferred Pronouns</label>
+                    <input type="text" id="pronouns-input" class="profile-input"
+                           placeholder="e.g. he/him, she/her, they/them"
+                           value="{{ pronouns }}">
+                </div>
+                <button type="button" class="profile-btn profile-btn-primary" id="save-profile-btn">
+                    <span class="material-symbols-outlined">save</span> Save Changes
+                </button>
+                <p id="profile-message" class="profile-message"></p>
+            </div>
+        </section>
+
+        <hr class="profile-divider">
+
+        <!-- Danger Zone -->
+        <section class="profile-section">
+            <h3 class="profile-section-title profile-section-title-danger">Danger Zone</h3>
+            <p class="profile-danger-desc">Permanently delete your account and all associated data. This cannot be undone.</p>
+            <button type="button" class="profile-btn profile-btn-danger" id="delete-account-btn">
+                <span class="material-symbols-outlined">delete</span> Delete Account
+            </button>
+        </section>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='profile.js') }}"></script>
+</body>
+</html>
