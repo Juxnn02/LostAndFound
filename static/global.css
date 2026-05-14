@@ -1,0 +1,23 @@
+:root {
+    --button-bg: #007bff;
+    --button-hover: #ffff00; /* highlight color when clicked */
+}
+
+button {
+    background-color: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+/* Delete button override */
+.delete-btn:hover {
+    background-color: #ff4d4d !important;
+}
