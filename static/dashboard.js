@@ -1,3 +1,4 @@
+
 function toggleSidebar() {
     document.getElementById('sidePanel').classList.toggle('open');
     document.getElementById('sidebarOverlay').classList.toggle('active');
@@ -9,6 +10,23 @@ function closeSidebar() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (userData) {
+        // Avatar
+        const dashboardAvatar = document.getElementById('user-avatar-dashboard');
+        if (dashboardAvatar) dashboardAvatar.src = userData.avatar;
+
+        // Username
+        const dashboardUsername = document.getElementById('username-dashboard');
+        if (dashboardUsername) dashboardUsername.textContent = userData.username;
+
+        // Blue buttons color
+        document.documentElement.style.setProperty('--btn-blue', userData.buttonColor || '#007bff');
+        document.documentElement.style.setProperty('--btn-blue-hover', '#ffffff');
+    }
+
+
     const searchInput = document.getElementById('search-input');
     const filterLinks = document.querySelectorAll('.filter-menu a');
     const noResults = document.getElementById('no-results');
@@ -23,53 +41,41 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
     updateTimestamps();
     setInterval(updateTimestamps, 60000);
 
-
-    // SEARCH LOGIC — uses live querySelectorAll so newly polled cards are included
+    // SEARCH LOGIC
     if (searchInput) {
         searchInput.addEventListener('keyup', () => {
             const query = searchInput.value.toLowerCase();
             let visibleCount = 0;
-
             document.querySelectorAll('.card').forEach(card => {
                 const text = card.innerText.toLowerCase();
                 const match = query === '' || text.includes(query);
                 card.style.display = match ? '' : 'none';
                 if (match) visibleCount++;
             });
-
             if (noResults) noResults.style.display = visibleCount === 0 ? 'block' : 'none';
         });
     }
 
-    // FILTER LOGIC — same, uses live querySelectorAll
+    // FILTER LOGIC
     filterLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-
             const category = link.innerText.toLowerCase();
-
             filterLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
 
             let visibleCount = 0;
-
             document.querySelectorAll('.card').forEach(card => {
                 const cardCategory = card.dataset.category;
                 const status = card.dataset.status;
-
                 let show = false;
 
-                if (category === "all items") {
-                    show = true;
-                } else if (category === "claimed") {
-                    show = (status === "claimed");
-                } else {
-                    show = (cardCategory === category && status !== "claimed");
-                }
+                if (category === "all items") show = true;
+                else if (category === "claimed") show = (status === "claimed");
+                else show = (cardCategory === category && status !== "claimed");
 
                 card.style.display = show ? '' : 'none';
                 if (show) visibleCount++;
@@ -85,10 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // LIVE POLLING — checks for new listings every 30 seconds
+    // LIVE POLLING
     const grid = document.getElementById('listings-grid');
     if (!grid) return;
-
     let latestId = parseInt(grid.dataset.latestId || '0', 10);
 
     function esc(str) {
@@ -123,17 +128,13 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // Apply current active filter to the new card so it doesn't appear when filtered out
         const activeLink = document.querySelector('.filter-menu a.active');
         const activeCategory = activeLink ? activeLink.innerText.toLowerCase() : 'all items';
         if (activeCategory !== 'all items') {
             const cardCat = (post.category || '').toLowerCase();
             const status = post.is_claimed ? 'claimed' : 'active';
-            if (activeCategory === 'claimed') {
-                card.style.display = status === 'claimed' ? '' : 'none';
-            } else {
-                card.style.display = (cardCat === activeCategory && status !== 'claimed') ? '' : 'none';
-            }
+            if (activeCategory === 'claimed') card.style.display = status === 'claimed' ? '' : 'none';
+            else card.style.display = (cardCat === activeCategory && status !== 'claimed') ? '' : 'none';
         }
 
         return card;
@@ -159,30 +160,21 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 const { new_posts, active_ids } = data;
 
-                // Remove cards that no longer exist in the database
                 const activeSet = new Set(active_ids);
                 document.querySelectorAll('.card[data-id]').forEach(card => {
-                    if (!activeSet.has(parseInt(card.dataset.id))) {
-                        card.remove();
-                    }
+                    if (!activeSet.has(parseInt(card.dataset.id))) card.remove();
                 });
 
                 if (!new_posts.length) return;
-
-                // Remove empty state if it exists
                 const emptyState = document.getElementById('empty-state');
                 if (emptyState) emptyState.remove();
 
-                // new_posts is newest-first; insert in reverse so newest ends up at top
                 [...new_posts].reverse().forEach(post => {
                     if (post.id > latestId) latestId = post.id;
                     const card = buildCard(post);
                     const firstCard = grid.querySelector('.card');
-                    if (firstCard) {
-                        grid.insertBefore(card, firstCard);
-                    } else {
-                        grid.prepend(card);
-                    }
+                    if (firstCard) grid.insertBefore(card, firstCard);
+                    else grid.prepend(card);
                     setTimeout(() => card.classList.remove('card-highlight'), 1500);
                 });
 
@@ -192,10 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setInterval(pollNewListings, 30000);
+
 });
 
+// Scroll to top button
 const scrollBtn = document.getElementById('scrollTopBtn');
-
 window.addEventListener('scroll', () => {
     if (scrollBtn) {
         scrollBtn.style.display = document.documentElement.scrollTop > 20 ? 'block' : 'none';
