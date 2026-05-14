@@ -10,16 +10,17 @@
     <link rel="stylesheet" href="static/app.css">
 </head>
 <body class="app-layout">
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
     <!-- SIDEBAR -->
     <aside class="sidepanel" id="sidePanel">
         <div class="sidepanel-top">
             <div class="profile-header">
                 <a href="/profile">
-                    <div class="avatar">{{ user_initials }}</div>
+                    <div class="avatar" id="sidebar-avatar">{{ user_initials }}</div>
                 </a>
                 <div class="user-info">
-                    <h3> Welcome, {{ user_name.split(' ')[0] }}!</h3>
+                    <h3 id="sidebar-username"> {{ user_name.split(' ')[0] }} </h3>
                 </div>
             </div>
 
@@ -33,7 +34,8 @@
         </div>
 
         <div class="sidepanel-footer">
-            <hr> <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
+            <hr> 
+            <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
         </div>
     </aside>
 
@@ -44,6 +46,7 @@
         </button>
         <span class="mobile-topbar-title">New Listing</span>
     </div>
+
     <div class="main-content">
         <div class="navbar">
             <h1 class="create-listing-header">New Listing</h1>
@@ -139,5 +142,48 @@
     </div>
 
     <script src="static/createlisting.js"></script>
+
+    <!-- ===== Profile & Accent Color Sync ===== -->
+    <script>
+    (function applyProfileSettings() {
+        const sidebarAvatar = document.getElementById('sidebar-avatar');
+        const sidebarUsername = document.getElementById('sidebar-username');
+        const savedColor = localStorage.getItem('profileAccentColor');
+        const savedAvatar = localStorage.getItem('profileAvatar');
+        const savedUsername = localStorage.getItem('profileUsername');
+
+        // Apply accent color
+        if (savedColor) {
+            document.documentElement.style.setProperty('--primary', savedColor);
+        }
+
+        // Update sidebar username
+        if (sidebarUsername && savedUsername) {
+            sidebarUsername.textContent = savedUsername.split(' ')[0] || savedUsername;
+        }
+
+        // Update sidebar avatar
+        if (sidebarAvatar) {
+            if (savedAvatar) {
+                sidebarAvatar.textContent = '';
+                const img = document.createElement('img');
+                img.src = savedAvatar;
+                img.style.width = '40px';
+                img.style.height = '40px';
+                img.style.borderRadius = '50%';
+                sidebarAvatar.appendChild(img);
+            } else if (savedUsername) {
+                const initials = savedUsername
+                    .split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .toUpperCase()
+                    .slice(0,2);
+                sidebarAvatar.textContent = initials;
+                if (initials.length === 1) sidebarAvatar.style.fontSize = '18px';
+            }
+        }
+    })();
+    </script>
 </body>
 </html>
