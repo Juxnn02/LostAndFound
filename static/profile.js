@@ -16,6 +16,8 @@ const deleteAccountBtn = document.getElementById('delete-account-btn');
 const buttonColorInput = document.getElementById('button-color');
 const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
 const avatarInput = document.getElementById('avatar-input');
+const sidebarUsername = document.getElementById('sidebar-username');
+const sidebarAvatar = document.getElementById('sidebar-avatar');
 
 // Initialize page
 function updateDisplay() {
@@ -24,6 +26,8 @@ function updateDisplay() {
     avatarImg.src = userData.avatar || 'default-avatar.png';
     buttonColorInput.value = userData.buttonColor;
     document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
+    sidebarUsername.textContent = userData.username.split(' ')[0];
+    sidebarAvatar.textContent = userData.username.split(' ').map(n => n[0]).join('').toUpperCase();
 }
 updateDisplay();
 
@@ -32,8 +36,8 @@ editNameBtn.addEventListener('click', () => {
     const newName = prompt('Enter new username:', userData.username);
     if(newName) {
         userData.username = newName;
-        updateDisplay();
         localStorage.setItem('userData', JSON.stringify(userData));
+        updateDisplay();
     }
 });
 
@@ -68,8 +72,8 @@ avatarInput.addEventListener('change', e => {
         const reader = new FileReader();
         reader.onload = () => {
             userData.avatar = reader.result;
-            updateDisplay();
             localStorage.setItem('userData', JSON.stringify(userData));
+            updateDisplay();
         };
         reader.readAsDataURL(file);
     }
