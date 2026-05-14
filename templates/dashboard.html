@@ -1,17 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — Lost & Found</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="static/app.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
-    <style>
-        /* Make avatar look clickable */
-        .avatar { cursor: pointer; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Lost & Found</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+    :root {
+        --button-bg: #007bff;
+        --button-hover: #ffffff;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        background: #f5f5f5;
+    }
+
+    /* SIDEBAR */
+    .sidepanel {
+        width: 220px;
+        background: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .sidepanel .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--button-bg);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        margin: 0 auto;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .sidepanel .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .sidepanel .user-info h3 {
+        font-weight: 600;
+        margin-top: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .sidepanel-nav a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        color: #333;
+        padding: 0.5rem 0.25rem;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    .sidepanel-nav a.active {
+        background: var(--button-bg);
+        color: white;
+    }
+
+    .sidepanel-nav a:hover {
+        background: var(--button-hover);
+        color: #000;
+    }
+
+    .sidepanel-footer a {
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    .sidepanel-footer a:hover {
+        background: var(--button-hover);
+        color: #000;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+        margin-left: 240px;
+        padding: 1rem 2rem;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--button-bg);
+        color: white;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .search-bar {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        padding: 0.5rem;
+        border-radius: 6px;
+    }
+
+    .searchbar-input {
+        border: none;
+        margin-left: 0.5rem;
+        outline: none;
+        width: 200px;
+    }
+
+    .filter-menu a {
+        text-decoration: none;
+        color: #333;
+        padding: 0.3rem 0.5rem;
+        margin-right: 0.5rem;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    .filter-menu a.active {
+        background: var(--button-bg);
+        color: white;
+    }
+
+    .filter-menu a:hover {
+        background: var(--button-hover);
+        color: #000;
+    }
+
+    /* GRID */
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+        gap: 1rem;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .card-img-wrapper {
+        position: relative;
+    }
+
+    .card-img img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .card-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: var(--button-bg);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+    }
+
+    .claimed-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(255,0,0,0.8);
+        color: white;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .card-body {
+        padding: 0.5rem;
+    }
+
+    .card-location {
+        font-size: 0.85rem;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    /* Empty state */
+    .empty-state-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        text-decoration: none;
+        color: white;
+        background: var(--button-bg);
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    .empty-state-btn:hover {
+        background: var(--button-hover);
+        color: #000;
+    }
+
+    /* Buttons scroll */
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 0.5rem 1rem;
+        background: var(--button-bg);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    #scrollTopBtn:hover {
+        background: var(--button-hover);
+        color: #000;
+    }
+
+</style>
 </head>
 
 <body class="app-layout">
@@ -20,12 +268,11 @@
 <aside class="sidepanel" id="sidePanel">
     <div class="sidepanel-top">
         <div class="profile-header">
-            <!-- CLICKABLE AVATAR -->
             <a href="/profile">
                 <div class="avatar">{{ user_initials }}</div>
             </a>
             <div class="user-info">
-                <h3> Welcome, {{ user_name.split(' ')[0] }}!</h3>
+                <h3>Welcome, {{ user_name.split(' ')[0] }}!</h3>
             </div>
         </div>
         
@@ -39,7 +286,8 @@
     </div>
 
     <div class="sidepanel-footer">
-        <hr> <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
+        <hr> 
+        <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
     </div>
 </aside>
 
@@ -63,12 +311,9 @@
             <a href="#">Other</a>
             <a href="#">Claimed</a>
         </div>
-
     </div>
 
-    <!-- GRID -->
     <div class="grid-container" id="listings-grid" data-latest-id="{{ (posts | map(attribute='id') | max) if posts else 0 }}">
-
         {% if posts %}
             {% for post in posts %}
             <div class="card"
@@ -119,16 +364,16 @@
 
         <p id="no-results" class="no-results">No items match your search.</p>
         <p id="no-claimed" class="no-results">Nothing has been claimed yet.</p>
-
     </div>
-
 </div>
 
 <button type="button" onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
     ↑ Back to Top
 </button>
 
-<script src="static/dashboard.js"></script>
-
+<script src="static/global.js"></script>
+<script>
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+</script>
 </body>
 </html>
