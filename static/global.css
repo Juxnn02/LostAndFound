@@ -1,11 +1,11 @@
 :root {
-    --btn-color: #007bff;
-    --btn-hover: #ffff00;
+    --btn-blue: #007bff;      /* original blue buttons */
+    --btn-blue-hover: #ffff00; /* original yellow hover */
 }
 
-/* General button styling */
-.btn {
-    background-color: var(--btn-color);
+/* Buttons that were originally blue */
+.btn-blue {
+    background-color: var(--btn-blue);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -14,8 +14,8 @@
     transition: background-color 0.2s;
 }
 
-.btn:hover {
-    background-color: var(--btn-hover);
+.btn-blue:hover {
+    background-color: var(--btn-blue-hover);
 }
 
 /* Danger button */
@@ -27,37 +27,10 @@
     background-color: #ff4c4c;
 }
 
-/* Avatar */
-.avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-}
-
-/* Layout */
-.profile-container {
-    max-width: 600px;
-    margin: 50px auto;
-    text-align: center;
-    font-family: Arial, sans-serif;
-}
-
-.user-info {
-    margin: 20px 0;
-}
-
-.user-info input {
-    padding: 5px;
-    margin-left: 10px;
-}
-
-.appearances {
-    margin-top: 30px;
-}
-
-#button-color {
-    margin-left: 10px;
-    padding: 2px;
+/* General button (non-blue, like profile) */
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
 }
