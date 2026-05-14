@@ -1,5 +1,3 @@
-// profile.js
-
 // Load user data or defaults
 let userData = JSON.parse(localStorage.getItem('userData')) || {
     username: 'User',
@@ -71,14 +69,4 @@ logoutBtn.addEventListener('click', () => {
 // Delete account
 deleteAccountBtn.addEventListener('click', () => {
     if (confirm('Are you sure you want to delete your account?')) {
-        localStorage.removeItem('userData');
-        localStorage.removeItem('currentUser');
-        window.location.href = 'login.html';
-    }
-});
-
-// Back to dashboard
-backButton.addEventListener('click', () => {
-    localStorage.setItem('userData', JSON.stringify(userData));
-    window.location.href = 'dashboard.html';
-});
+        localStorage.removeItem('user
