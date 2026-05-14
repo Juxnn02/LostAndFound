@@ -6,6 +6,7 @@
     <title>Dashboard — Lost & Found</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/app.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <style>
         /* Make avatar look clickable */
@@ -42,8 +43,9 @@
     </div>
 </aside>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 <div class="main-content">
+
     <div class="navbar">
         <h2>Lost &amp; Found</h2>
         
@@ -61,10 +63,12 @@
             <a href="#">Other</a>
             <a href="#">Claimed</a>
         </div>
+
     </div>
 
     <!-- GRID -->
     <div class="grid-container" id="listings-grid" data-latest-id="{{ (posts | map(attribute='id') | max) if posts else 0 }}">
+
         {% if posts %}
             {% for post in posts %}
             <div class="card"
@@ -115,7 +119,9 @@
 
         <p id="no-results" class="no-results">No items match your search.</p>
         <p id="no-claimed" class="no-results">Nothing has been claimed yet.</p>
+
     </div>
+
 </div>
 
 <button type="button" onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">
