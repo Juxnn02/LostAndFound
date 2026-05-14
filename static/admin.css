@@ -163,3 +163,18 @@ button:hover {
 .admin-back-link:hover {
     text-decoration: underline;
 }
+
+.report-thumb {
+    max-width: 80px;
+    margin-top: 4px;
+    border-radius: 4px;
+    display: block;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+}

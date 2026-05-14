@@ -44,14 +44,51 @@
             <textarea class="feedback-textarea" placeholder="Tell us about your experience..." rows="6"></textarea>
 
             <!-- BUTTONS -->
+            <p id="feedback-error" class="feedback-error-msg"></p>
             <div class="feedback-buttons">
                 <a href="/dashboard" class="btn-cancel">Cancel</a>
-                <button class="btn-submit">Submit</button>
+                <button class="btn-submit" id="feedback-submit-btn">Submit</button>
             </div>
 
         </div>
 
     </div>
 
+<script>
+document.getElementById('feedback-submit-btn').addEventListener('click', function() {
+    const rating = document.querySelector('input[name="rating"]:checked');
+    const comment = document.querySelector('.feedback-textarea').value.trim();
+    const errorEl = document.getElementById('feedback-error');
+
+    if (!rating) {
+        errorEl.textContent = 'Please select a star rating.';
+        return;
+    }
+
+    this.disabled = true;
+    this.textContent = 'Submitting…';
+
+    fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating: rating.value, comment: comment })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '/dashboard';
+        } else {
+            errorEl.textContent = data.message || 'Something went wrong.';
+            this.disabled = false;
+            this.textContent = 'Submit';
+        }
+    })
+    .catch(() => {
+        errorEl.textContent = 'Could not reach the server.';
+        this.disabled = false;
+        this.textContent = 'Submit';
+    });
+});
+</script>
 </body>
 </html>

@@ -141,6 +141,7 @@
                     <th>Owner</th>
                     <th>Status</th>
                     <th>Date</th>
+                    <th>Action</th>
                 </tr>
 
                 {% for report in reports %}
@@ -148,7 +149,11 @@
                     <td>{{ report.id }}</td>
                     <td>
                         {% if report.post %}
-                            <a href="/listing-info?id={{ report.post.id }}">{{ report.post.item_name }}</a>
+                            <strong>{{ report.post.item_name }}</strong><br>
+                            <small>{{ report.post.description[:80] }}{% if report.post.description|length > 80 %}…{% endif %}</small><br>
+                            {% if report.post.image_url %}
+                                <img src="{{ report.post.image_url }}" alt="listing image" class="report-thumb">
+                            {% endif %}
                         {% else %}
                             (deleted)
                         {% endif %}
@@ -158,11 +163,45 @@
                     <td>{{ report.reportee_email }}</td>
                     <td>{{ report.status }}</td>
                     <td>{{ report.created_at.strftime('%Y-%m-%d') if report.created_at else '—' }}</td>
+                    <td>
+                        {% if report.post %}
+                        <button type="button" class="btn-danger" onclick="deletePost('{{ report.post.id }}')">Delete Listing</button>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
 
                 {% if not reports %}
-                <tr><td colspan="7" class="table-empty">No reports yet.</td></tr>
+                <tr><td colspan="8" class="table-empty">No reports yet.</td></tr>
+                {% endif %}
+            </table>
+        </div>
+
+        <!-- FEEDBACK SECTION -->
+        <div class="admin-section">
+            <h2>User Feedback</h2>
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Date</th>
+                </tr>
+
+                {% for fb in feedbacks %}
+                <tr>
+                    <td>{{ fb.id }}</td>
+                    <td>{{ fb.user_email or 'Anonymous' }}</td>
+                    <td>{{ '★' * fb.rating }}{{ '☆' * (5 - fb.rating) }}</td>
+                    <td>{{ fb.comment or '—' }}</td>
+                    <td>{{ fb.created_at.strftime('%Y-%m-%d') if fb.created_at else '—' }}</td>
+                </tr>
+                {% endfor %}
+
+                {% if not feedbacks %}
+                <tr><td colspan="5" class="table-empty">No feedback yet.</td></tr>
                 {% endif %}
             </table>
         </div>

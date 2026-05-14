@@ -1501,6 +1501,13 @@ textarea:focus {
     text-decoration: none;
 }
 
+.feedback-error-msg {
+    color: #dc2626;
+    text-align: center;
+    margin: 0 0 8px;
+    font-size: 14px;
+}
+
 /* ─── Mobile Sidebar Toggle ─── */
 .hamburger-btn {
     display: none;

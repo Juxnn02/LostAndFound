@@ -11,7 +11,7 @@ import threading
 import time
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
-from models import db, Account, Post, Message, User, Admin, Report
+from models import db, Account, Post, Message, User, Admin, Report, Feedback
 import random
 
 app = Flask(__name__)
@@ -198,6 +198,24 @@ def messages():
 @app.route("/feedback")
 def feedback():
     return render_template("feedback.html")
+
+@app.route("/api/feedback", methods=["POST"])
+def api_feedback():
+    data = request.get_json()
+    rating = data.get("rating")
+    comment = data.get("comment", "").strip()
+
+    if not rating:
+        return jsonify({"success": False, "message": "Please select a rating."})
+
+    entry = Feedback(
+        user_email=session.get("user_email", ""),
+        rating=int(rating),
+        comment=comment
+    )
+    db.session.add(entry)
+    db.session.commit()
+    return jsonify({"success": True})
 
 
 # API ROUTES
@@ -653,6 +671,7 @@ def admin_dashboard():
     users = Account.query.all()
     posts = Post.query.order_by(Post.post_date.desc()).all()
     reports = Report.query.order_by(Report.created_at.desc()).all()
+    feedbacks = Feedback.query.order_by(Feedback.created_at.desc()).all()
 
     total_users = Account.query.count()
     total_posts = Post.query.count()
@@ -664,6 +683,7 @@ def admin_dashboard():
         users=users,
         posts=posts,
         reports=reports,
+        feedbacks=feedbacks,
         total_users=total_users,
         total_posts=total_posts,
         total_reports=total_reports,
