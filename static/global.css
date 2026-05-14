@@ -1,6 +1,6 @@
 :root {
-    --btn-blue: #007bff;      /* original blue buttons */
-    --btn-blue-hover: #ffff00; /* original yellow hover */
+    --btn-blue: #007bff;
+    --btn-blue-hover: #ffff00;
 }
 
 /* Buttons that were originally blue */
@@ -21,13 +21,14 @@
 /* Danger button */
 .btn-danger {
     background-color: #dc3545;
+    color: white;
 }
 
 .btn-danger:hover {
     background-color: #ff4c4c;
 }
 
-/* General button (non-blue, like profile) */
+/* Default button */
 .btn {
     padding: 10px 20px;
     border-radius: 5px;
