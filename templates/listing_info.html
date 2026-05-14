@@ -8,178 +8,277 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="static/app.css">
+    <style>
+        /* Make avatar look clickable */
+        .avatar, .listing-avatar { cursor: pointer; }
+    </style>
 </head>
 <body class="app-layout listing-page-body">
 
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-    <!-- SIDEBAR -->
-    <aside class="sidepanel" id="sidePanel">
-        <div class="sidepanel-top">
-            <div class="profile-header">
-                <a href="/profile">
-                    <div class="avatar">{{ user_initials }}</div>
-                </a>
-                <div class="user-info">
-                    <h3> Welcome, {{ user_name.split(' ')[0] }}!</h3>
-                </div>
+<!-- SIDEBAR -->
+<aside class="sidepanel" id="sidePanel">
+    <div class="sidepanel-top">
+        <div class="profile-header">
+            <a href="/profile">
+                <div class="avatar" id="sidebar-avatar">{{ user_initials }}</div>
+            </a>
+            <div class="user-info">
+                <h3 id="sidebar-username">{{ user_name.split(' ')[0] }}</h3>
             </div>
-            
-            <nav class="sidepanel-nav">
-                <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
-                <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
-                <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
-                <a href="/messages"><span class="material-symbols-outlined">chat</span>Messages</a>
-                <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
-            </nav>
         </div>
-        <div class="sidepanel-footer">
-            <hr> <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
-        </div>
-    </aside>
 
-    <!-- MAIN CONTENT AREA -->
-    <div class="mobile-topbar">
-        <button type="button" class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
-            <span class="material-symbols-outlined">menu</span>
-        </button>
-        <span class="mobile-topbar-title">Listing Details</span>
+        <nav class="sidepanel-nav">
+            <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
+            <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
+            <a href="/messages"><span class="material-symbols-outlined">chat</span>Messages</a>
+            <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
+        </nav>
     </div>
-    <div class="main-content">
+    <div class="sidepanel-footer">
+        <hr>
+        <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
+    </div>
+</aside>
 
-        <a href="/dashboard" class="listing-back-link" id="back-link">
-            <span class="material-symbols-outlined">arrow_back</span> <span id="back-text">Back to Dashboard</span>
-        </a>
+<!-- MAIN CONTENT AREA -->
+<div class="mobile-topbar">
+    <button type="button" class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+    <span class="mobile-topbar-title">Listing Details</span>
+</div>
 
-        <div class="listing-container"
-            data-post-status="{{ 'claimed' if post.is_claimed else 'active' }}"
-             data-post-id="{{ post.id if post else '' }}"
-             data-owner-id="{{ post.author.id if post and post.author else '' }}"
-             data-post-name="{{ post.item_name if post else '' }}"
-             data-owner-name="{{ post.author.account.name if post and post.author and post.author.account else '' }}">
+<div class="main-content">
 
-            <h1 class="listing-title">{{ post.item_name if post else 'Listing Not Found' }}</h1>
+    <a href="/dashboard" class="listing-back-link" id="back-link">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span id="back-text">Back to Dashboard</span>
+    </a>
 
-            <div class="listing-image-wrapper">
-                <div class="listing-image">
-                    {% if post and post.image_url %}
-                        <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}">
-                    {% else %}
-                        <div class="listing-no-image">
-                            <span class="listing-no-image-icon">📷</span>
-                            <span class="listing-no-image-label">No Photo</span>
-                        </div>
-                    {% endif %}
-                </div>
+    <div class="listing-container"
+         data-post-status="{{ 'claimed' if post.is_claimed else 'active' }}"
+         data-post-id="{{ post.id if post else '' }}"
+         data-owner-id="{{ post.author.id if post and post.author else '' }}"
+         data-post-name="{{ post.item_name if post else '' }}"
+         data-owner-name="{{ post.author.account.name if post and post.author and post.author.account else '' }}">
 
-                {% if post.is_claimed %}
-                    <div class="claimed-overlay">CLAIMED</div>
+        <h1 class="listing-title">{{ post.item_name if post else 'Listing Not Found' }}</h1>
+
+        <div class="listing-image-wrapper">
+            <div class="listing-image">
+                {% if post and post.image_url %}
+                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.item_name }}">
+                {% else %}
+                    <div class="listing-no-image">
+                        <span class="listing-no-image-icon">📷</span>
+                        <span class="listing-no-image-label">No Photo</span>
+                    </div>
                 {% endif %}
             </div>
 
-            <div class="listing-details">
-                        <div class="listing-info-flex">
-                            
-                            <!-- LEFT: User Identity Group -->
-                            <div class="listing-user-info">
-                                <div class="listing-avatar">
-                                    {% if post and post.author and post.author.account %}
-                                        {% set names = post.author.account.name.split() %}
-                                        {{ names[0][0]|upper }}{{ names[-1][0]|upper }}
-                                    {% else %}
-                                        UI
-                                    {% endif %}
-                                </div>
+            {% if post.is_claimed %}
+                <div class="claimed-overlay">CLAIMED</div>
+            {% endif %}
+        </div>
 
-                                <div class="listing-identity-column">
-                                    <p class="poster-name">
-                                        <strong>{{ post.author.account.name if post else 'Unknown' }}</strong>
-                                    </p>
-                                    <p class="listing-location">
-                                        <span class="material-symbols-outlined">location_on</span>
-                                        {{ post.location if post else '' }}
-                                    </p>
-                                    <span class="listing-timestamp" id="listing-timestamp" 
-                                        data-timestamp="{{ post.post_date.isoformat() + 'Z' if post else '' }}">
-                                    </span>
-                                </div>
-                            </div>
+        <div class="listing-details">
+            <div class="listing-info-flex">
 
-                            <!-- MIDDLE: Vertical Divider -->
-                            <div class="listing-column-divider"></div>
-
-                            <!-- RIGHT: Description -->
-                        <div class="listing-description-column">
-                            <div class="description-content-flex">
-                                <div class="description-text-lane">
-                                    <p class="listing-description">
-                                        {{ post.description if post else '' }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        </div> 
-                        <!-- BOTTOM ROW: Actions-->
-                        {% if post %}
-                        <div class="listing-actions-row">
-                            <div class="action-buttons">
-                                {% if session.get('user_id') == post.user_id %}
-                                    <!-- Owner Toggle moved here -->
-                                    <div class="owner-status-lane">
-                                        <div class="toggle-wrapper">
-                                            <label class="claim-switch">
-                                                <input type="checkbox" id="claim-toggle" 
-                                                    data-post-id="{{ post.id }}" 
-                                                    {% if post.is_claimed %}checked{% endif %}>
-                                                <span class="slider"></span>
-                                            </label>
-                                            <span id="toggle-text" class="claim-label">
-                                                {{ 'Claimed' if post.is_claimed else 'Active' }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <!-- Other User Buttons -->
-                                    <button type="button" id="connect-btn" class="btn-connect">
-                                        Connect <span class="material-symbols-outlined">chat</span>
-                                    </button>
-                                    <button type="button" id="report-btn" class="btn-report">
-                                        Report <span class="material-symbols-outlined">report</span>
-                                    </button>
-                                {% endif %}
-                            </div>
-                        </div>
+                <!-- LEFT: User Identity Group -->
+                <div class="listing-user-info">
+                    <div class="listing-avatar">
+                        {% if post and post.author and post.author.account %}
+                            {% set names = post.author.account.name.split() %}
+                            {{ names[0][0]|upper }}{{ names[-1][0]|upper }}
+                        {% else %}
+                            UI
                         {% endif %}
                     </div>
+
+                    <div class="listing-identity-column">
+                        <p class="poster-name">
+                            <strong id="listing-poster-name">{{ post.author.account.name if post else 'Unknown' }}</strong>
+                        </p>
+                        <p class="listing-location">
+                            <span class="material-symbols-outlined">location_on</span>
+                            {{ post.location if post else '' }}
+                        </p>
+                        <span class="listing-timestamp" id="listing-timestamp"
+                              data-timestamp="{{ post.post_date.isoformat() + 'Z' if post else '' }}">
+                        </span>
+                    </div>
                 </div>
-            </div>          
+
+                <!-- MIDDLE: Vertical Divider -->
+                <div class="listing-column-divider"></div>
+
+                <!-- RIGHT: Description -->
+                <div class="listing-description-column">
+                    <div class="description-content-flex">
+                        <div class="description-text-lane">
+                            <p class="listing-description">
+                                {{ post.description if post else '' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- BOTTOM ROW: Actions-->
+            {% if post %}
+            <div class="listing-actions-row">
+                <div class="action-buttons">
+                    {% if session.get('user_id') == post.user_id %}
+                    <div class="owner-status-lane">
+                        <div class="toggle-wrapper">
+                            <label class="claim-switch">
+                                <input type="checkbox" id="claim-toggle"
+                                       data-post-id="{{ post.id }}"
+                                       {% if post.is_claimed %}checked{% endif %}>
+                                <span class="slider"></span>
+                            </label>
+                            <span id="toggle-text" class="claim-label">
+                                {{ 'Claimed' if post.is_claimed else 'Active' }}
+                            </span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <button type="button" id="connect-btn" class="btn-connect">
+                        Connect <span class="material-symbols-outlined">chat</span>
+                    </button>
+                    <button type="button" id="report-btn" class="btn-report">
+                        Report <span class="material-symbols-outlined">report</span>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
         </div>
     </div>
+</div>
 
-    <!-- Report Modal -->
-    <div id="report-modal" class="report-modal">
-        <div class="report-modal-content">
-            <h3>What's wrong with this listing?</h3>
-            <form id="report-form">
-                <label class="report-radio-label">
-                    <input type="radio" name="report-reason" value="False Claim" required> False Claim
-                </label>
-                <label class="report-radio-label">
-                    <input type="radio" name="report-reason" value="Inappropriate Content"> Inappropriate Content
-                </label>
-                <label class="report-radio-label">
-                    <input type="radio" name="report-reason" value="Personal Information"> Personal Information
-                </label>
+<!-- Report Modal -->
+<div id="report-modal" class="report-modal">
+    <div class="report-modal-content">
+        <h3>What's wrong with this listing?</h3>
+        <form id="report-form">
+            <label class="report-radio-label">
+                <input type="radio" name="report-reason" value="False Claim" required> False Claim
+            </label>
+            <label class="report-radio-label">
+                <input type="radio" name="report-reason" value="Inappropriate Content"> Inappropriate Content
+            </label>
+            <label class="report-radio-label">
+                <input type="radio" name="report-reason" value="Personal Information"> Personal Information
+            </label>
 
-                <div class="report-modal-buttons">
-                    <button type="button" id="cancel-report-btn" class="btn-cancel">Cancel</button>
-                    <button type="submit" class="btn-submit-report">Submit</button>
-                </div>
-            </form>
-        </div>
+            <div class="report-modal-buttons">
+                <button type="button" id="cancel-report-btn" class="btn-cancel">Cancel</button>
+                <button type="submit" class="btn-submit-report">Submit</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <script src="static/timeformat.js"></script>
-    <script src="static/listing_info.js"></script>
+<script src="static/timeformat.js"></script>
+<script src="static/listing_info.js"></script>
+
+<!-- Profile Sync Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const savedUsername = localStorage.getItem('profileUsername');
+    const savedAvatar = localStorage.getItem('profileAvatar');
+    const savedColor = localStorage.getItem('profileAccentColor');
+    const currentUserId = localStorage.getItem('userId');
+
+    if (savedColor) document.documentElement.style.setProperty('--primary', savedColor);
+
+    function getInitials(name) {
+        if (!name) return 'UI';
+        const parts = name.trim().split(/\s+/);
+        if (parts.length === 1) return parts[0][0].toUpperCase();
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    // Update sidebar
+    const sidebarUsername = document.getElementById('sidebar-username');
+    const sidebarAvatar = document.getElementById('sidebar-avatar');
+    if (sidebarUsername && savedUsername) sidebarUsername.textContent = savedUsername.split(' ')[0];
+    if (sidebarAvatar) {
+        sidebarAvatar.textContent = '';
+        if (savedAvatar) {
+            const img = document.createElement('img');
+            img.src = savedAvatar;
+            img.style.width = '40px';
+            img.style.height = '40px';
+            img.style.borderRadius = '50%';
+            img.style.objectFit = 'cover';
+            sidebarAvatar.appendChild(img);
+        } else if (savedUsername) {
+            sidebarAvatar.textContent = getInitials(savedUsername);
+        }
+    }
+
+    // Update post avatar and name
+    function updateUserPosts() {
+        const allPosts = document.querySelectorAll('.listing-container, .card');
+        allPosts.forEach(postEl => {
+            const postOwnerId = postEl.dataset.ownerId;
+            if (currentUserId && postOwnerId && currentUserId === postOwnerId) {
+                const postAvatar = postEl.querySelector('.listing-avatar, .avatar');
+                if (postAvatar) {
+                    postAvatar.textContent = '';
+                    if (savedAvatar) {
+                        const img = document.createElement('img');
+                        img.src = savedAvatar;
+                        img.style.width = '40px';
+                        img.style.height = '40px';
+                        img.style.borderRadius = '50%';
+                        img.style.objectFit = 'cover';
+                        postAvatar.appendChild(img);
+                    } else if (savedUsername) {
+                        postAvatar.textContent = getInitials(savedUsername);
+                    }
+                }
+
+                const nameEl = postEl.querySelector('.poster-name strong, #listing-poster-name strong');
+                if (nameEl && savedUsername) nameEl.textContent = savedUsername;
+            }
+        });
+    }
+
+    updateUserPosts();
+
+    // Live update if name/avatar changes in another tab
+    window.addEventListener('storage', function(e) {
+        if (['profileUsername','profileAvatar'].includes(e.key)) {
+            updateUserPosts();
+            if (sidebarUsername && e.key === 'profileUsername') sidebarUsername.textContent = localStorage.getItem('profileUsername').split(' ')[0];
+            if (sidebarAvatar) {
+                sidebarAvatar.textContent = '';
+                const newAvatar = localStorage.getItem('profileAvatar');
+                const newName = localStorage.getItem('profileUsername');
+                if (newAvatar) {
+                    const img = document.createElement('img');
+                    img.src = newAvatar;
+                    img.style.width = '40px';
+                    img.style.height = '40px';
+                    img.style.borderRadius = '50%';
+                    img.style.objectFit = 'cover';
+                    sidebarAvatar.appendChild(img);
+                } else if (newName) {
+                    sidebarAvatar.textContent = getInitials(newName);
+                }
+            }
+        }
+    });
+});
+</script>
+
 </body>
 </html>
