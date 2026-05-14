@@ -96,10 +96,31 @@ def profile():
 
     user_id = session['user_id']
     user = User.query.get(user_id)
-    account = Account.query.get(user.account_id) if user else None
-    user_email = account.email if account else ''
 
-    return render_template("profile.html", user_initials=session.get('user_initials', ''), user_email=user_email)
+    if not user:
+
+        return redirect("/")
+
+
+    account = Account.query.get(user.account_id) if getattr(user, 'account_id', None) else None
+    user_email = getattr(account, 'email', 'No email')
+
+
+    user_name = getattr(user, 'name', 'Guest')
+
+    if 'user_initials' in session:
+        user_initials = session['user_initials']
+    else:
+    
+        name_parts = user_name.split()
+        user_initials = ''.join([p[0].upper() for p in name_parts[:2]]) if name_parts else '??'
+
+    return render_template(
+        "profile.html",
+        user_name=user_name,
+        user_initials=user_initials,
+        user_email=user_email
+    )
 
 
 @app.route("/dashboard")
