@@ -16,7 +16,7 @@
 </head>
 <body class="app-layout">
 
-<!-- Sidebar -->
+<!-- Sidebar (unchanged from dashboard) -->
 <aside class="sidepanel" id="sidePanel">
     <div class="sidepanel-top">
         <div class="profile-header">
@@ -44,28 +44,30 @@
     <div class="navbar"><h2>Profile</h2></div>
 
     <div class="profile-grid">
-        <!-- User info card -->
+
+        <!-- Left card: user info -->
         <div class="profile-card">
             <h3>User Info</h3>
-            <p id="username-display"></p>
-            <p id="email-display"></p>
-            <button class="btn btn-blue" id="edit-name-btn">
+            <p id="username-display" class="profile-text"></p>
+            <p id="email-display" class="profile-text"></p>
+            <button class="btn btn-blue btn-full" id="edit-name-btn">
                 <span class="material-symbols-outlined">edit</span> Edit Name
             </button>
         </div>
 
-        <!-- Appearance card -->
+        <!-- Right card: appearance -->
         <div class="profile-card">
             <h3>Appearance</h3>
             <label for="button-color">Button Color</label>
-            <input type="color" id="button-color">
+            <input type="color" id="button-color" class="btn-color">
 
             <label for="avatar-input">Profile Image</label>
             <input type="file" id="avatar-input" accept="image/*" style="display:none">
-            <button class="btn btn-blue" id="upload-avatar-btn">
+            <button class="btn btn-blue btn-full" id="upload-avatar-btn">
                 <span class="material-symbols-outlined">image</span> Choose Image
             </button>
         </div>
+
     </div>
 </div>
 
