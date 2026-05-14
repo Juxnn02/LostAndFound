@@ -9,34 +9,40 @@
 <body>
     <div class="profile-container">
         <button id="back-button" class="btn">Back</button>
+        <div class="profile-content">
+            <!-- Left Column -->
+            <div class="profile-left">
+                <img id="user-avatar" src="default-avatar.png" alt="User Avatar" class="avatar-medium">
+                <h2 id="username-display">Username</h2>
+                <p id="email-display">user@example.com</p>
 
-        <div class="avatar-section">
-            <img id="user-avatar" src="default-avatar.png" alt="User Avatar" class="avatar">
-            <input type="file" id="avatar-input" style="display:none">
-            <button id="edit-avatar-btn" class="btn">Edit Avatar</button>
-        </div>
-
-        <div class="user-info">
-            <div>
-                <label>Username:</label>
-                <input type="text" id="username-input">
+                <button id="edit-name-btn" class="btn btn-medium">Edit Name</button>
+                <button id="save-changes-btn" class="btn btn-medium">Save Changes</button>
+                <button id="logout-btn" class="btn btn-medium">Logout</button>
+                <button id="delete-account-btn" class="btn btn-medium btn-danger">Delete Account</button>
             </div>
-            <div>
-                <label>Email:</label>
-                <span id="email-display"></span>
+
+            <!-- Right Column -->
+            <div class="profile-right">
+                <h3>Appearance</h3>
+                <label for="button-color">Button Color:</label>
+                <input type="color" id="button-color" list="color-options">
+
+                <datalist id="color-options">
+                    <option value="#007bff"></option>
+                    <option value="#28a745"></option>
+                    <option value="#ffc107"></option>
+                    <option value="#17a2b8"></option>
+                    <option value="#6f42c1"></option>
+                    <option value="#fd7e14"></option>
+                    <option value="#e83e8c"></option>
+                    <!-- exclude black (#000000) and white (#ffffff) -->
+                </datalist>
+
+                <label for="avatar-input">Profile Image:</label>
+                <input type="file" id="avatar-input" accept="image/*" style="display:none">
+                <button id="upload-avatar-btn" class="btn btn-medium">Choose Image</button>
             </div>
-        </div>
-
-        <div class="buttons">
-            <button id="save-changes-btn" class="btn">Save Changes</button>
-            <button id="logout-btn" class="btn">Logout</button>
-            <button id="delete-account-btn" class="btn btn-danger">Delete Account</button>
-        </div>
-
-        <div class="appearances">
-            <h3>Appearances</h3>
-            <label for="button-color">Button Color:</label>
-            <input type="color" id="button-color">
         </div>
     </div>
 
