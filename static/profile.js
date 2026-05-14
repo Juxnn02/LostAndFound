@@ -1,4 +1,3 @@
-// Load user data or defaults
 let userData = JSON.parse(localStorage.getItem('userData')) || {
     username: 'User Name',
     email: 'user@example.com',
@@ -17,29 +16,31 @@ const avatarInput = document.getElementById('avatar-input');
 const buttonColorInput = document.getElementById('button-color');
 
 // Initialize display
-usernameDisplay.textContent = userData.username;
-emailDisplay.textContent = userData.email;
-sidebarUsername.textContent = userData.username.split(' ')[0];
-sidebarAvatar.textContent = userData.username.split(' ').map(n => n[0]).join('').toUpperCase();
-buttonColorInput.value = userData.buttonColor;
+function updateDisplay() {
+    usernameDisplay.textContent = userData.username;
+    emailDisplay.textContent = userData.email;
+    sidebarUsername.textContent = userData.username.split(' ')[0];
+    sidebarAvatar.textContent = userData.username.split(' ').map(n => n[0]).join('').toUpperCase();
+    buttonColorInput.value = userData.buttonColor;
+    document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
+}
+updateDisplay();
 
 // Edit username
 editNameBtn.addEventListener('click', () => {
     const newName = prompt('Enter your new username:', userData.username);
     if (newName) {
         userData.username = newName;
-        usernameDisplay.textContent = newName;
-        sidebarUsername.textContent = newName.split(' ')[0];
-        sidebarAvatar.textContent = newName.split(' ').map(n => n[0]).join('').toUpperCase();
         localStorage.setItem('userData', JSON.stringify(userData));
+        updateDisplay();
     }
 });
 
 // Change button color
 buttonColorInput.addEventListener('input', () => {
-    document.documentElement.style.setProperty('--btn-blue', buttonColorInput.value);
     userData.buttonColor = buttonColorInput.value;
     localStorage.setItem('userData', JSON.stringify(userData));
+    document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
 });
 
 // Upload avatar
@@ -51,7 +52,7 @@ avatarInput.addEventListener('change', e => {
         reader.onload = () => {
             userData.avatar = reader.result;
             localStorage.setItem('userData', JSON.stringify(userData));
-            alert('Avatar updated! (sidebar currently shows initials)');
+            alert('Avatar updated! (Sidebar still shows initials)');
         };
         reader.readAsDataURL(file);
     }
