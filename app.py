@@ -53,6 +53,9 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 
 db.init_app(app)
 
+with app.app_context():
+    db.create_all()
+
 # Add claimed_at column to existing databases that pre-date this field
 from sqlalchemy import text as _sql_text
 with app.app_context():
