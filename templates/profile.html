@@ -1,100 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile — Lost & Found</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — Lost & Found</title>
 
-    <!-- Fonts & icons to match dashboard -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
 
-    <!-- Dashboard CSS + Profile CSS -->
-    <link rel="stylesheet" href="static/app.css">
-    <link rel="stylesheet" href="static/profile.css">
+<link rel="stylesheet" href="static/app.css">
+<link rel="stylesheet" href="static/profile.css">
 </head>
 <body class="app-layout">
 
-    <!-- Sidebar (reuse from dashboard.html) -->
-    <aside class="sidepanel" id="sidePanel">
-        <div class="sidepanel-top">
-            <div class="profile-header">
-                <a href="/profile">
-                    <div class="avatar" id="sidebar-avatar">AB</div>
-                </a>
-                <div class="user-info">
-                    <h3>Welcome!</h3>
-                </div>
+<!-- Sidebar -->
+<aside class="sidepanel" id="sidePanel">
+    <div class="sidepanel-top">
+        <div class="profile-header">
+            <!-- Sidebar avatar as initials -->
+            <div class="avatar" id="sidebar-avatar">AB</div>
+            <div class="user-info">
+                <h3 id="sidebar-username">Welcome!</h3>
             </div>
-            <nav class="sidepanel-nav">
-                <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
-                <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
-                <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
-                <a href="/messages"><span class="material-symbols-outlined">chat</span>Messages</a>
-                <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
-            </nav>
         </div>
-        <div class="sidepanel-footer">
-            <hr>
-            <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
-        </div>
-    </aside>
-
-    <!-- Main content -->
-    <div class="main-content">
-        <div class="navbar">
-            <h2>Profile</h2>
-        </div>
-
-        <div class="profile-grid">
-
-            <!-- Left card: avatar & info -->
-            <div class="profile-card">
-                <div class="avatar-wrapper">
-                    <img src="default-avatar.png" class="avatar-medium" id="user-avatar" alt="User Avatar">
-                </div>
-                <h2 id="username-display">Username</h2>
-                <p id="email-display">user@example.com</p>
-
-                <div class="btn-group">
-                    <button class="btn btn-blue" id="edit-name-btn">
-                        <span class="material-symbols-outlined">edit</span> Edit Name
-                    </button>
-                    <button class="btn btn-blue" id="save-changes-btn">
-                        <span class="material-symbols-outlined">save</span> Save Changes
-                    </button>
-                    <button class="btn btn-blue" id="logout-btn">
-                        <span class="material-symbols-outlined">logout</span> Logout
-                    </button>
-                    <button class="btn btn-danger" id="delete-account-btn">
-                        <span class="material-symbols-outlined">delete</span> Delete Account
-                    </button>
-                </div>
-            </div>
-
-            <!-- Right card: appearance -->
-            <div class="profile-card">
-                <h3>Appearance</h3>
-
-                <label for="button-color">Button Color</label>
-                <input type="color" id="button-color">
-
-                <label for="avatar-input">Profile Image</label>
-                <input type="file" id="avatar-input" accept="image/*" style="display:none">
-                <button class="btn btn-blue" id="upload-avatar-btn">
-                    <span class="material-symbols-outlined">image</span> Choose Image
-                </button>
-            </div>
-
-        </div>
-
-        <!-- Back button -->
-        <button class="btn btn-blue" id="back-button">
-            <span class="material-symbols-outlined">arrow_back</span> Back
-        </button>
+        <nav class="sidepanel-nav">
+            <a href="/dashboard"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            <a href="/createlisting"><span class="material-symbols-outlined">add</span>New Listing</a>
+            <a href="/my_listings"><span class="material-symbols-outlined">list</span>My Listings</a>
+            <a href="/messages"><span class="material-symbols-outlined">chat</span>Messages</a>
+            <a href="/feedback"><span class="material-symbols-outlined">star</span>Feedback</a>
+        </nav>
     </div>
+    <div class="sidepanel-footer">
+        <hr>
+        <a href="/"><span class="material-symbols-outlined">logout</span>Logout</a>
+    </div>
+</aside>
 
-    <script src="static/profile.js"></script>
+<!-- Main content -->
+<div class="main-content">
+    <div class="navbar"><h2>Profile</h2></div>
+
+    <div class="profile-grid">
+        <!-- Left card: info -->
+        <div class="profile-card">
+            <h3>User Info</h3>
+            <p id="username-display"></p>
+            <p id="email-display"></p>
+            <button class="btn btn-blue" id="edit-name-btn">
+                <span class="material-symbols-outlined">edit</span> Edit Name
+            </button>
+        </div>
+
+        <!-- Right card: appearance -->
+        <div class="profile-card">
+            <h3>Appearance</h3>
+            <label for="button-color">Button Color</label>
+            <input type="color" id="button-color">
+
+            <label for="avatar-input">Profile Image</label>
+            <input type="file" id="avatar-input" accept="image/*" style="display:none">
+            <button class="btn btn-blue" id="upload-avatar-btn">
+                <span class="material-symbols-outlined">image</span> Choose Image
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="static/profile.js"></script>
 </body>
 </html>
