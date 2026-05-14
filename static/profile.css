@@ -1,45 +1,42 @@
-/* General body style */
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f5f5f5;
     margin: 0;
-    padding: 0;
 }
 
-/* Grid layout for left/right cards */
+/* Grid for cards */
 .profile-grid {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     flex-wrap: wrap;
     margin-top: 20px;
 }
 
-/* Card style to match dashboard */
+/* Card styling */
 .profile-card {
     flex: 1;
-    min-width: 300px;
-    background-color: #fff;
-    border-radius: 12px;
+    min-width: 250px;
+    background: #fff;
     padding: 20px;
+    border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     text-align: center;
 }
 
-/* Avatar image */
-.avatar-medium {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 15px;
+/* User info */
+#username-display, #email-display {
+    font-weight: 500;
+    margin: 5px 0;
 }
 
-/* Button group */
-.btn-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
+/* Color picker */
+#button-color {
+    width: 50px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
 /* Buttons */
@@ -49,13 +46,12 @@ body {
     justify-content: center;
     gap: 6px;
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 8px 16px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-/* Blue buttons */
 .btn-blue {
     background-color: var(--btn-blue, #007bff);
     color: #fff;
@@ -65,27 +61,16 @@ body {
     background-color: #0056b3;
 }
 
-/* Danger buttons */
-.btn-danger {
-    background-color: #dc3545;
+/* Sidebar avatar */
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #007bff;
     color: #fff;
-}
-
-.btn-danger:hover {
-    background-color: #a71d2a;
-}
-
-/* Color picker */
-#button-color {
-    width: 100%;
-    height: 40px;
-    border: none;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    cursor: pointer;
-}
-
-/* Back button */
-#back-button {
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin: 0 auto 10px;
 }
