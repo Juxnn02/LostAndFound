@@ -1,82 +1,93 @@
-// Load userData from localStorage or fallback to template values
-let userData = JSON.parse(localStorage.getItem('userData')) || {
-    username: document.getElementById('username-display').textContent || 'User Name',
-    email: document.getElementById('email-display').textContent || 'user@example.com',
-    avatar: document.getElementById('user-avatar').src || 'default-avatar.png',
-    buttonColor: '#007bff'
-};
-
-// Elements
+const avatarImg       = document.getElementById('user-avatar');
+const avatarInitials  = document.getElementById('user-avatar-initials');
 const usernameDisplay = document.getElementById('username-display');
-const emailDisplay = document.getElementById('email-display');
-const avatarImg = document.getElementById('user-avatar');
 const sidebarUsername = document.getElementById('sidebar-username');
-const sidebarAvatar = document.getElementById('sidebar-avatar');
-
-const editNameBtn = document.getElementById('edit-name-btn');
-const saveChangesBtn = document.getElementById('save-changes-btn');
-const deleteAccountBtn = document.getElementById('delete-account-btn');
-
+const sidebarAvatar   = document.getElementById('sidebar-avatar');
+const profileMsg      = document.getElementById('profile-message');
 const buttonColorInput = document.getElementById('button-color');
-const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
-const avatarInput = document.getElementById('avatar-input');
+const avatarInput     = document.getElementById('avatar-input');
 
-// Update page display
-function updateDisplay() {
-    usernameDisplay.textContent = userData.username;
-    emailDisplay.textContent = userData.email;
-    avatarImg.src = userData.avatar || 'default-avatar.png';
-    buttonColorInput.value = userData.buttonColor;
-    document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
-
-    sidebarUsername.textContent = userData.username.split(' ')[0] || '';
-    sidebarAvatar.textContent = userData.username
-        .split(' ')
-        .map(n => n[0])
-        .join('')
-        .toUpperCase();
+// Restore saved accent color from localStorage (cosmetic only)
+const savedColor = localStorage.getItem('profileAccentColor');
+if (savedColor) {
+    document.documentElement.style.setProperty('--primary', savedColor);
+    buttonColorInput.value = savedColor;
 }
 
-updateDisplay();
+// Restore saved avatar from localStorage (cosmetic only)
+const savedAvatar = localStorage.getItem('profileAvatar');
+if (savedAvatar) {
+    avatarImg.src = savedAvatar;
+    avatarImg.classList.remove('hidden');
+    if (avatarInitials) avatarInitials.classList.add('hidden');
+}
 
-// Edit Name
-editNameBtn.addEventListener('click', () => {
-    const newName = prompt('Enter your new username:', userData.username);
-    if (newName) {
-        userData.username = newName;
-        localStorage.setItem('userData', JSON.stringify(userData));
-        updateDisplay();
+function showMsg(text, isError) {
+    profileMsg.textContent = text;
+    profileMsg.style.color = isError ? 'var(--danger)' : 'var(--success)';
+}
+
+function updateSidebar(name) {
+    if (sidebarUsername) sidebarUsername.textContent = name.split(' ')[0] || name;
+    if (sidebarAvatar) {
+        sidebarAvatar.textContent = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+}
+
+// Edit Name — saves to database
+document.getElementById('edit-name-btn').addEventListener('click', async () => {
+    const current = usernameDisplay.textContent;
+    const newName = prompt('Enter your new display name:', current);
+    if (!newName || !newName.trim()) return;
+
+    const res = await fetch('/api/profile/update-name', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: newName.trim() })
+    });
+    const data = await res.json();
+    if (data.success) {
+        usernameDisplay.textContent = data.username;
+        updateSidebar(data.username);
+        showMsg('Name updated!', false);
+    } else {
+        showMsg(data.message || 'Could not update name.', true);
     }
 });
 
-// Save Changes (button color)
-saveChangesBtn.addEventListener('click', () => {
-    userData.buttonColor = buttonColorInput.value;
-    localStorage.setItem('userData', JSON.stringify(userData));
-    updateDisplay();
-    alert('Changes saved!');
+// Save Changes — persists accent color to localStorage
+document.getElementById('save-changes-btn').addEventListener('click', () => {
+    const color = buttonColorInput.value;
+    localStorage.setItem('profileAccentColor', color);
+    document.documentElement.style.setProperty('--primary', color);
+    showMsg('Changes saved!', false);
 });
 
-// Delete account
-deleteAccountBtn.addEventListener('click', () => {
-    if (confirm('Are you sure you want to delete your account?')) {
-        localStorage.removeItem('userData');
-        localStorage.removeItem('currentUser');
-        window.location.href = 'login.html';
+// Delete Account — removes from database
+document.getElementById('delete-account-btn').addEventListener('click', async () => {
+    if (!confirm('Are you sure you want to delete your account? This cannot be undone.')) return;
+    const res = await fetch('/api/profile/delete-account', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+        localStorage.clear();
+        window.location.href = '/';
+    } else {
+        showMsg(data.message || 'Could not delete account.', true);
     }
 });
 
-// Upload avatar
-uploadAvatarBtn.addEventListener('click', () => avatarInput.click());
+// Avatar upload — stores in localStorage (cosmetic/local)
+document.getElementById('upload-avatar-btn').addEventListener('click', () => avatarInput.click());
 avatarInput.addEventListener('change', e => {
     const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-            userData.avatar = reader.result;
-            localStorage.setItem('userData', JSON.stringify(userData));
-            updateDisplay();
-        };
-        reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        const dataUrl = reader.result;
+        localStorage.setItem('profileAvatar', dataUrl);
+        avatarImg.src = dataUrl;
+        avatarImg.classList.remove('hidden');
+        if (avatarInitials) avatarInitials.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
 });

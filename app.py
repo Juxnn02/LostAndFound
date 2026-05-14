@@ -98,18 +98,48 @@ def profile():
     user = User.query.get(user_id)
     account = Account.query.get(user.account_id) if user else None
 
-    username = user.username if user else ''
-    email = account.email if account else ''
-    avatar = user.avatar if user and getattr(user, 'avatar', None) else 'default-avatar.png'
-    user_initials = session.get('user_initials', '')
-
     return render_template(
         "profile.html",
-        username=username,
-        email=email,
-        avatar=avatar,
-        user_initials=user_initials
+        username=user.username if user else '',
+        email=account.email if account else '',
+        user_initials=session.get('user_initials', '')
     )
+
+
+@app.route("/api/profile/update-name", methods=["POST"])
+def api_profile_update_name():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Not logged in"})
+    data = request.get_json()
+    new_name = (data.get("username") or "").strip()
+    if not new_name:
+        return jsonify({"success": False, "message": "Name cannot be empty"})
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({"success": False, "message": "User not found"})
+    user.username = new_name
+    db.session.commit()
+    initials = ''.join(p[0].upper() for p in new_name.split() if p)[:2]
+    session['user_initials'] = initials
+    session['user_name'] = new_name
+    return jsonify({"success": True, "username": new_name, "initials": initials})
+
+
+@app.route("/api/profile/delete-account", methods=["POST"])
+def api_profile_delete_account():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Not logged in"})
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({"success": False, "message": "User not found"})
+    account = Account.query.get(user.account_id)
+    if account:
+        db.session.delete(account)
+    else:
+        db.session.delete(user)
+    db.session.commit()
+    session.clear()
+    return jsonify({"success": True})
     
 
 @app.route("/dashboard")

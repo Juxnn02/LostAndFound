@@ -1,109 +1,145 @@
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-}
-
-.profile-container {
-    max-width: 900px;
+.profile-card {
+    max-width: 860px;
     margin: 40px auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 12px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    padding: 40px;
 }
 
 .profile-content {
     display: flex;
-    gap: 50px;
+    gap: 60px;
     flex-wrap: wrap;
 }
 
-/* Left column */
 .profile-left {
     flex: 1;
-    text-align: center;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.avatar-medium {
-    width: 150px;
-    height: 150px;
+.avatar-circle {
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
 }
 
-.profile-left h2 {
-    margin: 10px 0 5px;
-}
-
-.profile-left p {
-    margin: 0 0 20px;
-}
-
-/* Right column */
-.profile-right {
-    flex: 1;
-}
-
-/* Color picker: taller, thicker, longer */
-.profile-right input[type="color"],
-.btn-color {
-    width: 60px;
-    height: 30px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    padding: 0;
-}
-
-/* Buttons full width */
-.btn-full {
-    width: 100%;
-    margin: 8px 0;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn-blue {
-    background-color: var(--btn-blue, #007bff);
-    color: #fff;
-}
-
-.btn-blue:hover {
-    background-color: #0056b3;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.btn-danger:hover {
-    background-color: #a71d2a;
-}
-
-/* Sidebar avatar same as dashboard */
-.avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #007bff;
-    color: #fff;
+.avatar-initials {
+    background: var(--primary);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 36px;
     font-weight: 700;
-    font-size: 18px;
-    margin: 0 auto 10px;
+    letter-spacing: 1px;
+}
+
+.hidden {
+    display: none;
+}
+
+.profile-left h2 {
+    margin: 0 0 4px;
+    font-size: 20px;
+    color: var(--text-dark);
+}
+
+.profile-email {
+    margin: 0 0 24px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 11px 16px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.profile-btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.profile-btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.profile-btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.profile-btn-danger:hover {
+    background: #dc2626;
+}
+
+.profile-message {
+    font-size: 13px;
+    margin: 4px 0 0;
+    color: var(--success);
+    min-height: 18px;
+    text-align: center;
+}
+
+.profile-right {
+    flex: 1;
+    min-width: 200px;
+}
+
+.profile-right h3 {
+    margin: 0 0 20px;
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+.profile-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.color-picker {
+    width: 60px;
+    height: 36px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    padding: 2px;
+    display: block;
+}
+
+@media (max-width: 600px) {
+    .profile-card {
+        margin: 16px;
+        padding: 24px;
+    }
+
+    .profile-content {
+        flex-direction: column;
+        gap: 32px;
+    }
 }
