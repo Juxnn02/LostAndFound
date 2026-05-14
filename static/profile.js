@@ -1,19 +1,18 @@
 
-// Load existing user data from localStorage
 const userData = JSON.parse(localStorage.getItem('userData')) || {
     username: 'User',
     email: 'user@example.com',
     avatar: 'default-avatar.png',
-    buttonColor: '#007bff', // default blue
-    buttonHover: '#ffff00' // default yellow
+    buttonColor: '#007bff'
 };
 
 // DOM elements
 const avatarImg = document.getElementById('user-avatar');
 const avatarInput = document.getElementById('avatar-input');
-const editAvatarBtn = document.getElementById('edit-avatar-btn');
-const usernameInput = document.getElementById('username-input');
+const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
+const usernameDisplay = document.getElementById('username-display');
 const emailDisplay = document.getElementById('email-display');
+const editNameBtn = document.getElementById('edit-name-btn');
 const saveChangesBtn = document.getElementById('save-changes-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const deleteAccountBtn = document.getElementById('delete-account-btn');
@@ -22,47 +21,52 @@ const backButton = document.getElementById('back-button');
 
 // Initialize fields
 avatarImg.src = userData.avatar;
-usernameInput.value = userData.username;
+usernameDisplay.textContent = userData.username;
 emailDisplay.textContent = userData.email;
 buttonColorInput.value = userData.buttonColor;
 
-// Edit Avatar
-editAvatarBtn.addEventListener('click', () => avatarInput.click());
+// Edit name
+editNameBtn.addEventListener('click', () => {
+    const newName = prompt('Enter new username:', userData.username);
+    if (newName) {
+        usernameDisplay.textContent = newName;
+        userData.username = newName;
+    }
+});
 
+// Upload avatar
+uploadAvatarBtn.addEventListener('click', () => avatarInput.click());
 avatarInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = () => {
             avatarImg.src = reader.result;
+            userData.avatar = reader.result;
         };
         reader.readAsDataURL(file);
     }
 });
 
-// Save Changes
+// Save changes
 saveChangesBtn.addEventListener('click', () => {
-    userData.username = usernameInput.value;
-    userData.avatar = avatarImg.src;
     userData.buttonColor = buttonColorInput.value;
-
     localStorage.setItem('userData', JSON.stringify(userData));
 
-    // Update global styles immediately
-    document.documentElement.style.setProperty('--btn-color', userData.buttonColor);
-    document.documentElement.style.setProperty('--btn-hover', '#ffffff'); // highlight color after change
+    // Update only blue buttons on other pages
+    document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
+    document.documentElement.style.setProperty('--btn-blue-hover', '#ffffff');
 
     alert('Changes saved!');
 });
 
 // Logout
 logoutBtn.addEventListener('click', () => {
-    // Clear session data if any
     localStorage.removeItem('currentUser');
     window.location.href = 'login.html';
 });
 
-// Delete Account
+// Delete account
 deleteAccountBtn.addEventListener('click', () => {
     if (confirm('Are you sure you want to delete your account?')) {
         localStorage.removeItem('userData');
@@ -73,5 +77,7 @@ deleteAccountBtn.addEventListener('click', () => {
 
 // Back to dashboard
 backButton.addEventListener('click', () => {
+    // Save changes before going back
+    localStorage.setItem('userData', JSON.stringify(userData));
     window.location.href = 'dashboard.html';
 });
