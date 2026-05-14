@@ -1,12 +1,14 @@
+// profile.js
 
-const userData = JSON.parse(localStorage.getItem('userData')) || {
+// Load user data or defaults
+let userData = JSON.parse(localStorage.getItem('userData')) || {
     username: 'User',
     email: 'user@example.com',
     avatar: 'default-avatar.png',
     buttonColor: '#007bff'
 };
 
-// DOM elements
+// Elements
 const avatarImg = document.getElementById('user-avatar');
 const avatarInput = document.getElementById('avatar-input');
 const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
@@ -19,13 +21,13 @@ const deleteAccountBtn = document.getElementById('delete-account-btn');
 const buttonColorInput = document.getElementById('button-color');
 const backButton = document.getElementById('back-button');
 
-// Initialize fields
+// Initialize page
 avatarImg.src = userData.avatar;
 usernameDisplay.textContent = userData.username;
 emailDisplay.textContent = userData.email;
 buttonColorInput.value = userData.buttonColor;
 
-// Edit name
+// Edit username
 editNameBtn.addEventListener('click', () => {
     const newName = prompt('Enter new username:', userData.username);
     if (newName) {
@@ -53,7 +55,7 @@ saveChangesBtn.addEventListener('click', () => {
     userData.buttonColor = buttonColorInput.value;
     localStorage.setItem('userData', JSON.stringify(userData));
 
-    // Update only blue buttons on other pages
+    // Update blue buttons globally
     document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
     document.documentElement.style.setProperty('--btn-blue-hover', '#ffffff');
 
@@ -77,7 +79,6 @@ deleteAccountBtn.addEventListener('click', () => {
 
 // Back to dashboard
 backButton.addEventListener('click', () => {
-    // Save changes before going back
     localStorage.setItem('userData', JSON.stringify(userData));
     window.location.href = 'dashboard.html';
 });
