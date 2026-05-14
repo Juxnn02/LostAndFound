@@ -45,15 +45,19 @@ body {
     flex: 1;
 }
 
-.profile-right input[type="color"] {
-    width: 80%; /* slightly smaller */
-    height: 35px;
+/* Color picker: 10px by 20px */
+.profile-right input[type="color"],
+.btn-color {
+    width: 20px;
+    height: 10px;
     border: none;
-    border-radius: 6px;
+    border-radius: 3px;
     cursor: pointer;
     margin-bottom: 20px;
+    padding: 0;
 }
 
+/* Buttons full width */
 .btn-full {
     width: 100%;
     margin: 8px 0;
@@ -87,4 +91,19 @@ body {
 
 .btn-danger:hover {
     background-color: #a71d2a;
+}
+
+/* Sidebar avatar same as dashboard */
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0 auto 10px;
 }
