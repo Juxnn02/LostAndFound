@@ -48,8 +48,8 @@ class Post(db.Model):
     image_url = db.Column(db.String(500))
     is_claimed = db.Column(db.Boolean, default=False)
 
-    reports = db.relationship('Report', backref='post')
-    messages = db.relationship('Message', backref='post')
+    reports = db.relationship('Report', backref='post', cascade="all, delete-orphan")
+    messages = db.relationship('Message', backref='post', cascade="all, delete-orphan")
 
 class Message(db.Model):
     __tablename__ = 'message'
