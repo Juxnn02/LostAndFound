@@ -45,13 +45,13 @@ body {
     flex: 1;
 }
 
-/* Color picker: 10px by 20px */
+/* Color picker: taller, thicker, longer */
 .profile-right input[type="color"],
 .btn-color {
-    width: 20px;
-    height: 10px;
+    width: 50px;       /* a bit longer */
+    height: 30px;      /* taller */
     border: none;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
     margin-bottom: 20px;
     padding: 0;
