@@ -443,7 +443,7 @@ def api_conversations():
             other_user = User.query.get(other_id)
             other_account = Account.query.get(other_user.account_id) if other_user else None
             conversations.append({
-                "post_id": msg.post_id,
+                "post_id": msg.post_id if msg.post_id else 0,
                 "post_name": post.item_name if post else "General",
                 "other_user_id": other_id,
                 "other_user_name": other_account.name if other_account else "Unknown",
@@ -519,17 +519,19 @@ def api_messages(post_id):
         return jsonify({"success": True})
 
     # GET
+    # post_id=0 is the sentinel for messages with no listing attached (post_id IS NULL)
+    actual_post_id = None if post_id == 0 else post_id
     other_user_id = request.args.get('other_user_id', type=int)
     if other_user_id:
         msgs = Message.query.filter(
-            Message.post_id == post_id,
+            Message.post_id == actual_post_id,
             (
                 ((Message.sender_id == user_id) & (Message.receiver_id == other_user_id)) |
                 ((Message.sender_id == other_user_id) & (Message.receiver_id == user_id))
             )
         ).order_by(Message.timestamp.asc()).all()
     else:
-        msgs = Message.query.filter_by(post_id=post_id).order_by(Message.timestamp.asc()).all()
+        msgs = Message.query.filter_by(post_id=actual_post_id).order_by(Message.timestamp.asc()).all()
 
     return jsonify([{
         "id": m.id,

@@ -53,12 +53,13 @@
 }
 
 .inbox-card {
-    width: 100%; 
-    padding: 12px 14px; 
+    width: 100%;
+    padding: 12px 14px;
     border-radius: 12px;
     background: white;
-    box-shadow: var(--shadow-sm); 
+    box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
+    margin-bottom: 8px;
 }
 
 .inbox-card:hover {

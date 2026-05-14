@@ -105,7 +105,7 @@ function openChat(postId, otherUserId, otherUserName, postName) {
 }
 
 async function fetchMessages() {
-    if (!activePostId) return;
+    if (activePostId === null || activePostId === undefined) return;
     const res = await fetch(`/api/messages/${activePostId}?other_user_id=${activeOtherUserId}`);
     const msgs = await res.json();
 
