@@ -1,9 +1,12 @@
-// Load user data from localStorage or defaults
+// Try to get the currently logged-in user
+let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+// If there is a logged-in user, use their info; otherwise fallback
 let userData = JSON.parse(localStorage.getItem('userData')) || {
-    username: '',      // will be overwritten if stored at login
-    email: '',
-    avatar: 'default-avatar.png',
-    buttonColor: '#007bff'
+    username: (currentUser && currentUser.username) || 'User Name',
+    email: (currentUser && currentUser.email) || 'user@example.com',
+    avatar: (currentUser && currentUser.avatar) || 'default-avatar.png',
+    buttonColor: (currentUser && currentUser.buttonColor) || '#007bff'
 };
 
 // Elements
@@ -21,7 +24,7 @@ const buttonColorInput = document.getElementById('button-color');
 const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
 const avatarInput = document.getElementById('avatar-input');
 
-// Update all displays
+// Function to update all displays
 function updateDisplay() {
     usernameDisplay.textContent = userData.username;
     emailDisplay.textContent = userData.email;
@@ -29,7 +32,7 @@ function updateDisplay() {
     buttonColorInput.value = userData.buttonColor;
     document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
 
-    // Sidebar initials and name
+    // Sidebar initials and first name
     sidebarUsername.textContent = userData.username.split(' ')[0] || '';
     sidebarAvatar.textContent = userData.username
         .split(' ')
@@ -47,6 +50,10 @@ editNameBtn.addEventListener('click', () => {
     if (newName) {
         userData.username = newName;
         localStorage.setItem('userData', JSON.stringify(userData));
+        if (currentUser) {
+            currentUser.username = newName;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
         updateDisplay();
     }
 });
@@ -55,6 +62,10 @@ editNameBtn.addEventListener('click', () => {
 saveChangesBtn.addEventListener('click', () => {
     userData.buttonColor = buttonColorInput.value;
     localStorage.setItem('userData', JSON.stringify(userData));
+    if (currentUser) {
+        currentUser.buttonColor = buttonColorInput.value;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
     updateDisplay();
     alert('Changes saved!');
 });
@@ -77,6 +88,13 @@ avatarInput.addEventListener('change', e => {
         reader.onload = () => {
             userData.avatar = reader.result;
             localStorage.setItem('userData', JSON.stringify(userData));
+
+            // Optionally update currentUser avatar too
+            if (currentUser) {
+                currentUser.avatar = reader.result;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+
             updateDisplay();
         };
         reader.readAsDataURL(file);
