@@ -15,11 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
         avatar.appendChild(img);
     }
 
+    // Load saved name
+    if(localStorage.getItem('userName')) {
+        document.getElementById('user-name').textContent = localStorage.getItem('userName');
+        nameInput.value = localStorage.getItem('userName');
+    }
+
     // Load saved button color
     if(localStorage.getItem('buttonColor')) {
-        document.documentElement.style.setProperty('--button-bg', localStorage.getItem('buttonColor'));
+        const savedColor = localStorage.getItem('buttonColor');
+        document.documentElement.style.setProperty('--button-bg', savedColor);
         document.documentElement.style.setProperty('--button-hover', '#ffffff');
-        buttonColorInput.value = localStorage.getItem('buttonColor');
+        buttonColorInput.value = savedColor;
     }
 
     // Click avatar opens file picker
@@ -47,23 +54,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if(newName) {
             localStorage.setItem('userName', newName);
             document.getElementById('user-name').textContent = newName;
-            alert('Changes saved!');
         }
 
         const color = buttonColorInput.value;
         localStorage.setItem('buttonColor', color);
         document.documentElement.style.setProperty('--button-bg', color);
         document.documentElement.style.setProperty('--button-hover', '#ffffff');
+
+        // Global update trigger (for other pages)
+        localStorage.setItem('profileUpdated', Date.now());
+
+        alert('Changes saved!');
     });
 
     // Logout
     logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userAvatar');
+        localStorage.removeItem('buttonColor');
         location.href = '/';
     });
 
     // Delete account
     deleteBtn.addEventListener('click', () => {
         if(confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+            localStorage.clear();
             alert('Account deleted!');
             location.href = '/';
         }
