@@ -1,38 +1,64 @@
-body { font-family: 'Inter', sans-serif; background-color: #f5f5f5; margin: 0; }
-
-/* Grid layout */
-.profile-grid {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin-top: 20px;
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
 }
 
-/* Cards */
-.profile-card {
-    flex: 1;
-    min-width: 300px;
-    background: #fff;
+.profile-container {
+    max-width: 900px;
+    margin: 40px auto;
     padding: 20px;
+    background-color: white;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.profile-content {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+/* Left column */
+.profile-left {
+    flex: 1;
     text-align: center;
 }
 
-/* User info text */
-.profile-text {
-    font-weight: 500;
-    margin: 10px 0;
-    font-size: 16px;
+.avatar-medium {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
 }
 
-/* Buttons full width like dashboard */
+.profile-left h2 {
+    margin: 10px 0 5px;
+}
+
+.profile-left p {
+    margin: 0 0 20px;
+}
+
+/* Right column */
+.profile-right {
+    flex: 1;
+}
+
+.profile-right input[type="color"] {
+    width: 80%; /* slightly smaller */
+    height: 35px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
 .btn-full {
     width: 100%;
-    margin-top: 10px;
+    margin: 8px 0;
 }
 
-/* Buttons */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -45,25 +71,20 @@ body { font-family: 'Inter', sans-serif; background-color: #f5f5f5; margin: 0; }
     transition: background-color 0.3s;
 }
 
-.btn-blue { background-color: var(--btn-blue, #007bff); color: #fff; }
-.btn-blue:hover { background-color: #0056b3; }
-.btn-danger { background-color: #dc3545; color: #fff; }
-.btn-danger:hover { background-color: #a71d2a; }
-
-/* Color picker larger */
-.btn-color { width: 100%; height: 40px; border: none; border-radius: 6px; margin: 10px 0; cursor: pointer; }
-
-/* Sidebar avatar same as dashboard */
-.avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #007bff;
+.btn-blue {
+    background-color: var(--btn-blue, #007bff);
     color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-    margin: 0 auto 10px;
+}
+
+.btn-blue:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #a71d2a;
 }
