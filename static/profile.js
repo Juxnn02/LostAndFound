@@ -1,7 +1,7 @@
-// Load userData or defaults
+// Load user data from localStorage or defaults
 let userData = JSON.parse(localStorage.getItem('userData')) || {
-    username: 'John Doe',
-    email: 'john@example.com',
+    username: '',      // will be overwritten if stored at login
+    email: '',
     avatar: 'default-avatar.png',
     buttonColor: '#007bff'
 };
@@ -15,14 +15,13 @@ const sidebarAvatar = document.getElementById('sidebar-avatar');
 
 const editNameBtn = document.getElementById('edit-name-btn');
 const saveChangesBtn = document.getElementById('save-changes-btn');
-const logoutBtn = document.getElementById('logout-btn');
 const deleteAccountBtn = document.getElementById('delete-account-btn');
 
 const buttonColorInput = document.getElementById('button-color');
 const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
 const avatarInput = document.getElementById('avatar-input');
 
-// Function to populate page
+// Update all displays
 function updateDisplay() {
     usernameDisplay.textContent = userData.username;
     emailDisplay.textContent = userData.email;
@@ -30,12 +29,16 @@ function updateDisplay() {
     buttonColorInput.value = userData.buttonColor;
     document.documentElement.style.setProperty('--btn-blue', userData.buttonColor);
 
-    // Sidebar
-    sidebarUsername.textContent = userData.username.split(' ')[0];
-    sidebarAvatar.textContent = userData.username.split(' ').map(n => n[0]).join('').toUpperCase();
+    // Sidebar initials and name
+    sidebarUsername.textContent = userData.username.split(' ')[0] || '';
+    sidebarAvatar.textContent = userData.username
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase();
 }
 
-// Initialize display
+// Initialize
 updateDisplay();
 
 // Edit Name
@@ -54,12 +57,6 @@ saveChangesBtn.addEventListener('click', () => {
     localStorage.setItem('userData', JSON.stringify(userData));
     updateDisplay();
     alert('Changes saved!');
-});
-
-// Logout
-logoutBtn.addEventListener('click', () => {
-    localStorage.removeItem('currentUser');
-    window.location.href = 'login.html';
 });
 
 // Delete account
