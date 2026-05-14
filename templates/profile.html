@@ -4,12 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile — Lost & Found</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
 <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
 <style>
 :root {
     --button-bg: {{ user.get('button_color', '#007bff') }};
-    --button-hover: #ffffff;
+    --button-hover: #ffff00;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    margin: 0;
+    padding: 0;
 }
 
 .profile-container {
@@ -26,7 +32,7 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: #007bff;
+    background: var(--button-bg);
     color: white;
     display: flex;
     justify-content: center;
@@ -34,6 +40,8 @@
     cursor: pointer;
     overflow: hidden;
     margin: 0 auto 1rem;
+    font-size: 36px;
+    font-weight: bold;
 }
 
 .avatar img {
@@ -48,6 +56,7 @@
     margin: 0.5rem 0;
     border-radius: 6px;
     border: 1px solid #ccc;
+    font-size: 1rem;
 }
 
 .profile-buttons {
@@ -57,13 +66,56 @@
     margin-top: 1rem;
 }
 
+button {
+    background-color: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 1rem;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
 .delete-btn:hover {
     background-color: #ff4d4d !important;
 }
+
+.appearance-section {
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.back-btn {
+    margin: 1rem;
+    background-color: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background-color: var(--button-hover);
+}
+
+.material-symbols-outlined {
+    margin-right: 0.4rem;
+    font-size: 1.2rem;
+}
 </style>
 </head>
-<body class="app-layout">
+<body>
 
+<!-- BACK BUTTON -->
 <button class="back-btn" onclick="location.href='/dashboard'">
     <span class="material-symbols-outlined">arrow_back</span> Back
 </button>
@@ -78,14 +130,17 @@
     <h2 id="user-name">{{ user_name or 'Guest' }}</h2>
     <p id="user-email">{{ user_email }}</p>
 
+    <!-- EDIT NAME -->
     <input type="text" id="name-input" class="profile-input" placeholder="Enter your name" value="{{ user_name or '' }}">
 
+    <!-- ACTION BUTTONS -->
     <div class="profile-buttons">
         <button id="save-btn">Save Changes</button>
         <button id="logout-btn">Logout</button>
         <button id="delete-btn" class="delete-btn">Delete Account</button>
     </div>
 
+    <!-- APPEARANCE SECTION -->
     <div class="appearance-section">
         <h3>Appearance</h3>
         <label for="button-color">Button Color:</label>
@@ -96,6 +151,7 @@
 <!-- Hidden file input for avatar upload -->
 <input type="file" id="avatar-upload" accept="image/*" style="display:none">
 
+<!-- PROFILE JS -->
 <script src="{{ url_for('static', filename='profile.js') }}"></script>
 </body>
 </html>
