@@ -30,7 +30,7 @@ Built for **CSC 330** at SCSU.
 | Auth | Flask sessions + Werkzeug password hashing |
 | Email | Flask-Mail (Gmail SMTP) |
 | Frontend | Vanilla JS, Jinja2 templates, custom CSS |
-| Deployment | Render (via `render.yaml`) |
+| Deployment | Google Cloud Run (GCP) via Dockerfile |
 
 ---
 
@@ -90,21 +90,21 @@ Open [http://localhost:5000](http://localhost:5000) in your browser.
 LostAndFound/
 ├── app.py               # Flask routes and API endpoints
 ├── models.py            # SQLAlchemy database models
-├── init.py              # Database initialization script
-├── migrate.py           # Database migration helpers
 ├── requirements.txt
-├── render.yaml          # Render deployment config
+├── Dockerfile           # Container config for GCP Cloud Run
 ├── static/
 │   ├── app.css          # Main stylesheet (SCSU-branded)
 │   ├── dashboard.js     # Live polling, search, and filter logic
 │   ├── listing_info.js  # Claim toggle, connect, and report logic
 │   ├── messages.js      # In-app messaging
+│   ├── profile.js       # Profile page (nickname, pronouns, delete account)
 │   └── ...
 └── templates/
     ├── dashboard.html
     ├── listing_info.html
     ├── createlisting.html
     ├── messages.html
+    ├── profile.html
     ├── admin.html
     └── ...
 ```
@@ -115,8 +115,8 @@ LostAndFound/
 
 | Model | Description |
 |---|---|
-| `Account` | Stores name, email, and hashed password |
-| `User` | Student profile linked to an Account (username, student ID) |
+| `Account` | Stores name, email, hashed password, and creation date |
+| `User` | Student profile linked to an Account (username, nickname, pronouns, student ID) |
 | `Post` | A found-item listing with category, location, image, and claim status |
 | `Message` | Direct message between two users tied to a specific listing |
 | `Report` | A report filed against a listing, reviewed by admins |
@@ -126,12 +126,10 @@ LostAndFound/
 
 ## Deployment
 
-The app is configured for [Render](https://render.com) via `render.yaml`. Set the following environment variables in your Render service dashboard:
+The app is deployed on **Google Cloud Run** (GCP). It is containerized via `Dockerfile` and built/deployed using the `gcloud` CLI.
 
-- `SECRET_KEY`
-- `DATABASE_URL` (PostgreSQL connection string — Render provides this automatically)
-- `MAIL_USERNAME`
-- `MAIL_PASSWORD`
+### Deploy command
+
 
 ---
 
