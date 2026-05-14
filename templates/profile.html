@@ -5,18 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile — Lost & Found</title>
 
-<!-- Fonts & Material Icons -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
 
-<!-- CSS -->
 <link rel="stylesheet" href="static/app.css">
 <link rel="stylesheet" href="static/profile.css">
 </head>
 <body class="app-layout">
 
-<!-- Sidebar (unchanged from dashboard) -->
+<!-- Sidebar -->
 <aside class="sidepanel" id="sidePanel">
     <div class="sidepanel-top">
         <div class="profile-header">
@@ -43,31 +41,43 @@
 <div class="main-content">
     <div class="navbar"><h2>Profile</h2></div>
 
-    <div class="profile-grid">
+    <div class="profile-container">
 
-        <!-- Left card: user info -->
-        <div class="profile-card">
-            <h3>User Info</h3>
-            <p id="username-display" class="profile-text"></p>
-            <p id="email-display" class="profile-text"></p>
-            <button class="btn btn-blue btn-full" id="edit-name-btn">
-                <span class="material-symbols-outlined">edit</span> Edit Name
-            </button>
+        <div class="profile-content">
+            <!-- Left column -->
+            <div class="profile-left">
+                <img id="user-avatar" src="default-avatar.png" class="avatar-medium" alt="User Avatar">
+                <h2 id="username-display">Username</h2>
+                <p id="email-display">user@example.com</p>
+
+                <button class="btn btn-blue btn-full" id="edit-name-btn">
+                    <span class="material-symbols-outlined">edit</span> Edit Name
+                </button>
+                <button class="btn btn-blue btn-full" id="save-changes-btn">
+                    <span class="material-symbols-outlined">save</span> Save Changes
+                </button>
+                <button class="btn btn-blue btn-full" id="logout-btn">
+                    <span class="material-symbols-outlined">logout</span> Logout
+                </button>
+                <button class="btn btn-danger btn-full" id="delete-account-btn">
+                    <span class="material-symbols-outlined">delete</span> Delete Account
+                </button>
+            </div>
+
+            <!-- Right column -->
+            <div class="profile-right">
+                <h3>Appearance</h3>
+
+                <label for="button-color">Button Color</label>
+                <input type="color" id="button-color" class="btn-color">
+
+                <label for="avatar-input">Profile Image</label>
+                <input type="file" id="avatar-input" accept="image/*" style="display:none">
+                <button class="btn btn-blue btn-full" id="upload-avatar-btn">
+                    <span class="material-symbols-outlined">image</span> Choose Image
+                </button>
+            </div>
         </div>
-
-        <!-- Right card: appearance -->
-        <div class="profile-card">
-            <h3>Appearance</h3>
-            <label for="button-color">Button Color</label>
-            <input type="color" id="button-color" class="btn-color">
-
-            <label for="avatar-input">Profile Image</label>
-            <input type="file" id="avatar-input" accept="image/*" style="display:none">
-            <button class="btn btn-blue btn-full" id="upload-avatar-btn">
-                <span class="material-symbols-outlined">image</span> Choose Image
-            </button>
-        </div>
-
     </div>
 </div>
 
