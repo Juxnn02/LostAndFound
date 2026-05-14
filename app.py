@@ -480,6 +480,42 @@ def api_messages(post_id):
         )
         db.session.add(new_msg)
         db.session.commit()
+
+        # Send email notification in background so it doesn't delay the response
+        try:
+            sender_user    = User.query.get(user_id)
+            sender_account = Account.query.get(sender_user.account_id) if sender_user else None
+            receiver_user  = User.query.get(int(receiver_id))
+            receiver_acct  = Account.query.get(receiver_user.account_id) if receiver_user else None
+            post_obj       = Post.query.get(post_id)
+            app_url        = request.host_url.rstrip('/')
+
+            if receiver_acct and sender_account and post_obj:
+                sender_name  = sender_account.name
+                listing_name = post_obj.item_name
+                to_email     = receiver_acct.email
+
+                def _send():
+                    with app.app_context():
+                        try:
+                            notif = MailMessage(
+                                subject=f"New message about '{listing_name}'",
+                                recipients=[to_email],
+                                body=(
+                                    f"You have a new message from {sender_name} "
+                                    f"about '{listing_name}'.\n\n"
+                                    f"Log in to reply: {app_url}/messages\n\n"
+                                    f"— Lost & Found @ SCSU"
+                                )
+                            )
+                            mail.send(notif)
+                        except Exception:
+                            pass
+
+                threading.Thread(target=_send, daemon=True).start()
+        except Exception:
+            pass
+
         return jsonify({"success": True})
 
     # GET
