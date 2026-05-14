@@ -1,35 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile — Lost & Found</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
-    <style>
-        :root {
-            --button-bg: {{ user.get('button_color', '#007bff') }};
-            --button-hover: #ffffff;
-        }
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #007bff;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            overflow: hidden;
-            margin: 0 auto 1rem;
-        }
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — Lost & Found</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+:root {
+    --button-bg: {{ user.get('button_color', '#007bff') }};
+    --button-hover: #ffffff;
+}
+
+.profile-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #007bff;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    margin: 0 auto 1rem;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-input {
+    width: 80%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.profile-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.delete-btn:hover {
+    background-color: #ff4d4d !important;
+}
+</style>
 </head>
 <body class="app-layout">
 
@@ -38,14 +69,16 @@
 </button>
 
 <div class="profile-container">
+
+    <!-- CLICKABLE AVATAR -->
     <div class="avatar" id="avatar" aria-label="User Avatar">
         {{ user_initials }}
     </div>
 
-    <h2>{{ user_name or 'Guest' }}</h2>
-    <p>{{ user_email }}</p>
+    <h2 id="user-name">{{ user_name or 'Guest' }}</h2>
+    <p id="user-email">{{ user_email }}</p>
 
-    <input type="text" id="name-input" class="profile-input" placeholder="Enter your name" value="{{ user_name }}">
+    <input type="text" id="name-input" class="profile-input" placeholder="Enter your name" value="{{ user_name or '' }}">
 
     <div class="profile-buttons">
         <button id="save-btn">Save Changes</button>
@@ -54,13 +87,15 @@
     </div>
 
     <div class="appearance-section">
-        <h3>Appearances</h3>
+        <h3>Appearance</h3>
         <label for="button-color">Button Color:</label>
         <input type="color" id="button-color" value="{{ user.get('button_color', '#007bff') }}">
     </div>
 </div>
 
+<!-- Hidden file input for avatar upload -->
 <input type="file" id="avatar-upload" accept="image/*" style="display:none">
+
 <script src="{{ url_for('static', filename='profile.js') }}"></script>
 </body>
 </html>
