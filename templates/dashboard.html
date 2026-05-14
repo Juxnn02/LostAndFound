@@ -22,10 +22,10 @@
         <div class="profile-header">
             <!-- CLICKABLE AVATAR -->
             <a href="/profile">
-                <div class="avatar">{{ user_initials }}</div>
+                <div class="avatar" id="sidebar-avatar">{{ user_initials }}</div>
             </a>
             <div class="user-info">
-                <h3> Welcome, {{ user_name.split(' ')[0] }}!</h3>
+                <h3 id="sidebar-username">Welcome, {{ user_name.split(' ')[0] }}!</h3>
             </div>
         </div>
         
@@ -129,6 +129,51 @@
 </button>
 
 <script src="static/dashboard.js"></script>
+
+<!-- ===== Sidebar Profile & Accent Color ===== -->
+<script>
+(function applyProfileSettings() {
+    const sidebarAvatar = document.getElementById('sidebar-avatar');
+    const sidebarUsername = document.getElementById('sidebar-username');
+
+    const savedColor = localStorage.getItem('profileAccentColor');
+    const savedAvatar = localStorage.getItem('profileAvatar');
+    const savedUsername = localStorage.getItem('profileUsername');
+
+    // Apply accent color
+    if (savedColor) {
+        document.documentElement.style.setProperty('--primary', savedColor);
+    }
+
+    // Update username
+    if (sidebarUsername && savedUsername) {
+        const firstName = savedUsername.split(' ')[0] || savedUsername;
+        sidebarUsername.textContent = `Welcome, ${firstName}!`;
+    }
+
+    // Update avatar
+    if (sidebarAvatar) {
+        if (savedAvatar) {
+            sidebarAvatar.textContent = '';
+            const img = document.createElement('img');
+            img.src = savedAvatar;
+            img.style.width = '40px';
+            img.style.height = '40px';
+            img.style.borderRadius = '50%';
+            sidebarAvatar.appendChild(img);
+        } else if (savedUsername) {
+            const initials = savedUsername
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0,2);
+            sidebarAvatar.textContent = initials;
+            if (initials.length === 1) sidebarAvatar.style.fontSize = '18px';
+        }
+    }
+})();
+</script>
 
 </body>
 </html>
